@@ -1,4 +1,4 @@
-require_relative "../lib/find_variables.rb"
+require_relative "../lib/data_request.rb"
 
 require "minitest/autorun"
 
