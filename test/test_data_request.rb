@@ -23,4 +23,9 @@ class DataRequestTableTests < Minitest::Test
     assert_equal "01.00.27", @dr.version 
   end
 
+
+  def test_can_read_table_id
+    assert_equal "Oday", @dr.table_id 
+  end
+
 end
