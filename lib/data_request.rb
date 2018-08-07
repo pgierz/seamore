@@ -1,6 +1,14 @@
 require "json"
 
-def variable_ids_from_datarequest(datarequest_path)
-  j = JSON.parse File.read(datarequest_path)
-  j["variable_entry"].keys
+
+class DataRequest
+  def initialize(path)
+    @data = JSON.parse File.read(path)
+  end
+
+
+  def variable_ids
+    @data["variable_entry"].keys
+  end
+
 end
