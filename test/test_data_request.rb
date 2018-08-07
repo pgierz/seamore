@@ -17,5 +17,10 @@ class DataRequestTests < Minitest::Test
   def test_can_read_variable_ids
     assert_equal ["chlos", "omldamax", "phycos", "sos", "sossq", "tos", "tossq"].sort, @dr.variable_ids.sort
   end
+  
+  
+  def test_can_read_version
+    assert_equal "01.00.27", @dr.version 
+  end
 
 end

@@ -11,4 +11,8 @@ class DataRequest
     @data["variable_entry"].keys
   end
 
+
+  def version
+    @data["Header"]["data_specs_version"]
+  end
 end
