@@ -13,7 +13,7 @@ class FindVariables < Minitest::Test
   end
 
   
-  def test_can_read_variables_from_datarequest
-    assert variables_from_datarequest(@datarequest_path).sort == ["chlos", "omldamax", "phycos", "sos", "sossq", "tos", "tossq"].sort
+  def test_can_read_variable_ids_from_datarequest
+    assert variable_ids_from_datarequest(@datarequest_path).sort == ["chlos", "omldamax", "phycos", "sos", "sossq", "tos", "tossq"].sort
   end
 end
