@@ -1,7 +1,7 @@
 require "json"
 
 
-class DataRequest
+class DataRequestTable
   def initialize(path)
     @data = JSON.parse File.read(path)
   end

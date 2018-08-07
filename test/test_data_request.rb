@@ -3,10 +3,10 @@ require_relative "../lib/data_request.rb"
 require "minitest/autorun"
 
 
-class DataRequestTests < Minitest::Test
+class DataRequestTableTests < Minitest::Test
   def setup
     @datarequest_path = "#{__dir__}/fixtures/CMIP6_Oday.json"
-    @dr = DataRequest.new(@datarequest_path)
+    @dr = DataRequestTable.new(@datarequest_path)
   end
   
   
