@@ -29,7 +29,13 @@ class DataRequestTable
   attr_reader :path
   def initialize(path)
     @path = path
+    begin
     @data = JSON.parse File.read(path)
+    rescue JSON::ParserError => e
+      raise "file #{path}: #{e.message}"
+    end
+    raise "missing 'Header' entry at #{@path}" unless @data.has_key?("Header")
+    raise "missing 'table_id' in 'Header' entry at #{@path}" unless @data["Header"].has_key?("table_id")
   end
 
 
