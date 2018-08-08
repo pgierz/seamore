@@ -40,8 +40,8 @@ class DataRequestTable
   end
   
   
-  def frequency
-    @data["variable_entry"][variable_ids.first]["frequency"]
+  def frequencies
+    (@data["variable_entry"].values.map {|v| v["frequency"]}).uniq
   end
 
 

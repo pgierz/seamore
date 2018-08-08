@@ -49,8 +49,13 @@ class DataRequestTableTests < Minitest::Test
   end
   
   
-  def test_can_read_frequency
-    assert_equal "day", @t.frequency
+  def test_can_read_frequencies
+    assert_equal ["day"], @t.frequencies
+  end
+
+
+  def test_can_read_multiple_frequencies
+    assert_equal %w(3hr 3hrPt), DataRequestTable.new("#{__dir__}/fixtures/CMIP6_3hr.json").frequencies
   end
 
   
