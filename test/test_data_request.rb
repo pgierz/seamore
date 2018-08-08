@@ -47,6 +47,11 @@ class DataRequestTableTests < Minitest::Test
   
   def teardown
   end
+  
+  
+  def test_can_read_frequency
+    assert_equal "day", @t.frequency
+  end
 
   
   def test_can_read_variable_ids

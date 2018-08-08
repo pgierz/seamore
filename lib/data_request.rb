@@ -30,12 +30,17 @@ class DataRequestTable
   def initialize(path)
     @path = path
     begin
-    @data = JSON.parse File.read(path)
+      @data = JSON.parse File.read(path)
     rescue JSON::ParserError => e
       raise "file #{path}: #{e.message}"
     end
     raise "missing 'Header' entry at #{@path}" unless @data.has_key?("Header")
     raise "missing 'table_id' in 'Header' entry at #{@path}" unless @data["Header"].has_key?("table_id")
+  end
+  
+  
+  def frequency
+    @data["variable_entry"][variable_ids.first]["frequency"]
   end
 
 
