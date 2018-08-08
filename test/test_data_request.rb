@@ -14,10 +14,25 @@ class DataRequestTests < Minitest::Test
   
   def teardown
   end
-
   
+  
+  def test_returns_version
+    assert_equal "01.00.27", DataRequest.new(@datarequest_paths).version 
+  end
+  
+  
+  def test_returns_merged_table_ids
+    assert_equal %w(3hr Oday SIday), DataRequest.new(@datarequest_paths).table_ids
+  end
+
+
+  def test_returns_merged_variable_ids
+    assert_equal %w(clt hfls hfss huss mrro mrsos pr prc prsn ps rlds rldscs rlus rsds rsdscs rsdsdiff rsus rsuscs tas tos tslsi uas vas chlos omldamax phycos sos sossq tos tossq siconc siconca sisnthick sispeed sitemptop sithick sitimefrac siu siv), DataRequest.new(@datarequest_paths).variable_ids
+  end
+ 
+ 
   def test_can_be_created_with_multiple_table_paths
-    DataRequest.new(@datarequest_paths)    
+    DataRequest.new(@datarequest_paths)
   end
   
 end
