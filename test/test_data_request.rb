@@ -50,7 +50,7 @@ class DataRequestTableTests < Minitest::Test
 
   
   def test_can_read_variable_ids
-    assert_equal ["chlos", "omldamax", "phycos", "sos", "sossq", "tos", "tossq"].sort, @t.variable_ids.sort
+    assert_equal ["chlos", "omldamax", "phycos", "sos", "sossq", "tos", "tossq"], @t.variable_ids
   end
   
   

@@ -33,7 +33,7 @@ class DataRequestTable
 
 
   def variable_ids
-    @data["variable_entry"].keys
+    @data["variable_entry"].keys.sort
   end
 
 
