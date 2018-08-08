@@ -1,7 +1,17 @@
 require "json"
 
 
+class DataRequest
+  def initialize(paths)
+    @tables = paths.map {|x| DataRequestTable.new(x)}
+    @tables.each {|x| raise "tables have different data request versions (#{@tables.first.version}@#{@tables.first.path} vs #{x.version}@#{x.path})" if @tables.first.version != x.version}
+  end
+  
+end
+
+
 class DataRequestTable
+  attr_reader :path
   def initialize(path)
     @path = path
     @data = JSON.parse File.read(path)
@@ -22,7 +32,5 @@ class DataRequestTable
     # chop of the "Table " prefix as it is not allowed according to the "controlled vocabularies"
     raise "can not determine table_id: <#{@path}>" unless /Table (?<table_id>\w+)$/ =~ @data["Header"]["table_id"]
     table_id  
-  end
-  
-  
+  end  
 end
