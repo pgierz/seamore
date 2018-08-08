@@ -36,6 +36,7 @@ class DataRequestTable
     end
     raise "missing 'Header' entry at #{@path}" unless @data.has_key?("Header")
     raise "missing 'table_id' in 'Header' entry at #{@path}" unless @data["Header"].has_key?("table_id")
+    raise "missing 'mip_era' in 'Header' entry at #{@path}" unless @data["Header"].has_key?("mip_era")
   end
   
   
