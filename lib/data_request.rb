@@ -5,6 +5,7 @@ class DataRequest
   def initialize(paths)
     @tables = paths.map {|x| DataRequestTable.new(x)}
     @tables.each {|x| raise "tables have different data request versions (#{@tables.first.version}@#{@tables.first.path} vs #{x.version}@#{x.path})" if @tables.first.version != x.version}
+    @tables = @tables.sort_by {|t| t.table_id}
   end
 
 

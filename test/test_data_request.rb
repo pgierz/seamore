@@ -7,8 +7,8 @@ class DataRequestTests < Minitest::Test
   def setup
     @datarequest_paths = []
     @datarequest_paths << "#{__dir__}/fixtures/CMIP6_3hr.json"
-    @datarequest_paths << "#{__dir__}/fixtures/CMIP6_Oday.json"
     @datarequest_paths << "#{__dir__}/fixtures/CMIP6_SIday.json"
+    @datarequest_paths << "#{__dir__}/fixtures/CMIP6_Oday.json"
   end
   
   
