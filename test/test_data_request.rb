@@ -27,7 +27,7 @@ class DataRequestTests < Minitest::Test
 
 
   def test_returns_merged_variable_ids
-    assert_equal %w(clt hfls hfss huss mrro mrsos pr prc prsn ps rlds rldscs rlus rsds rsdscs rsdsdiff rsus rsuscs tas tos tslsi uas vas chlos omldamax phycos sos sossq tos tossq siconc siconca sisnthick sispeed sitemptop sithick sitimefrac siu siv), DataRequest.new(@datarequest_paths).variable_ids
+    assert_equal %w(chlos clt hfls hfss huss mrro mrsos omldamax phycos pr prc prsn ps rlds rldscs rlus rsds rsdscs rsdsdiff rsus rsuscs siconc siconca sisnthick sispeed sitemptop sithick sitimefrac siu siv sos sossq tas tos tos tossq tslsi uas vas), DataRequest.new(@datarequest_paths).variable_ids
   end
  
  

@@ -10,7 +10,7 @@ class DataRequest
 
 
   def variable_ids
-    @tables.collect_concat {|t| t.variable_ids}
+    (@tables.collect_concat {|t| t.variable_ids}).sort
   end
 
 
