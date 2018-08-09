@@ -49,6 +49,11 @@ class DataRequestTableTests < Minitest::Test
   end
   
   
+  def test_can_create_variable_objects
+    assert_equal "chlos", @t.variables.first.out_name
+  end
+
+
   def test_can_read_frequencies
     assert_equal ["day"], @t.frequencies
   end

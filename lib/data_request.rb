@@ -23,6 +23,19 @@ class DataRequest
     @tables.collect_concat {|t| t.table_id}
   end
 end
+class Variable < OpenStruct
+  attr_reader :tables
+  
+  def method_missing(m, *args, &block)
+    raise "no method '#{m}'"
+  end
+  
+  
+  def add_table(t)
+    @tables ||= []
+    @tables << t
+  end
+end
 
 
 class DataRequestTable
@@ -47,6 +60,16 @@ class DataRequestTable
 
   def variable_ids
     @data["variable_entry"].keys.sort
+  end
+
+
+  def variables
+    vars = @data["variable_entry"].keys.sort.map do |k|
+      var = @data["variable_entry"][k]
+      JSON.parse(var.to_json, object_class: Variable)
+    end
+    vars.each {|v| v.add_table(self)}
+    vars
   end
 
 
