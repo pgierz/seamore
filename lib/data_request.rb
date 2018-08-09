@@ -28,7 +28,7 @@ class DataRequest
 
 
   def variable_ids
-    (@tables.collect_concat {|t| t.variable_ids}).sort
+    @variables.map {|v| v.out_name}
   end
 
 
@@ -52,6 +52,7 @@ class DataRequest
       puts "#{v.out_name}::#{v.frequency} [#{v.tables.map{|t| t.table_id}.join(' ')}]"
     end
   end
+
 end
 
 
