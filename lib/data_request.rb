@@ -2,6 +2,13 @@ require "json"
 
 
 class DataRequest
+  # create from all tables in given dir, omitting non-table files from the default Tables directory at https://github.com/PCMDI/cmip6-cmor-tables
+  def self.new_from_tables_dir(path)
+    eliglible_files = Dir["#{path}/CMIP6_*.json"]-["#{path}/CMIP6_CV_test.json", "#{path}/CMIP6_coordinate.json", "#{path}/CMIP6_CV.json", "#{path}/CMIP6_formula_terms.json", "#{path}/CMIP6_grids.json"]
+    DataRequest.new eliglible_files
+  end
+
+
   def initialize(paths)
     @tables = paths.map {|x| DataRequestTable.new(x)}
     @tables.each {|x| raise "tables have different data request versions (#{@tables.first.version}@#{@tables.first.path} vs #{x.version}@#{x.path})" if @tables.first.version != x.version}
