@@ -6,6 +6,24 @@ class DataRequest
     @tables = paths.map {|x| DataRequestTable.new(x)}
     @tables.each {|x| raise "tables have different data request versions (#{@tables.first.version}@#{@tables.first.path} vs #{x.version}@#{x.path})" if @tables.first.version != x.version}
     @tables = @tables.sort_by {|t| t.table_id}
+    
+    # merge variables with identical variable_id and frequency which may appear in multiple tables
+    # sort by name+interval+frequency, so we the following order:
+    #      var1 0.125 3hr   [table1]
+    #      var2 0.125 3hr   [table42]
+    #      var2 0.125 3hrPt [table1]
+    vars = @tables.collect_concat {|t| t.variables}
+    merged_vars = []
+    vars = vars.sort_by {|v| "#{v.out_name} #{v.tables.first.approx_interval} #{v.frequency}"}
+    vars.each do |v|
+      if(merged_vars.last && merged_vars.last.out_name == v.out_name && merged_vars.last.frequency == v.frequency)
+        merged_vars.last.add_table(*v.tables)
+      else
+        merged_vars << v
+      end
+    end
+    
+    @variables = merged_vars
   end
 
 
@@ -22,7 +40,21 @@ class DataRequest
   def table_ids
     @tables.collect_concat {|t| t.table_id}
   end
+
+
+  # print variables and frequencies, so one knows which data to generate for a simulation (table names are appended)
+  # sorted by name+interval+frequency, so we the following order:
+  #      var1 0.125 3hr   [table1]
+  #      var2 0.125 3hr   [table42]
+  #      var2 0.125 3hrPt [table1]
+  def print
+    @variables.each do |v|
+      puts "#{v.out_name}::#{v.frequency} [#{v.tables.map{|t| t.table_id}.join(' ')}]"
+    end
+  end
 end
+
+
 class Variable < OpenStruct
   attr_reader :tables
   
@@ -75,6 +107,11 @@ class DataRequestTable
 
   def version
     @data["Header"]["data_specs_version"]
+  end
+  
+  
+  def approx_interval
+    @data["Header"]["approx_interval"]
   end
   
   
