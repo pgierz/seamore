@@ -42,15 +42,17 @@ class DataRequest
   end
 
 
-  # print variables and frequencies, so one knows which data to generate for a simulation (table names are appended)
+  # all variables and frequencies as string, so one knows which data to generate for a simulation (table names are appended)
   # sorted by name+interval+frequency, so we the following order:
   #      var1 0.125 3hr   [table1]
   #      var2 0.125 3hr   [table42]
   #      var2 0.125 3hrPt [table1]
-  def print
+  def to_s
+    s = "=== #{version} ===\n"
     @variables.each do |v|
-      puts "#{v.out_name}::#{v.frequency} [#{v.tables.map{|t| t.table_id}.join(' ')}]"
+      s += "#{v.out_name}::#{v.frequency} [#{v.tables.map{|t| t.table_id}.join(' ')}]\n"
     end
+    s
   end
 
 end
