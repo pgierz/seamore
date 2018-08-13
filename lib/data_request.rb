@@ -47,8 +47,8 @@ class DataRequest
   def table_ids
     @tables.collect_concat {|t| t.table_id}
   end
-
-
+  
+  
   # all variables and frequencies as string, so one knows which data to generate for a simulation (table names are appended)
   # sorted by name+interval+frequency, so we the following order:
   #      var1 0.125 3hr   [table1]
@@ -67,14 +67,19 @@ end
 
 class Variable < OpenStruct
   attr_reader :tables
-  
+
   def method_missing(m, *args, &block)
     raise "no method '#{m}'"
   end
   
   
+  def set_variable_entry_key(k)
+    @variable_entry_key = k
+  end
+  
+  
   def variable_id
-    out_name # it is not clear whether the variable_id is stored as 'out_name' or the 'variable_entry' key as these differ for e.g. difmxybo in data request 0.1.00.27
+    @variable_entry_key # it is not clear whether the variable_id is stored as 'out_name' or the 'variable_entry' key as these differ for e.g. difmxybo in data request 0.1.00.27
   end
   
   
@@ -111,12 +116,13 @@ class DataRequestTable
 
 
   def variables
-    vars = @data["variable_entry"].keys.sort.map do |k|
+    @data["variable_entry"].keys.sort.map do |k|
       var = @data["variable_entry"][k]
-      JSON.parse(var.to_json, object_class: Variable)
+      v = JSON.parse(var.to_json, object_class: Variable)
+      v.set_variable_entry_key k
+      v.add_table self
+      v
     end
-    vars.each {|v| v.add_table(self)}
-    vars
   end
 
 

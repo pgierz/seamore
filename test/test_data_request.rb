@@ -16,6 +16,12 @@ class DataRequestTests < Minitest::Test
   end
   
   
+  def test_difmxybo_and_difmxybo2d_exist
+    dr = DataRequest.new(["#{__dir__}/fixtures/difmxybo2d/CMIP6_Oclim.json"])
+    assert_equal %w(difmxybo difmxybo2d), dr.variable_ids
+  end
+
+
   def test_returns_version
     assert_equal "01.00.27", DataRequest.new(@datarequest_paths).version 
   end
