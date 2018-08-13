@@ -21,9 +21,9 @@ class DataRequest
     #      var2 0.125 3hrPt [table1]
     vars = @tables.collect_concat {|t| t.variables}
     merged_vars = []
-    vars = vars.sort_by {|v| "#{v.out_name} #{v.tables.first.approx_interval} #{v.frequency}"}
+    vars = vars.sort_by {|v| "#{v.variable_id} #{v.tables.first.approx_interval} #{v.frequency}"}
     vars.each do |v|
-      if(merged_vars.last && merged_vars.last.out_name == v.out_name && merged_vars.last.frequency == v.frequency)
+      if(merged_vars.last && merged_vars.last.variable_id == v.variable_id && merged_vars.last.frequency == v.frequency)
         merged_vars.last.add_table(*v.tables)
       else
         merged_vars << v
@@ -35,7 +35,7 @@ class DataRequest
 
 
   def variable_ids
-    @variables.map {|v| v.out_name}
+    @variables.map {|v| v.variable_id}
   end
 
 
@@ -57,7 +57,7 @@ class DataRequest
   def to_s
     s = "=== #{version} ===\n"
     @variables.each do |v|
-      s += "#{v.out_name}::#{v.frequency} [#{v.tables.map{|t| t.table_id}.join(' ')}]\n"
+      s += "#{v.variable_id}::#{v.frequency} [#{v.tables.map{|t| t.table_id}.join(' ')}]\n"
     end
     s
   end
@@ -70,6 +70,11 @@ class Variable < OpenStruct
   
   def method_missing(m, *args, &block)
     raise "no method '#{m}'"
+  end
+  
+  
+  def variable_id
+    out_name # it is not clear whether the variable_id is stored as 'out_name' or the 'variable_entry' key as these differ for e.g. difmxybo in data request 0.1.00.27
   end
   
   
