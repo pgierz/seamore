@@ -16,6 +16,21 @@ class FesomOutputDir
 end
 
 
+class FesomVariable
+    def self.variable_id_for_data_request(fesom_svn_revision, request_version, fesom_variable)
+      mappings = {}
+      mappings["550"] = {}
+      mappings["550"]["01.00.27"] = {}
+      mappings["550"]["01.00.27"]["tso"] = "tos"
+      
+      v = mappings[fesom_svn_revision][request_version][fesom_variable]
+      v ||= fesom_variable
+      #puts "FESOM revision #{fesom_svn_revision}::#{fesom_variable} => data request #{request_version}::#{v}"
+      v
+    end
+end
+
+
 class FesomOutputFile
   # fetch frequency from native fesom file
   # https://github.com/WCRP-CMIP/CMIP6_CVs/blob/master/CMIP6_frequency.json
