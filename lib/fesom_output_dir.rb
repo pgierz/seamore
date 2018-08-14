@@ -4,14 +4,21 @@ require_relative "data_request.rb"
 class FesomOutputDir
   def initialize(d)
     eliglible_files = Dir[File.join(d,"*")].grep(/\/(?<variable_id>\w+)_fesom_\d{8}\.nc\Z/)
-    eliglible_files.sort!
     
     @variable_files = []
     eliglible_files.each do |f|
       /(?<variable_id>\w+)_fesom_(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})\.nc\Z/ =~ File.basename(f)
-    end    
       @variable_files << FesomOutputFile.new(variable_id: variable_id, year: year, month: month, day: day, path: f)
+    end    
+    
+    @variable_files.sort!
   end
+  
+  
+  def to_s
+    @variable_files.inject('') {|sum,f| sum + "#{f}\n"}
+  end
+  
   
   #PRIMAVERA_DELIVERED_VARS = %w(evs fsitherm hfds mlotst omldamax opottemptend pbo prlq prsn rsdo siarean siareas sic sidmassevapsubl sidmasssi sidmassth sidmasstranx sidmasstrany siextentn siextents sifllatstop sisnconc sisnmass sisnthick sispeed sistrxdtop sistrxubot sistrydtop sistryubot sithick sitimefrac siu siv sivol sivoln sivols so soga sos tauuo tauvo thetao thetaoga tos tso u2o uo uso uto v2o vo volo vso vto w2o wfo wo wso wto zos zossq)
   
@@ -64,6 +71,16 @@ class FesomOutputFile
   end
   
   
+  def <=>(other)
+    "#{@variable_id} #{@approx_interval} #{@frequency}" <=> "#{other.variable_id} #{other.approx_interval} #{other.frequency}"
+  end
+  
+  
+  def to_s
+    "#{@variable_id}::#{@frequency}"
+  end
+  
+
   # fetch frequency from native fesom file
   # https://github.com/WCRP-CMIP/CMIP6_CVs/blob/master/CMIP6_frequency.json
   def self.frequency(f)
