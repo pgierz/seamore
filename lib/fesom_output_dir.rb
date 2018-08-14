@@ -13,6 +13,28 @@ class FesomOutputDir
     end    
   end
   
+  #PRIMAVERA_DELIVERED_VARS = %w(evs fsitherm hfds mlotst omldamax opottemptend pbo prlq prsn rsdo siarean siareas sic sidmassevapsubl sidmasssi sidmassth sidmasstranx sidmasstrany siextentn siextents sifllatstop sisnconc sisnmass sisnthick sispeed sistrxdtop sistrxubot sistrydtop sistryubot sithick sitimefrac siu siv sivol sivoln sivols so soga sos tauuo tauvo thetao thetaoga tos tso u2o uo uso uto v2o vo volo vso vto w2o wfo wo wso wto zos zossq)
+  
+  def report_on_data_request(data_request_tables_dir)
+    request = DataRequest.new_from_tables_dir(data_request_tables_dir)
+    request_vars = request.variable_ids
+    
+    # see if we have each existing fesom variable in the data request
+    @variables.each do |fevar|
+#    PRIMAVERA_DELIVERED_VARS.each do |fevar|
+      cmorvar = FesomVariable.variable_id_for_data_request("550", "01.00.27", fevar)
+      if(request_vars.include? cmorvar)
+        if(cmorvar == fevar)
+          puts "FESOM #{fevar}"
+        else
+          puts "FESOM #{fevar} => CMOR #{cmorvar}"
+       end
+      else
+        puts "FESOM #{fevar} !! can not assign to any CMOR variable"
+      end
+    end
+  end
+    
 end
 
 
