@@ -17,12 +17,12 @@ class DataRequestTests < Minitest::Test
   
   
   def test_approx_interval_for_table_Omon_is_30
-    assert_equal "30.00000", DataRequest.approx_interval_for_table("Omon")
+    assert_equal 30.0, DataRequest.approx_interval_for_table("Omon")
   end
 
 
   def test_approx_interval_for_frequency_mon_is_30
-    assert_equal "30.00000", DataRequest.approx_interval_for_frequency("mon")
+    assert_equal 30.0, DataRequest.approx_interval_for_frequency("mon")
   end
 
 
