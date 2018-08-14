@@ -16,6 +16,16 @@ class DataRequestTests < Minitest::Test
   end
   
   
+  def test_approx_interval_for_table_Omon_is_30
+    assert_equal "30.00000", DataRequest.approx_interval_for_table("Omon")
+  end
+
+
+  def test_approx_interval_for_frequency_mon_is_30
+    assert_equal "30.00000", DataRequest.approx_interval_for_frequency("mon")
+  end
+
+
   def test_difmxybo_and_difmxybo2d_exist
     dr = DataRequest.new(["#{__dir__}/fixtures/difmxybo2d/CMIP6_Oclim.json"])
     assert_equal %w(difmxybo difmxybo2d), dr.variable_ids

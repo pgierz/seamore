@@ -2,6 +2,74 @@ require "json"
 
 
 class DataRequest
+  def self.approx_interval_for_table(table)
+    approx_interval = {"3hr" => "0.125000",
+    "6hrLev" => "0.250000",
+    "6hrPlev" => "0.250000",
+    "6hrPlevPt" => "0.250000",
+    "AERday" => "1.0",
+    "AERhr" => "1.0", # note, data request 01.00.27 says "1.0" here, but this seems to be wrong
+    "AERmon" => "30.00000",
+    "AERmonZ" => "30.00000",
+    "Amon" => "30.00000",
+    "CF3hr" => "0.125000",
+    "CFday" => "1.00000",
+    "CFmon" => "30.00000",
+    "CFsubhr" => "0.017361",
+    "day" => "1.00000",
+    "E1hr" => "0.017361",
+    "E1hrClimMon" => "0.017361",
+    "E3hr" => "0.125000",
+    "E3hrPt" => "0.125000",
+    "E6hrZ" => "0.250000",
+    "Eday" => "1.00000",
+    "EdayZ" => "1.00000",
+    "Efx" => "0.00000",
+    "Emon" => "30.00000",
+    "EmonZ" => "30.00000",
+    "Esubhr" => "0.017361",
+    "Eyr" => "365",
+    "ImonAnt" => "30.00",
+    "ImonGre" => "30.00",
+    "IyrAnt" => "365.00",
+    "IyrGre" => "365.00",
+    "LImon" => "30.00000",
+    "Lmon" => "30.00000",
+    "Oclim" => "30.00000",
+    "Oday" => "1.00000",
+    "Odec" => "3650.00000",
+    "Ofx" => "0.00000",
+    "Omon" => "30.00000",
+    "Oyr" => "365.00000",
+    "SIday" => "1.00000",
+    "SImon" => "30.00000"}[table]
+
+    raise "can not find approx_interval for table #{table}" unless approx_interval
+    approx_interval
+  end
+
+
+  def self.approx_interval_for_frequency(frequency)
+    approx_interval = {"1hr" => "0.017361",
+    "1hrCM" => "0.017361",
+    "1hrPt" => "0.017361",
+    "3hr" => "0.125000",
+    "3hrPt" => "0.125000",
+    "6hr" => "0.250000",
+    "6hrPt" => "0.250000",
+    "day" => "1.0",
+    "dec" => "3650.00000",
+    "mon" => "30.00000",
+    "monC" => "30.00000",
+    "monPt" => "30.00000",
+    "yr" => "365",
+    "yrPt" => "365"}[frequency]
+
+    raise "can not find approx_interval for frequency #{frequency}" unless approx_interval
+    approx_interval
+  end
+
+
   # create from all tables in given dir, omitting non-table files from the default Tables directory at https://github.com/PCMDI/cmip6-cmor-tables
   def self.new_from_tables_dir(path)
     eliglible_files = Dir["#{path}/CMIP6_*.json"]-["#{path}/CMIP6_CV_test.json", "#{path}/CMIP6_coordinate.json", "#{path}/CMIP6_CV.json", "#{path}/CMIP6_formula_terms.json", "#{path}/CMIP6_grids.json"]
