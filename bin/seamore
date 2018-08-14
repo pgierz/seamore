@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+require 'gli'
+
+require_relative "../lib/data_request.rb"
+
+include GLI::App
+
+program_desc 'CMORize FESOM output to a given CMIP6 data request'
+
+subcommand_option_handling :normal
+arguments :strict
+
+desc 'Print data request variables for json tables at PATH'
+arg "tables path"
+command :print do |c|  
+  c.action do |global_opts,opts,args|    
+    puts DataRequest.new_from_tables_dir args.first
+  end
+end
+
+
+exit run(ARGV)
