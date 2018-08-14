@@ -3,6 +3,7 @@
 require 'gli'
 
 require_relative "../lib/data_request.rb"
+require_relative "../lib/fesom_output_dir.rb"
 
 include GLI::App
 
@@ -17,6 +18,15 @@ arg "tables_dir"
 command :print do |c|  
   c.action do |global_opts,opts,args|    
     puts DataRequest.new_from_tables_dir args.first
+  end
+end
+
+
+desc 'Print FESOM output variables available at PATH'
+arg "FESOM_output_dir"
+command :print_available do |c|  
+  c.action do |global_opts,opts,args|    
+    puts FesomOutputDir.new(args.first)
   end
 end
 
