@@ -66,7 +66,7 @@ class DataRequestTableTests < Minitest::Test
   
   
   def test_can_create_variable_objects
-    assert_equal "chlos", @t.variables.first.out_name
+    assert_equal "chlos", @t.variable_entries.first.variable_id
   end
 
 

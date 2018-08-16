@@ -80,12 +80,12 @@ class DataRequest
     #      var1 0.125 3hr   [table1]
     #      var2 0.125 3hr   [table42]
     #      var2 0.125 3hrPt [table1]
-    vars = @tables.collect_concat {|t| t.variables}
+    vars = @tables.collect_concat {|t| t.variable_entries}
     merged_vars = []
-    vars = vars.sort_by {|v| "#{v.variable_id} #{v.tables.first.approx_interval} #{v.frequency}"}
+    vars = vars.sort_by {|v| "#{v.variable_id} #{v.table.approx_interval} #{v.frequency}"}
     vars.each do |v|
       if(merged_vars.last && merged_vars.last.variable_id == v.variable_id && merged_vars.last.frequency == v.frequency)
-        merged_vars.last.add_table(*v.tables)
+        merged_vars.last.add_table(v.table)
       else
         merged_vars << v
       end
@@ -126,16 +126,16 @@ class DataRequest
 end
 
 
-class Variable < OpenStruct
-  attr_reader :tables
 
-  def method_missing(m, *args, &block)
-    raise "no method '#{m}'"
-  end
-  
-  
-  def set_variable_entry_key(k)
-    @variable_entry_key = k
+
+class TableVarEntry
+  attr_reader :table, :tables
+
+
+  def initialize(variable_entry_key:, entry_data:, table:)
+    @variable_entry_key = variable_entry_key    
+    @data = entry_data
+    @table = table
   end
   
   
@@ -148,10 +148,10 @@ class Variable < OpenStruct
     @tables ||= []
     @tables << t
   end
-
-
-  def to_s
-    "#{variable_id}::#{frequency} [#{tables.map{|t| t.table_id}.join(' ')}]"
+    
+  
+  def frequency
+    @data['frequency']
   end
 end
 
@@ -181,13 +181,9 @@ class DataRequestTable
   end
 
 
-  def variables
+  def variable_entries
     @data["variable_entry"].keys.sort.map do |k|
-      var = @data["variable_entry"][k]
-      v = JSON.parse(var.to_json, object_class: Variable)
-      v.set_variable_entry_key k
-      v.add_table self
-      v
+      TableVarEntry.new(variable_entry_key: k, entry_data: @data["variable_entry"][k], table: self)
     end
   end
 
