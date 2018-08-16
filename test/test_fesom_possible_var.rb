@@ -47,4 +47,10 @@ class FesomPossibleVarTests < Minitest::Test
     assert_equal "K",  v.unit
     assert_equal TimeMethods::POINT,  v.time_method
   end
+  
+  
+  def test_85_possible_vars_exist
+    vars = FesomPossibleVar.create_from_fortran_code(FESOM_VARIABLE_INITIALIZATION_CODE)
+    assert_equal 85, vars.size
+  end
 end
