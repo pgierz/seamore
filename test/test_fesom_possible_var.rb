@@ -11,7 +11,7 @@ class FesomPossibleVarTests < Minitest::Test
     call tso_mean%init(n2, 'tso', 'sea surface temperature of liquid ocean, sampled synoptically', 'K')
     EOFHEREDOC
 
-    @vars = FesomPossibleVar.create_from_fortran_code(code)
+    @vars = FesomPossibleVar.create_from_fortran_code(code, sort: false)
   end
   
   
@@ -50,7 +50,7 @@ class FesomPossibleVarTests < Minitest::Test
   
   
   def test_85_possible_vars_exist
-    vars = FesomPossibleVar.create_from_fortran_code(FESOM_VARIABLE_INITIALIZATION_CODE)
+    vars = FesomPossibleVar.create_from_fortran_code(FESOM_VARIABLE_INITIALIZATION_CODE, sort: false)
     assert_equal 85, vars.size
   end
 end

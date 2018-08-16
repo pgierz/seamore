@@ -36,7 +36,6 @@ desc 'Print variables FESOM (r550) could possibly produce'
 command :print_possible do |c|  
   c.action do |global_opts,opts,args|    
     vars = FesomPossibleVar.create_from_fortran_code(FESOM_VARIABLE_INITIALIZATION_CODE)
-    vars = vars.sort_by {|v| v.variable_id}
     vars.each {|v| puts v}
   end
 end

@@ -14,8 +14,8 @@ class FesomPossibleVar
   end
 
 
-  def self.create_from_fortran_code(code)
-    code.split("\n").map do |init_line|
+  def self.create_from_fortran_code(code, sort: true)
+    vars = code.split("\n").map do |init_line|
       /.+?, ['"](?<variable_id>[^,]+?)['"], ['"](?<description>.+?)['"], ['"](?<unit>[^,]+?)['"]\) *.*/ =~ init_line
       raise "could not parse all values: variable_id:#{variable_id.inspect}, unit:#{unit.inspect}, description:#{description.inspect}, code:'#{init_line}'" unless [variable_id, unit, description].all?
       if(variable_id == "tso")
@@ -23,6 +23,12 @@ class FesomPossibleVar
       else
         FesomPossibleVar.new variable_id, unit, description, TimeMethods::MEAN
       end
+    end
+    
+    if(sort)
+      vars.sort_by {|v| v.variable_id}
+    else
+      vars
     end
   end
   
