@@ -117,7 +117,7 @@ class DataRequest
   def to_s
     s = "=== #{version} ===\n"
     @variables.each do |v|
-      s += "#{v.variable_id}::#{v.frequency} [#{v.tables.map{|t| t.table_id}.join(' ')}]\n"
+      s += "#{v}\n"
     end
     s
   end
@@ -146,6 +146,11 @@ class Variable < OpenStruct
   def add_table(t)
     @tables ||= []
     @tables << t
+  end
+
+
+  def to_s
+    "#{variable_id}::#{frequency} [#{tables.map{|t| t.table_id}.join(' ')}]"
   end
 end
 
