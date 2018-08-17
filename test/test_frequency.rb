@@ -17,8 +17,8 @@ class FrequencyTests < Minitest::Test
   end
 
 
-  def test_frequency_for_monPt_has_name_mon
-    assert_equal "mon", Frequency.for_name("monPt").name
+  def test_frequency_for_monPt_has_name_monPt
+    assert_equal "monPt", Frequency.for_name("monPt").name
   end
 
 

@@ -1,5 +1,5 @@
 class TimeMethods
-  ALL = [MEAN=:MEAN, POINT=:INSTANTANEOUS]
+  ALL = [MEAN=:MEAN, POINT=:INSTANTANEOUS, CLIMATOLOGY=:CLIMATOLOGY, NONE=:NONE]
 end
 
 
@@ -9,8 +9,9 @@ class Frequency
   
 
   def self.for_name(n)
-    tm = n.end_with?("Pt")==true ? TimeMethods::POINT : TimeMethods::MEAN
-    ALL.find {|f| f.name == n.delete_suffix("Pt") && f.time_method == tm}
+    freq = ALL.find {|f| f.name == n}
+    raise "can not determine Frequency object for #{n}" unless freq
+    freq
   end
 
 
@@ -22,18 +23,22 @@ class Frequency
 
 
   ALL = [
-    F_hr = Frequency.new("1hr", 1.0/24),
+    F_1hr = Frequency.new("1hr", 1.0/24),    
     F_3hr = Frequency.new("3hr", 3.0/24),
     F_6hr = Frequency.new("6hr", 6.0/24),
     F_day = Frequency.new("day", 1.0), # there is no dayPt frequency
     F_mon = Frequency.new("mon", 30.0),
     F_yr = Frequency.new("yr", 365.0),
     F_dec = Frequency.new("dec", 3650.0),
-    F_hrPt = Frequency.new("1hr", 1.0/24, TimeMethods::POINT),
-    F_3hrPt = Frequency.new("3hr", 3.0/24, TimeMethods::POINT),
-    F_6hrPt = Frequency.new("6hr", 6.0/24, TimeMethods::POINT),
-    F_monPt = Frequency.new("mon", 30.0, TimeMethods::POINT),
-    F_yrPt = Frequency.new("yr", 365.0, TimeMethods::POINT),
+    F_hrPt = Frequency.new("1hrPt", 1.0/24, TimeMethods::POINT),
+    F_3hrPt = Frequency.new("3hrPt", 3.0/24, TimeMethods::POINT),
+    F_6hrPt = Frequency.new("6hrPt", 6.0/24, TimeMethods::POINT),
+    F_monPt = Frequency.new("monPt", 30.0, TimeMethods::POINT),
+    F_yrPt = Frequency.new("yrPt", 365.0, TimeMethods::POINT),
+    F_1hrCM = Frequency.new("1hrCM", 1.0/24, TimeMethods::CLIMATOLOGY),
+    F_fx = Frequency.new("fx", 0, TimeMethods::NONE),
+    F_monC = Frequency.new("monC", 30.0, TimeMethods::CLIMATOLOGY),
+    F_subhrPt = Frequency.new("subhrPt", 0.017361, TimeMethods::POINT), # there is no subhr time:mean
     ]
     
   
