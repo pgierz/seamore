@@ -1,5 +1,3 @@
-require_relative "data_request.rb"
-
 
 class FesomOutputDir
   def initialize(d)
@@ -67,7 +65,7 @@ class FesomOutputFile
   def initialize(variable_id:, year:, month:, day:, path:)
     @variable_id = variable_id
     @frequency = FesomOutputFile.frequency(path)
-    @approx_interval = DataRequest.approx_interval_for_frequency @frequency
+    @approx_interval = Frequency.for_name(@frequency).approx_interval
   end
   
   

@@ -47,25 +47,6 @@ class DataRequest
   end
 
 
-  def self.approx_interval_for_frequency(frequency)
-    approx_interval = {
-    "3hr" => 3.0/24,
-    "3hrPt" => 3.0/24,
-    "6hr" => 6.0/24,
-    "6hrPt" => 6.0/24,
-    "day" => 1.0,
-    "dec" => 3650.0,
-    "mon" => 30.0,
-    "monC" => 30.0,
-    "monPt" => 30.0,
-    "yr" => 365.0,
-    "yrPt" => 365.0}[frequency]
-
-    raise "can not find approx_interval for frequency #{frequency}" unless approx_interval
-    approx_interval
-  end
-
-
   # create from all tables in given dir, omitting non-table files from the default Tables directory at https://github.com/PCMDI/cmip6-cmor-tables
   def self.new_from_tables_dir(path)
     eliglible_files = Dir["#{path}/CMIP6_*.json"]-["#{path}/CMIP6_CV_test.json", "#{path}/CMIP6_coordinate.json", "#{path}/CMIP6_CV.json", "#{path}/CMIP6_formula_terms.json", "#{path}/CMIP6_grids.json"]
