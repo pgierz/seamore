@@ -1,6 +1,4 @@
-class TimeMethods
-  ALL = [MEAN=:MEAN, POINT=:INSTANTANEOUS]
-end
+require_relative "frequency.rb"
 
 
 class FesomPossibleVar

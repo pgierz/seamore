@@ -2,11 +2,6 @@ require "json"
 require_relative "frequency.rb"
 
 
-class TimeMethods
-  ALL = [MEAN=:MEAN, POINT=:INSTANTANEOUS]
-end
-
-
 class DataRequest
   attr_reader :variables
   
