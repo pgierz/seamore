@@ -1,7 +1,16 @@
 require "json"
+require_relative "frequency.rb"
+
+
+class TimeMethods
+  ALL = [MEAN=:MEAN, POINT=:INSTANTANEOUS]
+end
 
 
 class DataRequest
+  attr_reader :variables
+  
+
   def self.approx_interval_for_table(table)
     approx_interval = {"3hr" => 3.0/24,
     "6hrLev" => 6.0/24,
@@ -82,12 +91,12 @@ class DataRequest
     #      var2 0.125 3hrPt [table1]
     vars = @tables.collect_concat {|t| t.variable_entries}
     merged_vars = []
-    vars = vars.sort_by {|v| "#{v.variable_id} #{v.table.approx_interval} #{v.frequency}"}
+    vars = vars.sort_by {|v| "#{v.variable_id} #{v.table.approx_interval} #{v.frequency_name}"}
     vars.each do |v|
-      if(merged_vars.last && merged_vars.last.variable_id == v.variable_id && merged_vars.last.frequency == v.frequency)
-        merged_vars.last.add_table(v.table)
+      if(merged_vars.last && merged_vars.last.variable_id == v.variable_id && merged_vars.last.unit == v.unit && merged_vars.last.time_method == v.time_method)
+        merged_vars.last.merge_table_var_entry(v)
       else
-        merged_vars << v
+        merged_vars << DataRequestVariable.new_from_table_var_entry(v)
       end
     end
     
@@ -129,19 +138,25 @@ end
 class DataRequestVariable
   attr_reader :variable_id, :unit, :description, :time_method, :frequencies
 
-  def initialize(variable_id, unit, description, time_method, table)
+  def self.new_from_table_var_entry(var_entry)
+    DataRequestVariable.new(var_entry.variable_id, var_entry.unit, var_entry.description, var_entry.time_method, var_entry.table, var_entry.frequency_name)
+  end
+
+
+  def initialize(variable_id, unit, description, time_method, table, frequency)
     @variable_id = variable_id
     @unit = unit
     @description = description
     @time_method = time_method
     @tables = [table]
-    @frequencies = []
+    @frequencies = [frequency]
   end
   
   
   def merge_table_var_entry(var_entry)
     @tables << var_entry.table
     @frequencies << var_entry.frequency_name
+    # we do not merge time methods, as we treat identical variable_ids with different time methods as different variables
   end
   
   
@@ -152,35 +167,43 @@ end
 
 
 class TableVarEntry
-  attr_reader :table, :tables
+  attr_reader :table, :tables, :frequency_name, :time_method
 
 
   def initialize(variable_entry_key:, entry_data:, table:)
     @variable_entry_key = variable_entry_key    
     @data = entry_data
     @table = table
+    @frequency_name = @data['frequency']
+    @time_method = Frequency.for_name(@data['frequency']).time_method
   end
   
-  
+
   def variable_id
     @variable_entry_key # it is not clear whether the variable_id is stored as 'out_name' or the 'variable_entry' key as these differ for e.g. difmxybo in data request 0.1.00.27
   end
-  
-  
+
+
   def add_table(t)
     @tables ||= []
     @tables << t
   end
     
   
-  def frequency
-    @data['frequency']
+  def unit
+     @data['units']
+  end
+
+
+  def description
+     @data['comment']
   end
 end
 
 
 class DataRequestTable
   attr_reader :path
+  
   def initialize(path)
     @path = path
     begin
