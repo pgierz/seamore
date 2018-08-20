@@ -126,6 +126,29 @@ class DataRequest
 end
 
 
+class DataRequestVariable
+  attr_reader :variable_id, :unit, :description, :time_method, :frequencies
+
+  def initialize(variable_id, unit, description, time_method, table)
+    @variable_id = variable_id
+    @unit = unit
+    @description = description
+    @time_method = time_method
+    @tables = [table]
+    @frequencies = []
+  end
+  
+  
+  def merge_table_var_entry(var_entry)
+    @tables << var_entry.table
+    @frequencies << var_entry.frequency_name
+  end
+  
+  
+  def to_s
+    "#{variable_id} '#{unit}' [#{frequencies.join(' ')}] [#{@tables.map{|t| t.table_id}.join(' ')}]"
+  end
+end
 
 
 class TableVarEntry
