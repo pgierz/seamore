@@ -62,9 +62,18 @@ class FesomOutputFile
     
   attr_reader :variable_id, :approx_interval, :frequency
 
-  def initialize(variable_id:, year:, month:, day:, path:)
+  def initialize(variable_id:, year:, month:, day:, path:, cdl_data: nil)
+    raise "can not have both set: a path and CDL data" if (path && cdl_data)
     @variable_id = variable_id
-    @frequency = FesomOutputFile.frequency(path)
+    @frequency = if path
+      begin
+        FesomOutputFile.frequency_from_cdl %x(ncdump -h #{path}) if path
+      rescue RuntimeError => e
+        raise "file #{path}: #{e.message}"
+      end
+    elsif cdl_data
+      FesomOutputFile.frequency_from_cdl cdl_data
+    end
     @approx_interval = Frequency.for_name(@frequency).approx_interval
   end
   
@@ -76,13 +85,16 @@ class FesomOutputFile
   
   def to_s
     "#{@variable_id}::#{@frequency}"
+    #"#{@variable_id} '#{unit}' [#{frequencies.join(' ')}]"
   end
   
 
-  # fetch frequency from native fesom file
+  # fetch frequency from native fesom file CDL (i.e. ncdump)
   # https://github.com/WCRP-CMIP/CMIP6_CVs/blob/master/CMIP6_frequency.json
-  def self.frequency(f)
-    sout = %x(ncdump -h #{f} | grep output_schedule)
+  def self.frequency_from_cdl(cdl)
+    match = /^.*?output_schedule.*/.match cdl
+    sout = match.to_s
+
     /unit: (?<unit>\w) / =~ sout
     /rate: (?<rate>\d+)/ =~ sout
   
@@ -95,13 +107,13 @@ class FesomOutputFile
       "day"
     when /s\d+/
       # this frequency is based on fesom time steps, i.e. might be used to express 3-hourly
-      puts "NOTE: assuming frequency rate of #{unit}#{rate} equals 3hr for #{f}"
+      puts "NOTE: assuming frequency rate of #{unit}#{rate} equals 3hr for netcdf CDL"
       # solution: read the time axis and see what delta t we really have
 
       # for tso the frequency should be 3hrPt now (i.e. instantaneous)      
       "3hrPt" # this is hackish but does apply for the PRIMAVERA runs (tso is the only 3-hourly variable)      
     else
-      raise "unknown unit+rate <#{unit}#{rate}> for file <#{f}>"
+      raise "unknown unit+rate <#{unit}#{rate}> for netcdf CDL"
     end    
   end
 
