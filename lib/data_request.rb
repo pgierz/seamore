@@ -91,8 +91,10 @@ class DataRequest
     #      var2 0.125 3hrPt [table1]
     vars = @tables.collect_concat {|t| t.variable_entries}
     merged_vars = []
-    vars = vars.sort_by {|v| "#{v.variable_id} #{v.table.approx_interval} #{v.frequency_name}"}
+    # sort vars by merge criterium (variable_id, unit, time_method) and additionally by interval and table_id
+    vars = vars.sort_by {|v| "#{v.variable_id} #{v.unit} #{v.time_method} #{v.table.approx_interval} #{v.table.table_id}"}
     vars.each do |v|
+      # merge vars with equal variable_id, unit, time_method
       if(merged_vars.last && merged_vars.last.variable_id == v.variable_id && merged_vars.last.unit == v.unit && merged_vars.last.time_method == v.time_method)
         merged_vars.last.merge_table_var_entry(v)
       else
