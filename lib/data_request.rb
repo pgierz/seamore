@@ -169,7 +169,7 @@ end
 
 
 class TableVarEntry
-  attr_reader :table, :tables, :frequency_name, :time_method
+  attr_reader :table, :frequency_name, :time_method
 
 
   def initialize(variable_entry_key:, entry_data:, table:)
@@ -183,12 +183,6 @@ class TableVarEntry
 
   def variable_id
     @variable_entry_key # it is not clear whether the variable_id is stored as 'out_name' or the 'variable_entry' key as these differ for e.g. difmxybo in data request 0.1.00.27
-  end
-
-
-  def add_table(t)
-    @tables ||= []
-    @tables << t
   end
     
   
