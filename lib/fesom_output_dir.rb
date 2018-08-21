@@ -59,20 +59,21 @@ end
 
 
 class FesomOutputFile
-    
-  attr_reader :variable_id, :approx_interval, :frequency
+  attr_reader :variable_id, :approx_interval, :frequency, :unit
 
   def initialize(variable_id:, year:, month:, day:, path:, cdl_data: nil)
     raise "can not have both set: a path and CDL data" if (path && cdl_data)
     @variable_id = variable_id
-    @frequency = if path
+    if path
       begin
-        FesomOutputFile.frequency_from_cdl %x(ncdump -h #{path}) if path
+        @frequency = FesomOutputFile.frequency_from_cdl %x(ncdump -h #{path})
+        @unit = FesomOutputFile.unit_from_cdl variable_id, %x(ncdump -h #{path})
       rescue RuntimeError => e
         raise "file #{path}: #{e.message}"
       end
     elsif cdl_data
-      FesomOutputFile.frequency_from_cdl cdl_data
+      @frequency = FesomOutputFile.frequency_from_cdl cdl_data
+      @unit = FesomOutputFile.unit_from_cdl variable_id, cdl_data
     end
     @approx_interval = Frequency.for_name(@frequency).approx_interval
   end
@@ -84,10 +85,16 @@ class FesomOutputFile
   
   
   def to_s
-    "#{@variable_id}::#{@frequency}"
-    #"#{@variable_id} '#{unit}' [#{frequencies.join(' ')}]"
+    "#{@variable_id} '#{unit}' [#{@frequency}]"
   end
   
+
+  # variable unit from native fesom file CDL (i.e. ncdump)
+  def self.unit_from_cdl(variable_id, cdl)
+     match = /#{variable_id}:units = "(?<unit>.+)"/.match cdl # there seems to be an error with rubys "".=~ as we do not get access to the unis variable then interpolating variable_id, using //.match seems to solve this
+     match[:unit]
+  end
+
 
   # fetch frequency from native fesom file CDL (i.e. ncdump)
   # https://github.com/WCRP-CMIP/CMIP6_CVs/blob/master/CMIP6_frequency.json

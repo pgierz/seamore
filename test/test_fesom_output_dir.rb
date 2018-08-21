@@ -5,7 +5,7 @@ require "minitest/autorun"
 
 class FesomOutputDirTests < Minitest::Test
   def setup
-    @volo_cdl = <<~'EOFHEREDOC'
+    volo_cdl = <<~'EOFHEREDOC'
     netcdf volo_fesom_19510101 {
     dimensions:
       time = UNLIMITED ; // (12 currently)
@@ -43,6 +43,8 @@ class FesomOutputDirTests < Minitest::Test
       1.081448e+18 ;
     }
     EOFHEREDOC
+    
+    @volo = FesomOutputFile.new variable_id:"volo", year:"1951", month:"01", day:"01", path:nil, cdl_data:volo_cdl
   end
   
   
@@ -50,8 +52,12 @@ class FesomOutputDirTests < Minitest::Test
   end
   
   
+  def test_volo_unit_is_m3
+    assert_equal "m3", @volo.unit
+  end
+  
+  
   def test_volo_frequency_is_day
-    ff = FesomOutputFile.new variable_id:"volo", year:"1951", month:"01", day:"01", path:nil, cdl_data:@volo_cdl
-    assert_equal "day", ff.frequency
+    assert_equal "day", @volo.frequency
   end
 end
