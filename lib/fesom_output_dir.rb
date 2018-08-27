@@ -1,5 +1,7 @@
 
 class FesomOutputDir
+  attr_reader :variable_files
+
   def initialize(d)
     eliglible_files = Dir[File.join(d,"*")].grep(/\/(?<variable_id>\w+)_fesom_\d{8}\.nc\Z/)
     
@@ -59,7 +61,7 @@ end
 
 
 class FesomOutputFile
-  attr_reader :variable_id, :approx_interval, :frequency, :unit
+  attr_reader :variable_id, :approx_interval, :frequency, :unit, :time_method
 
   def initialize(variable_id:, year:, month:, day:, path:, cdl_data: nil)
     raise "can not have both set: a path and CDL data" if (path && cdl_data)
@@ -76,6 +78,8 @@ class FesomOutputFile
       @unit = FesomOutputFile.unit_from_cdl variable_id, cdl_data
     end
     @approx_interval = Frequency.for_name(@frequency).approx_interval
+    
+    @time_method = Frequency.for_name(@frequency).time_method
   end
   
   
