@@ -1,8 +1,17 @@
 require_relative "../lib/fesom_output_dir.rb"
 require_relative "../lib/data_request.rb"
+require_relative "../lib/fesom_possible_var.rb"
 
 
 class Matcher
+  def self.print_matching_possible(request_dir:)
+    possible_vars = FesomPossibleVar.create_from_fortran_code(FESOM_VARIABLE_INITIALIZATION_CODE, sort: true)
+    request = DataRequest.new_from_tables_dir File.expand_path(request_dir)
+
+    self.print_matching(request, possible_vars) 
+  end
+  
+  
   def self.print_matching_available(request_dir:, output_dir:)
     output_vars = FesomOutputDir.new(File.expand_path output_dir).variable_files
     request = DataRequest.new_from_tables_dir File.expand_path(request_dir)

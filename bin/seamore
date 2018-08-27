@@ -54,4 +54,13 @@ command :match_available do |c|
 end
 
 
+desc 'Print matches of variables FESOM could possibly produce and a given data request'
+arg "tables_dir"
+command :match_possible do |c|  
+  c.action do |global_opts,opts,args|    
+    puts Matcher.print_matching_possible(request_dir: args[0])
+  end
+end
+
+
 exit run(ARGV)
