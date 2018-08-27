@@ -7,7 +7,12 @@ class Matcher
     output_vars = FesomOutputDir.new(File.expand_path output_dir).variable_files
     request = DataRequest.new_from_tables_dir File.expand_path(request_dir)
     
-    output_vars.each do |outvar|
+    self.print_matching(request, output_vars) 
+  end
+
+
+  def self.print_matching(request, fesom_variables)    
+    fesom_variables.each do |outvar|
       cmipvar = request.variables.find {|v| v.variable_id == outvar.variable_id && v.time_method == outvar.time_method && v.unit == outvar.unit}
       if(cmipvar)
         puts "#{outvar.variable_id} #{outvar.unit} #{cmipvar}"
