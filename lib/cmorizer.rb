@@ -36,8 +36,9 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   src_txt = <<~'EOFHEREDOC'
-  # "fesom name"_"available frequency" => ["CMIP table_id"_"variable_id"]
-  cmorize tos_day => [Oday_tos, Omon_tos, Odec_tos]
+  # "fesom name"_"available frequency" => ["variable_id"_"CMIP table_id"]
+  cmorize tos_day => [tos_Oday, tos_Omon, tos_Odec]
+  cmorize tso_3hrPt => [tos_3hr]
   EOFHEREDOC
   
   r = CMORizer::DSLReader.new src_txt
