@@ -24,13 +24,14 @@ class Matcher
     fesom_variables.each do |fevar|
       cmipvar = request.variables.find {|v| v.variable_id == fevar.variable_id && v.time_method == fevar.time_method && v.unit == fevar.unit}
       if(cmipvar)
-        puts "cmorize #{fevar.variable_id} #{fevar.unit} #{cmipvar}"
+        table_txts = cmipvar.table_ids.map {|t| "#{cmipvar.variable_id}_#{t}"}
+        puts "cmorize #{fevar.variable_id}_#{fevar.frequency} => [#{table_txts.join(', ')}]"
       else
         cmipvar = request.variables.find {|v| v.variable_id == fevar.variable_id}
         if(cmipvar)
-          puts "NO match: #{fevar} (!! #{cmipvar.variable_id} '#{cmipvar.unit}' exists in datarequest)"
+          puts "# NO match: #{fevar} (!! #{cmipvar.variable_id} '#{cmipvar.unit}' exists in datarequest)"
         else
-          puts "NO match: #{fevar}"
+          puts "# NO match: #{fevar}"
         end
       end
     end
