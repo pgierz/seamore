@@ -29,6 +29,7 @@ module CMORizer
 
   class Task
     def initialize(src, result, &block)
+      puts "#{self.class} #{src} ==> #{result}"
       @src = src
       @result = result
       instance_eval(&block) if block_given?
@@ -40,7 +41,24 @@ module CMORizer
       hash = args.first
       from = hash.keys.first
       to = hash.values.first
-      p Task.new(from, to, &block)
+    end
+
+
+    def unit(hash)
+      from = hash.keys.first
+      to = hash.values.first
+      sym = "Unit_#{from}_to_#{to}_Task".to_sym
+      cls = CMORizer::Subtasks.const_get sym
+      obj = cls.new
+    end
+    end
+  
+  
+  module Subtasks
+    class Unit_K_to_degC_Task
+      def initialize
+        puts "\t#{self.class}"
+      end
     end
   end
 end
