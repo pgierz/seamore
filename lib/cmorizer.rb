@@ -47,15 +47,15 @@ module CMORizer
     def unit(hash)
       from = hash.keys.first
       to = hash.values.first
-      sym = "Unit_#{from}_to_#{to}_Task".to_sym
-      cls = CMORizer::Subtasks.const_get sym
+      sym = "Unit_#{from}_to_#{to}".to_sym
+      cls = CMORizer::Step.const_get sym
       obj = cls.new
     end
     end
   
   
-  module Subtasks
-    class Unit_K_to_degC_Task
+  module Step
+    class Unit_K_to_degC
       def initialize
         puts "\t#{self.class}"
       end
