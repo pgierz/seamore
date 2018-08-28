@@ -29,11 +29,14 @@ module CMORizer
       puts "#{self.class} #{src} ==> #{result}"
       @src = src
       @result = result
+      @eval_mode = true
       instance_eval(&block) if block_given?
+      @eval_mode = false
     end
 
 
     def method_missing(method_sym, *args, &block)
+      return super unless @eval_mode
       # we assume every unknown method designates a sub-task
       hash = args.first
       from = hash.keys.first
