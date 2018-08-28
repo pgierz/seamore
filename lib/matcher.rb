@@ -21,16 +21,16 @@ class Matcher
 
 
   def self.print_matching(request, fesom_variables)    
-    fesom_variables.each do |outvar|
-      cmipvar = request.variables.find {|v| v.variable_id == outvar.variable_id && v.time_method == outvar.time_method && v.unit == outvar.unit}
+    fesom_variables.each do |fevar|
+      cmipvar = request.variables.find {|v| v.variable_id == fevar.variable_id && v.time_method == fevar.time_method && v.unit == fevar.unit}
       if(cmipvar)
-        puts "#{outvar.variable_id} #{outvar.unit} #{cmipvar}"
+        puts "cmorize #{fevar.variable_id} #{fevar.unit} #{cmipvar}"
       else
-        cmipvar = request.variables.find {|v| v.variable_id == outvar.variable_id}
+        cmipvar = request.variables.find {|v| v.variable_id == fevar.variable_id}
         if(cmipvar)
-          puts "NO match: #{outvar} (!! #{cmipvar.variable_id} '#{cmipvar.unit}' exists in datarequest)"
+          puts "NO match: #{fevar} (!! #{cmipvar.variable_id} '#{cmipvar.unit}' exists in datarequest)"
         else
-          puts "NO match: #{outvar}"
+          puts "NO match: #{fevar}"
         end
       end
     end
