@@ -9,7 +9,9 @@ module CMORizer
       hash = args.first
       src = hash.keys.first
       results = hash.values.first
-      results.each {|r| p CMORizeTask.new(src, r)}
+      results.each do |r|
+        CMORizeTask.new(src, r, &block)
+      end
     end
 
 
@@ -26,9 +28,10 @@ module CMORizer
 
 
   class CMORizeTask
-    def initialize(src, result)
+    def initialize(src, result, &block)
       @src = src
       @result = result
+      instance_eval(&block) if block_given?
     end
   end
 end
@@ -38,7 +41,8 @@ if __FILE__ == $PROGRAM_NAME
   src_txt = <<~'EOFHEREDOC'
   # "fesom name"_"available frequency" => ["variable_id"_"CMIP table_id"]
   cmorize tos_day => [tos_Oday, tos_Omon, tos_Odec]
-  cmorize tso_3hrPt => [tos_3hr]
+  cmorize tso_3hrPt => [tos_3hr] do
+  end
   EOFHEREDOC
   
   r = CMORizer::DSLReader.new src_txt
