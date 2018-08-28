@@ -1,3 +1,5 @@
+require_relative "step.rb"
+
 module CMORizer
   class Project
     def initialize(src_txt)
@@ -50,15 +52,6 @@ module CMORizer
       sym = "Unit_#{from}_to_#{to}".to_sym
       cls = CMORizer::Step.const_get sym
       obj = cls.new
-    end
-    end
-  
-  
-  module Step
-    class Unit_K_to_degC
-      def initialize
-        puts "\t#{self.class}"
-      end
     end
   end
 end
