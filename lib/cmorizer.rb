@@ -21,11 +21,6 @@ module CMORizer
     def method_missing(method_sym, *args, &block)
       method_sym.to_s
     end
-
-
-    def self.const_missing(name)
-      name.to_s
-    end
   end
 
 
