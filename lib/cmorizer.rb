@@ -33,6 +33,15 @@ module CMORizer
       @result = result
       instance_eval(&block) if block_given?
     end
+
+
+    def method_missing(method_sym, *args, &block)
+      # we assume every unknown method designates a sub-task
+      hash = args.first
+      from = hash.keys.first
+      to = hash.values.first
+      p Task.new(from, to, &block)
+    end
   end
 end
 
@@ -42,6 +51,7 @@ if __FILE__ == $PROGRAM_NAME
   # "fesom name"_"available frequency" => ["variable_id"_"CMIP table_id"]
   cmorize tos_day => [tos_Oday, tos_Omon, tos_Odec]
   cmorize tso_3hrPt => [tos_3hr] do
+    unit 'K' => 'degC'
   end
   EOFHEREDOC
   
