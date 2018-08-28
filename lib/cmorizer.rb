@@ -1,5 +1,5 @@
 module CMORizer
-  class DSLReader
+  class Project
     def initialize(src_txt)
       instance_eval(src_txt, src_txt)
     end
@@ -10,7 +10,7 @@ module CMORizer
       src = hash.keys.first
       results = hash.values.first
       results.each do |r|
-        CMORizeTask.new(src, r, &block)
+        Task.new(src, r, &block)
       end
     end
 
@@ -27,7 +27,7 @@ module CMORizer
   end
 
 
-  class CMORizeTask
+  class Task
     def initialize(src, result, &block)
       @src = src
       @result = result
@@ -45,5 +45,5 @@ if __FILE__ == $PROGRAM_NAME
   end
   EOFHEREDOC
   
-  r = CMORizer::DSLReader.new src_txt
+  CMORizer::Project.new src_txt
 end
