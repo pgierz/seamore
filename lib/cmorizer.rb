@@ -3,7 +3,7 @@ require_relative "step.rb"
 module CMORizer
   class Project
     def initialize(src_txt)
-      @tasks = []
+      @cmorization_steps_chains = []
       @eval_mode = true
       instance_eval(src_txt, src_txt)
       @eval_mode = false
@@ -12,6 +12,8 @@ module CMORizer
   
     def execute
       @tasks.each {|t| t.execute}
+      @cmorization_steps_chains.each do |chain|
+      end
     end
   
   
@@ -20,7 +22,7 @@ module CMORizer
       src = hash.keys.first
       results = hash.values.first
       results.each do |r|
-        @tasks << Task.new(src, r, &block)
+        @cmorization_steps_chains << StepsChain.new(src, r, &block)
       end
     end
 
@@ -33,7 +35,7 @@ module CMORizer
   end
 
 
-  class Task
+  class StepsChain
     def initialize(from, to, &block)
       @fesom_variable = from
       @cmor_variable = to
