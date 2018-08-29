@@ -108,13 +108,6 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   src_txt = <<~'EOFHEREDOC'
-  
-  experiment_id "highres-future" do
-    indir "cplout/core/yadda"
-    outdir "postprocess/core"
-    #mesh "mesh_griddes_BOLD.nc", "bold_depths.txt", "/mnt/lustre02/work/ab0995/a270067/fesom/bold/mesh_Agulhas"
-  end
-  
   # "fesom name"_"available frequency" => ["variable_id"_"CMIP table_id"]
   cmorize tos_day => [tos_Oday, tos_Omon, tos_Odec]
   cmorize tso_3hrPt => [tos_3hr] do
