@@ -22,6 +22,7 @@ module CMORizer
     end
 
 
+    # "fesom name"_"available frequency" => ["variable_id"_"CMIP table_id"]
     def cmorize(*args, &block)
       hash = args.first
       src = hash.keys.first
@@ -108,10 +109,6 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   src_txt = <<~'EOFHEREDOC'
-  # "fesom name"_"available frequency" => ["variable_id"_"CMIP table_id"]
-  cmorize tso_3hrPt => [tos_3hr] do
-    unit 'K' => 'degC'
-  end
   EOFHEREDOC
   
   project = CMORizer::Project.new src_txt
