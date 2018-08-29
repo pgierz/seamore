@@ -37,8 +37,8 @@ module CMORizer
 
   class StepsChain
     def initialize(from, to, &block)
-      @fesom_variable = from
-      @cmor_variable = to
+      @fesom_variable_description = from
+      @cmor_variable_description = to
       @step_classes = []
       @eval_mode = true
       instance_eval(&block) if block_given?
@@ -56,8 +56,8 @@ module CMORizer
     
     
     def execute
-      puts "#{self.class} #{@fesom_variable} ==> #{@cmor_variable}"
       @steps.each {|s| s.execute}
+      puts "#{self.class} #{@fesom_variable_description} ==> #{@cmor_variable_description}"
     end
 
 
