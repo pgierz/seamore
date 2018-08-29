@@ -4,6 +4,11 @@ module CMORizer
       def execute
         puts "\t#{self.class}"
       end
+    
+
+      def initialize(next_step)
+        @next_step = next_step
+      end
     end
     
     

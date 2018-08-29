@@ -39,10 +39,19 @@ module CMORizer
     def initialize(from, to, &block)
       @fesom_variable = from
       @cmor_variable = to
-      @steps = []
+      @step_classes = []
       @eval_mode = true
       instance_eval(&block) if block_given?
       @eval_mode = false
+      
+      # create step instances
+      @steps = []
+      next_step = nil
+      @step_classes.reverse_each do |cls|
+        next_step = cls.new(next_step)
+        @steps << next_step
+      end
+      @steps.reverse!
     end
     
     
@@ -54,7 +63,7 @@ module CMORizer
 
     def add_step(sym)
       cls = CMORizer::Step.const_get sym
-      @steps << cls.new
+      @step_classes << cls
     end
 
 
