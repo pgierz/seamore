@@ -4,7 +4,9 @@ module CMORizer
   class Project
     def initialize(src_txt)
       @tasks = []
+      @eval_mode = true
       instance_eval(src_txt, src_txt)
+      @eval_mode = false
     end
   
   
@@ -25,6 +27,7 @@ module CMORizer
 
     private
     def method_missing(method_sym, *args, &block)
+      return super unless @eval_mode
       method_sym.to_s
     end
   end
