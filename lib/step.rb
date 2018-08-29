@@ -8,23 +8,78 @@ module CMORizer
 
       def initialize(next_step)
         @next_step = next_step
+        @available_inputs = {}
+      end
+
+
+      def add_input(input, year, number_of_eventual_input_years)
+        @available_inputs[year] = input
+        
+        # some steps might be able to process each file as soon as it arrives
+        # others, like merge, might require the maximum number of files to be available
+        if can_process?(number_of_eventual_input_years)
+          sortet_years = @available_inputs.keys.sort
+          sortet_inputs = @available_inputs.values_at(*sortet_years)
+          results = process(sortet_inputs)
+          if results
+            results.each_with_index do |r,i|
+              @next_step.add_input(r, sorted_years[i], number_of_eventual_input_years)          
+            end
+          end
+          @available_inputs.clear
+        end
+      end
+            
+      
+      def process(inputs)
+        puts "\t#{self.class} #{inputs.join(', ')} next:#{@next_step.class}"
       end
     end
     
     
-    class MERGEFILES < BaseStep
+    class IndividualBaseStep < BaseStep
+      def can_process?(number_of_eventual_input_years)
+        true
+      end
+    end
+
+
+    class JoinedBaseStep < BaseStep
+      def can_process?(number_of_eventual_input_years)
+        @available_inputs.keys.size == number_of_eventual_input_years
+      end
+    end
+  end
+end
+
+
+module CMORizer
+  module Step
+    class MERGEFILES < JoinedBaseStep
     end
     
     
-    class FESOM_MEAN_TIMESTAMP_ADJUST < BaseStep
+    class CMOR_FILE < IndividualBaseStep
+    end    
+    
+
+    class APPLY_CMOR_FILENAME < IndividualBaseStep
+    end
+
+
+    class APPLY_GLOBAL_ATTRIBUTES < IndividualBaseStep
     end
     
     
-    class Unit_K_to_degC < BaseStep
+    class FESOM_MEAN_TIMESTAMP_ADJUST < IndividualBaseStep
+    end
+    
+    
+    class Unit_K_to_degC < IndividualBaseStep
     end
     
 
-    class TIME_SECONDS_TO_DAYS < BaseStep
+    class TIME_SECONDS_TO_DAYS < IndividualBaseStep
     end
   end
 end
