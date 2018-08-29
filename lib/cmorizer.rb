@@ -105,12 +105,3 @@ module CMORizer
     end
   end
 end
-
-
-if __FILE__ == $PROGRAM_NAME
-  src_txt = <<~'EOFHEREDOC'
-  EOFHEREDOC
-  
-  project = CMORizer::Project.new src_txt
-  project.execute
-end
