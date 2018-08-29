@@ -24,4 +24,15 @@ class CMORizerTests < Minitest::Test
     assert_kind_of CMORizer::Project, project
   end
   
+  
+  def test_cmorizations_can_have_multiple_cmip_tables
+    src_txt = <<~'EOFHEREDOC'
+      cmorize tos_day => [tos_Oday, tos_Omon, tos_Odec]
+      cmorize prsn_day => [prsn_3hr, prsn_day, prsn_ImonAnt, prsn_ImonGre, prsn_Amon, prsn_Omon]
+    EOFHEREDOC
+  
+    project = CMORizer::Project.new src_txt
+    assert_kind_of CMORizer::Project, project
+  end
+  
 end

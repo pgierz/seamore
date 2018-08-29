@@ -109,7 +109,6 @@ end
 if __FILE__ == $PROGRAM_NAME
   src_txt = <<~'EOFHEREDOC'
   # "fesom name"_"available frequency" => ["variable_id"_"CMIP table_id"]
-  cmorize tos_day => [tos_Oday, tos_Omon, tos_Odec]
   cmorize tso_3hrPt => [tos_3hr] do
     unit 'K' => 'degC'
   end
