@@ -17,6 +17,11 @@ module CMORizer
     end
   
   
+    def experiment_id(*args, &block)
+      Experiment.new(*args, &block)
+    end
+
+
     def cmorize(*args, &block)
       hash = args.first
       src = hash.keys.first
@@ -35,6 +40,22 @@ module CMORizer
   end
 
 
+  class Experiment
+    def initialize(experiment_id, &block)
+      @experiment_id = experiment_id # check against controlled vocabularies 
+      instance_eval(&block) if block_given?
+    end
+    
+    
+    def indir(d)
+    end
+
+
+    def outdir(d)
+    end
+  end
+  
+  
   class StepsChain
     def initialize(from, to, &block)
       @fesom_variable_description = from
@@ -87,6 +108,13 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   src_txt = <<~'EOFHEREDOC'
+  
+  experiment_id "highres-future" do
+    indir "cplout/core/yadda"
+    outdir "postprocess/core"
+    #mesh "mesh_griddes_BOLD.nc", "bold_depths.txt", "/mnt/lustre02/work/ab0995/a270067/fesom/bold/mesh_Agulhas"
+  end
+  
   # "fesom name"_"available frequency" => ["variable_id"_"CMIP table_id"]
   cmorize tos_day => [tos_Oday, tos_Omon, tos_Odec]
   cmorize tso_3hrPt => [tos_3hr] do
