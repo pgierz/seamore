@@ -47,12 +47,17 @@ module CMORizer
     end
 
 
+    def add_step(sym)
+      cls = CMORizer::Step.const_get sym
+      @steps << cls.new
+    end
+
+
     def method_missing(method_sym, *args, &block)
       return super unless @eval_mode
       # we assume every unknown method designates a sub-task
       sym = method_sym.upcase
-      cls = CMORizer::Step.const_get sym
-      @steps << cls.new
+      add_step sym
     end
 
 
@@ -60,8 +65,7 @@ module CMORizer
       from = hash.keys.first
       to = hash.values.first
       sym = "Unit_#{from}_to_#{to}".to_sym
-      cls = CMORizer::Step.const_get sym
-      obj = cls.new
+      add_step sym
     end
   end
 end
