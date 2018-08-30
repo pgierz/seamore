@@ -11,11 +11,19 @@ module CMORizer
       instance_eval(src_txt, src_txt)
       @eval_mode = false
     end
-  
+    
   
     def execute
-      @tasks.each {|t| t.execute}
-      @cmorization_steps_chains.each do |chain|
+      @experiments.each do |experiment|
+        year_ranges = Project.year_ranges(first: experiment.first_year.to_i, last: experiment.last_year.to_i, step: @years_step)
+      
+        @cmorization_steps_chains.each do |chain|
+          year_ranges.each do |year_range|
+            # fetch files for chain.fesom_variable_description + year_range
+            fesom_files = [] #!!
+            chain.execute(fesom_files)
+          end        
+        end
       end
     end
   
@@ -133,9 +141,12 @@ module CMORizer
     end
     
     
-    def execute
-      @steps.each {|s| s.execute}
+    def execute(fesom_files)
       puts "#{self.class} #{@fesom_variable_description} ==> #{@cmor_variable_description}"
+      # fill the first step with all the passed files
+      fesom_files.each do |f|
+        @steps.first.add_input(f, f.year, fesom_files.size)
+      end
     end
 
 
