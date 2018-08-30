@@ -5,6 +5,7 @@ module CMORizer
   class Project
     def initialize(src_txt)
       @cmorization_steps_chains = []
+      @experiments = []
       @years_step = 1
       @eval_mode = true
       instance_eval(src_txt, src_txt)
@@ -31,6 +32,7 @@ module CMORizer
 
 
     def experiment_id(*args, &block)
+      @experiments << Experiment.new(args.shift, @controlled_vocabularies['experiment_id'], &block)
     end
   
   
@@ -71,17 +73,42 @@ module CMORizer
 
 
   class Experiment
-    def initialize(experiment_id, &block)
-      @experiment_id = experiment_id # check against controlled vocabularies 
+    def initialize(experiment_id, experiment_controlled_vocabularies, &block)
+      @experiment_id = experiment_id
+      raise "experiment_id #{@experiment_id} does not exist in controlled vocabularies" unless experiment_controlled_vocabularies.has_key?(@experiment_id)
+      @experiment_cv = experiment_controlled_vocabularies[@experiment_id]
       instance_eval(&block) if block_given?
     end
     
     
     def indir(d)
+      @indir = d
     end
 
 
     def outdir(d)
+      @outdir = d
+    end
+
+
+    def first_year
+      start_year
+    end
+
+
+    def last_year
+      end_year
+    end
+
+
+    def method_missing(method_sym, *args, &block)
+      return super if (!args.empty? && !block_given?)
+      # we assume we should get a key from our CV hash
+      if @experiment_cv.has_key? method_sym.to_s
+        return @experiment_cv[method_sym.to_s]
+      else
+        super # not a hash key, so treat as a non-existing method
+      end
     end
   end
   
