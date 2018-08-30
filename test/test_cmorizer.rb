@@ -13,7 +13,8 @@ class CMORizerTests < Minitest::Test
   
   
   def test_project_can_eval_experiment_id
-    src_txt = <<~'EOFHEREDOC'
+    src_txt = <<~EOFHEREDOC
+      cmip6_cvs_dir "#{__dir__}/fixtures/CV"
       experiment_id "highres-future" do
         indir ""
         outdir ""
@@ -26,7 +27,7 @@ class CMORizerTests < Minitest::Test
   
   
   def test_cmorizations_can_have_multiple_cmip_tables
-    src_txt = <<~'EOFHEREDOC'
+    src_txt = <<~EOFHEREDOC
       cmorize tos_day => [tos_Oday, tos_Omon, tos_Odec]
       cmorize prsn_day => [prsn_3hr, prsn_day, prsn_ImonAnt, prsn_ImonGre, prsn_Amon, prsn_Omon]
     EOFHEREDOC
@@ -37,7 +38,7 @@ class CMORizerTests < Minitest::Test
   
   
   def test_cmorization_can_have_empty_block
-    src_txt = <<~'EOFHEREDOC'
+    src_txt = <<~EOFHEREDOC
       cmorize omldamax_day => [omldamax_Oday] do
       end
     EOFHEREDOC
@@ -48,7 +49,7 @@ class CMORizerTests < Minitest::Test
   
   
   def test_cmorization_can_have_KtodegC_unit_step_in_block
-    src_txt = <<~'EOFHEREDOC'
+    src_txt = <<~EOFHEREDOC
       cmorize tso_3hrPt => [tos_3hr] do
         unit 'K' => 'degC'
       end

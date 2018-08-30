@@ -1,9 +1,11 @@
 require_relative "step.rb"
+require_relative "controlled_vocabularies.rb"
 
 module CMORizer
   class Project
     def initialize(src_txt)
       @cmorization_steps_chains = []
+      @years_step = 1
       @eval_mode = true
       instance_eval(src_txt, src_txt)
       @eval_mode = false
@@ -17,11 +19,21 @@ module CMORizer
     end
   
   
-    def experiment_id(*args, &block)
-      Experiment.new(*args, &block)
+    def cmip6_cvs_dir(d)
+      d = File.expand_path d
+      @controlled_vocabularies = ControlledVocabularies.new_from_dir d
+    end
+    
+    
+    def merge_years_step(s)
+      @years_step = s
     end
 
 
+    def experiment_id(*args, &block)
+    end
+  
+  
     # "fesom name"_"available frequency" => ["variable_id"_"CMIP table_id"]
     def cmorize(*args, &block)
       hash = args.first
