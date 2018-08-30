@@ -31,6 +31,23 @@ module CMORizer
         @cmorization_steps_chains << StepsChain.new(src, r, &block)
       end
     end
+    
+    
+    def self.year_ranges(first:, last:, step:)
+      # this looks too complicated, but I am tired and it passes the tests
+      ranges = []
+      range_first = first
+      range_last = first+step-1
+      while range_last <= last do
+        ranges << [range_first, range_last]
+        range_first += step
+        range_last += step
+      end
+      if(range_first <= last && range_last > last)
+        ranges << [range_first, last]
+      end
+      ranges
+    end
 
 
     private
