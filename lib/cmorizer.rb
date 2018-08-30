@@ -80,7 +80,7 @@ module CMORizer
   end
 
 
-  class Experiment
+  class Experiment    
     def initialize(experiment_id, experiment_controlled_vocabularies, &block)
       @experiment_id = experiment_id
       raise "experiment_id #{@experiment_id} does not exist in controlled vocabularies" unless experiment_controlled_vocabularies.has_key?(@experiment_id)
@@ -90,12 +90,18 @@ module CMORizer
     
     
     def indir(d)
-      @indir = d
+      @indir = File.expand_path d # DSL setter
+      def self.indir # redefine to behave as getter
+        @indir
+      end
     end
 
 
     def outdir(d)
-      @outdir = d
+      @outdir = File.expand_path d # DSL setter
+      def self.outdir # redefine to behave as getter
+        @outdir
+      end
     end
 
 
