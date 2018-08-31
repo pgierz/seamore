@@ -15,13 +15,23 @@ module CMORizer
   
     def execute
       @experiments.each do |experiment|
-        year_ranges = Project.year_ranges(first: experiment.first_year.to_i, last: experiment.last_year.to_i, step: @years_step)
-      
+        experiment_year_ranges = Project.year_ranges(first: experiment.first_year.to_i, last: experiment.last_year.to_i, step: @years_step)
+        fesom_output_files = FesomOutputDir.new(experiment.indir).variable_files
+        
         @cmorization_steps_chains.each do |chain|
-          year_ranges.each do |year_range|
+          experiment_year_ranges.each do |year_range|
+
             # fetch files for chain.fesom_variable_description + year_range
-            fesom_files = [] #!!
-            chain.execute(fesom_files)
+            filtered_fesom_files =
+              fesom_output_files.select do |ff|
+                if year_range.first <= ff.year && ff.year <= year_range.last
+                  if "#{ff.variable_id}_#{ff.frequency}" == chain.fesom_variable_description
+                    true
+                  end
+                end
+              end
+
+            chain.execute(filtered_fesom_files)
           end        
         end
       end
@@ -128,6 +138,8 @@ module CMORizer
   
   
   class StepsChain
+    attr_reader :fesom_variable_description
+    
     def initialize(from, to, &block)
       @fesom_variable_description = from
       @cmor_variable_description = to
