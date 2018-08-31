@@ -18,9 +18,9 @@ module CMORizer
         # some steps might be able to process each file as soon as it arrives
         # others, like merge, might require the maximum number of files to be available
         if can_process?(number_of_eventual_input_years)
-          sortet_years = @available_inputs.keys.sort
-          sortet_inputs = @available_inputs.values_at(*sortet_years)
-          results = process(sortet_inputs)
+          sorted_years = @available_inputs.keys.sort
+          sorted_inputs = @available_inputs.values_at(*sorted_years)
+          results = process(sorted_inputs)
           if results
             results.each_with_index do |r,i|
               @next_step.add_input(r, sorted_years[i], number_of_eventual_input_years)          
@@ -33,6 +33,7 @@ module CMORizer
       
       def process(inputs)
         puts "\t#{self.class} #{inputs.join(', ')} next:#{@next_step.class}"
+        inputs
       end
     end
     
