@@ -1,5 +1,7 @@
 require_relative "step.rb"
 require_relative "controlled_vocabularies.rb"
+require_relative "fesom_output_dir.rb"
+
 
 module CMORizer
   class Project

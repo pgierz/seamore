@@ -1,9 +1,9 @@
-require_relative "../lib/fesom_output_dir.rb"
+require_relative "../lib/fesom_file.rb"
 
 require "minitest/autorun"
 
 
-class FesomOutputDirTests < Minitest::Test
+class FesomFileTests < Minitest::Test
   def setup
     volo_cdl = <<~'EOFHEREDOC'
     netcdf volo_fesom_19510101 {
