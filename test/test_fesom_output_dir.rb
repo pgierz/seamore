@@ -44,7 +44,7 @@ class FesomOutputDirTests < Minitest::Test
     }
     EOFHEREDOC
     
-    @volo = FesomOutputFile.new variable_id:"volo", year:"1951", month:"01", day:"01", path:nil, cdl_data:volo_cdl
+    @volo = FesomYearlyOutputFile.new variable_id:"volo", year:"1951", month:"01", day:"01", path:nil, cdl_data:volo_cdl
   end
   
   

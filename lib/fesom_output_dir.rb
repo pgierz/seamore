@@ -4,11 +4,11 @@ class FesomOutputDir
 
   def initialize(d)
     eliglible_files = Dir[File.join(d,"*")].grep(/\/(?<variable_id>\w+)_fesom_\d{8}\.nc\Z/)
-    
+
     @variable_files = []
     eliglible_files.each do |f|
       /(?<variable_id>\w+)_fesom_(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})\.nc\Z/ =~ File.basename(f)
-      @variable_files << FesomOutputFile.new(variable_id: variable_id, year: year, month: month, day: day, path: f)
+      @variable_files << FesomYearlyOutputFile.new(variable_id: variable_id, year: year, month: month, day: day, path: f)
     end    
     
     @variable_files.sort!
@@ -60,7 +60,7 @@ class FesomVariable
 end
 
 
-class FesomOutputFile
+class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
   attr_reader :variable_id, :approx_interval, :frequency, :unit, :time_method
 
   def initialize(variable_id:, year:, month:, day:, path:, cdl_data: nil)
@@ -69,14 +69,14 @@ class FesomOutputFile
     if path
       begin
         cdl = %x(ncdump -h #{path})
-        @frequency = FesomOutputFile.frequency_from_cdl cdl
-        @unit = FesomOutputFile.unit_from_cdl variable_id, cdl
+        @frequency = FesomYearlyOutputFile.frequency_from_cdl cdl
+        @unit = FesomYearlyOutputFile.unit_from_cdl variable_id, cdl
       rescue RuntimeError => e
         raise "file #{path}: #{e.message}"
       end
     elsif cdl_data
-      @frequency = FesomOutputFile.frequency_from_cdl cdl_data
-      @unit = FesomOutputFile.unit_from_cdl variable_id, cdl_data
+      @frequency = FesomYearlyOutputFile.frequency_from_cdl cdl_data
+      @unit = FesomYearlyOutputFile.unit_from_cdl variable_id, cdl_data
     end
     @approx_interval = Frequency.for_name(@frequency).approx_interval
     
