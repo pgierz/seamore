@@ -61,11 +61,12 @@ end
 
 
 class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
-  attr_reader :variable_id, :approx_interval, :frequency, :unit, :time_method
+  attr_reader :variable_id, :year, :approx_interval, :frequency, :unit, :time_method
 
   def initialize(variable_id:, year:, month:, day:, path:, cdl_data: nil)
     raise "can not have both set: a path and CDL data" if (path && cdl_data)
     @variable_id = variable_id
+    @year = year.to_i
     if path
       begin
         cdl = %x(ncdump -h #{path})
