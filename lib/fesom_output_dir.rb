@@ -68,8 +68,9 @@ class FesomOutputFile
     @variable_id = variable_id
     if path
       begin
-        @frequency = FesomOutputFile.frequency_from_cdl %x(ncdump -h #{path})
-        @unit = FesomOutputFile.unit_from_cdl variable_id, %x(ncdump -h #{path})
+        cdl = %x(ncdump -h #{path})
+        @frequency = FesomOutputFile.frequency_from_cdl cdl
+        @unit = FesomOutputFile.unit_from_cdl variable_id, cdl
       rescue RuntimeError => e
         raise "file #{path}: #{e.message}"
       end
