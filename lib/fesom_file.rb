@@ -1,5 +1,6 @@
 require_relative 'frequency.rb'
 
+
 class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
   attr_reader :variable_id, :year, :path, :approx_interval, :frequency, :unit, :time_method
 

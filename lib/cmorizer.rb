@@ -1,6 +1,7 @@
 require_relative "step.rb"
 require_relative "controlled_vocabularies.rb"
 require_relative "fesom_output_dir.rb"
+require_relative "processable_file.rb"
 
 
 module CMORizer
@@ -33,6 +34,7 @@ module CMORizer
                 end
               end
 
+            processable_files = filtered_fesom_files.map {|ff| ProcessableFile.new ff.path}
             chain.execute(filtered_fesom_files)
           end        
         end

@@ -1,3 +1,6 @@
+require_relative "processable_file.rb"
+
+
 module CMORizer
   module Step
     class BaseStep
