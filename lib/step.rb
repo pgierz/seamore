@@ -23,7 +23,7 @@ module CMORizer
           results = process(sorted_inputs)
           if results
             results.each_with_index do |r,i|
-              @next_step.add_input(r, sorted_years[i], number_of_eventual_input_years)          
+              @next_step.add_input(r, sorted_years[i], number_of_eventual_input_years) if @next_step
             end
           end
           @available_inputs.clear
@@ -32,7 +32,7 @@ module CMORizer
             
       
       def process(inputs)
-        puts "\t#{self.class} #{inputs.join(', ')} next:#{@next_step.class}"
+        puts "\t#{self.class} #{inputs.join(', ')}"
         inputs
       end
     end
