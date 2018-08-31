@@ -4,11 +4,6 @@ require_relative "processable_file.rb"
 module CMORizer
   module Step
     class BaseStep
-      def execute
-        puts "\t#{self.class}"
-      end
-    
-
       def initialize(next_step)
         @next_step = next_step
         @available_inputs = {}
