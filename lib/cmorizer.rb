@@ -34,7 +34,6 @@ module CMORizer
                 end
               end
 
-            processable_files = filtered_fesom_files.map {|ff| ProcessableFile.new ff.path}
             chain.execute(filtered_fesom_files)
           end        
         end
@@ -167,7 +166,7 @@ module CMORizer
       puts "#{self.class} #{@fesom_variable_description} ==> #{@cmor_variable_description}"
       # fill the first step with all the passed files
       fesom_files.each do |f|
-        @steps.first.add_input(f, f.year, fesom_files.size)
+        @steps.first.add_input(ProcessableFile.new(f.path), [f.year], fesom_files.size)
       end
     end
 
