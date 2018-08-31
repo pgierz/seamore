@@ -15,18 +15,21 @@ module CMORizer
       end
 
 
-      def add_input(input, year, number_of_eventual_input_years)
-        @available_inputs[year] = input
+      def add_input(input, years, number_of_eventual_input_years)
+        @available_inputs[years] = input
         
         # some steps might be able to process each file as soon as it arrives
         # others, like merge, might require the maximum number of files to be available
         if can_process?(number_of_eventual_input_years)
-          sorted_years = @available_inputs.keys.sort
-          sorted_inputs = @available_inputs.values_at(*sorted_years)
-          results = process(sorted_inputs)
-          if results
-            results.each_with_index do |r,i|
-              @next_step.add_input(r, sorted_years[i], number_of_eventual_input_years) if @next_step
+          sorted_years_arrays = @available_inputs.keys.sort
+          sorted_inputs = @available_inputs.values_at(*sorted_years_arrays)
+
+          sorted_years = sorted_years_arrays.flatten
+          results, result_years = process(sorted_inputs, sorted_years)
+          
+          if results && @next_step
+            results.each_index do |i|
+              @next_step.add_input(results[i], [result_years[i]], number_of_eventual_input_years)
             end
           end
           @available_inputs.clear
@@ -34,9 +37,9 @@ module CMORizer
       end
             
       
-      def process(inputs)
-        puts "\t#{self.class} #{inputs.join(', ')}"
-        inputs
+      def process(inputs, years)
+        puts "\t#{self.class} #{inputs.map{|f| File.basename(f.path)}.join(', ')}"
+        return inputs, years
       end
     end
     

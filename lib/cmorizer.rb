@@ -163,7 +163,7 @@ module CMORizer
     
     
     def execute(fesom_files)
-      puts "#{self.class} #{@fesom_variable_description} ==> #{@cmor_variable_description}"
+      puts "#{@fesom_variable_description} ==> #{@cmor_variable_description}"
       # fill the first step with all the passed files
       fesom_files.each do |f|
         @steps.first.add_input(ProcessableFile.new(f.path), [f.year], fesom_files.size)
