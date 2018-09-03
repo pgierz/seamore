@@ -69,9 +69,18 @@ module CMORizer
 end
 
 
+require_relative "file_command.rb"
 module CMORizer
   module Step
     class MERGEFILES < JoinedBaseStep
+      def process(inputs, years)        
+        infiles = inputs.map{|f| f.path}
+        ofile = outpath(*infiles)
+        
+        CDO_MERGE_cmd.new.run(infiles, ofile)
+        
+        return [ProcessableFile.new(ofile)], years
+      end
     end
     
     
