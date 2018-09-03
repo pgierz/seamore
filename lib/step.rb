@@ -36,6 +36,20 @@ module CMORizer
         puts "\t#{self.class} #{inputs.map{|f| File.basename(f.path)}.join(', ')}"
         return inputs, years
       end
+      
+      
+      def outpath(*inpaths)
+        outdir = File.dirname(inpaths.first)
+        step_suffix = self.class.to_s.split('::').last
+        outname = 
+          if inpaths.size == 1
+            "#{File.basename(inpaths.last)}.#{step_suffix}"
+          else
+            "#{File.basename(inpaths.first, ".*")}--#{File.basename(inpaths.last)}.#{step_suffix}"
+          end
+        
+        File.join outdir, outname
+      end
     end
     
     
