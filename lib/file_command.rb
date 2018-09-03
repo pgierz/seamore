@@ -3,12 +3,12 @@ require 'fileutils'
 
 class FileCommand
   def run(*infiles, outfile)
-    execute_atomically(*infiles, outfile, cmd_txt(*infiles, outfile))
+    execute_atomically(*infiles, outfile)
   end
   
   
   private
-  def execute_atomically(*infiles, outfile, cmd_txt)
+  def execute_atomically(*infiles, outfile)
     outfile_inprogress = "#{outfile}.inprogress"
 
     raise "file exists: #{outfile_inprogress}" if File.exist?(outfile_inprogress)
