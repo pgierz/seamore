@@ -1,4 +1,3 @@
-require_relative "processable_file.rb"
 
 
 module CMORizer
@@ -33,7 +32,7 @@ module CMORizer
             
       
       def process(inputs, years)
-        puts "\t#{self.class} #{inputs.map{|f| File.basename(f.path)}.join(', ')}"
+        puts "\t#{self.class} #{inputs.join(', ')}"
         return inputs, years
       end
       
@@ -74,12 +73,11 @@ module CMORizer
   module Step
     class MERGEFILES < JoinedBaseStep
       def process(inputs, years)        
-        infiles = inputs.map{|f| f.path}
-        ofile = outpath(*infiles)
+        ofile = outpath(*inputs)
         
-        CDO_MERGE_cmd.new.run(infiles, ofile)
+        CDO_MERGE_cmd.new.run(inputs, ofile)
         
-        return [ProcessableFile.new(ofile)], years
+        return [ofile], years
       end
     end
     

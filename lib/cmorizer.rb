@@ -1,7 +1,6 @@
 require_relative "step.rb"
 require_relative "controlled_vocabularies.rb"
 require_relative "fesom_output_dir.rb"
-require_relative "processable_file.rb"
 
 
 module CMORizer
@@ -166,7 +165,7 @@ module CMORizer
       puts "#{@fesom_variable_description} ==> #{@cmor_variable_description}"
       # fill the first step with all the passed files
       fesom_files.each do |f|
-        @steps.first.add_input(ProcessableFile.new(f.path), [f.year], fesom_files.size)
+        @steps.first.add_input(f.path, [f.year], fesom_files.size)
       end
     end
 
