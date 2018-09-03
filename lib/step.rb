@@ -19,7 +19,8 @@ module CMORizer
           sorted_inputs = @available_inputs.values_at(*sorted_years_arrays)
 
           sorted_years = sorted_years_arrays.flatten
-          results, result_years = process(sorted_inputs, sorted_years)
+          opath = create_outpath(*sorted_inputs)
+          results, result_years = process(sorted_inputs, sorted_years, opath)
           
           if results && @next_step
             results.each_index do |i|
@@ -31,13 +32,13 @@ module CMORizer
       end
             
       
-      def process(inputs, years)
-        puts "\t#{self.class} #{inputs.join(', ')}"
+      def process(inputs, years, opath)
+        puts "\t#{self.class} #{inputs.join(', ')} #{opath}"
         return inputs, years
       end
       
       
-      def outpath(*inpaths)
+      def create_outpath(*inpaths)
         outdir = File.dirname(inpaths.first)
         step_suffix = self.class.to_s.split('::').last
         outname = 
@@ -72,12 +73,10 @@ require_relative "file_command.rb"
 module CMORizer
   module Step
     class MERGEFILES < JoinedBaseStep
-      def process(inputs, years)        
-        ofile = outpath(*inputs)
+      def process(inputs, years, opath)
+        CDO_MERGE_cmd.new.run(inputs, opath)
         
-        CDO_MERGE_cmd.new.run(inputs, ofile)
-        
-        return [ofile], years
+        return [opath], years
       end
     end
     
@@ -103,12 +102,10 @@ module CMORizer
     
 
     class TIME_SECONDS_TO_DAYS < IndividualBaseStep
-      def process(inputs, years)        
-        ofile = outpath(*inputs)
+      def process(inputs, years, opath)        
+        CDO_SET_T_UNITS_DAYS_cmd.new.run(inputs, opath)
         
-        CDO_SET_T_UNITS_DAYS_cmd.new.run(inputs, ofile)
-        
-        return [ofile], years
+        return [opath], years
       end
 
     end
