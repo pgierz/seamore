@@ -36,3 +36,10 @@ class CDO_MERGE_cmd < FileCommand
     %Q(cdo mergetime #{infiles.join(' ')} #{outfile})
   end
 end
+
+
+class CDO_SET_T_UNITS_DAYS_cmd < FileCommand
+  def cmd_txt(*infiles, outfile)
+    %Q(cdo settunits,days #{infiles.join(' ')} #{outfile})
+  end
+end

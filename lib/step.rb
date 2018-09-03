@@ -103,6 +103,14 @@ module CMORizer
     
 
     class TIME_SECONDS_TO_DAYS < IndividualBaseStep
+      def process(inputs, years)        
+        ofile = outpath(*inputs)
+        
+        CDO_SET_T_UNITS_DAYS_cmd.new.run(inputs, ofile)
+        
+        return [ofile], years
+      end
+
     end
   end
 end
