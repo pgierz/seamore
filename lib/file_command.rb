@@ -42,6 +42,20 @@ class OutofplaceCommand < FileCommand
 end
 
 
+class InplaceCommand < FileCommand
+  def inplace?
+    true
+  end  
+
+
+  def cmd_txt(infiles, outfile)
+    raise "can handle only 1 file in #{self.class} but got #{infiles.size} #{infiles.inspect}" if infiles.size != 1
+    FileUtils.mv infiles[0], outfile
+    cmd_txt_inplace(outfile)
+  end
+end
+
+
 class CDO_MERGE_cmd < OutofplaceCommand
   def cmd_txt_outofplace(infiles, outfile)
     %Q(cdo mergetime #{infiles.join(' ')} #{outfile})
@@ -52,5 +66,14 @@ end
 class CDO_SET_T_UNITS_DAYS_cmd < OutofplaceCommand
   def cmd_txt_outofplace(infiles, outfile)
     %Q(cdo settunits,days #{infiles.join(' ')} #{outfile})
+  end
+end
+
+
+class FESOM_MEAN_TIMESTAMP_ADJUST_cmd < InplaceCommand
+  def cmd_txt_inplace(file)
+    bin = ENV["FESOM_MEAN_TIMESTAMP_ADJUST_BIN"]
+    bin = "fesom_mean_timestamp_adjust" unless bin # env not set, assume binary is available via PATH
+    %Q(#{bin} #{file})
   end
 end

@@ -94,6 +94,11 @@ module CMORizer
     
     
     class FESOM_MEAN_TIMESTAMP_ADJUST < IndividualBaseStep
+      def process(inputs, years, opath)      
+        FESOM_MEAN_TIMESTAMP_ADJUST_cmd.new.run(inputs, opath)
+        
+        return [opath], years
+      end
     end
     
     
