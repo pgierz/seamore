@@ -6,6 +6,7 @@ require_relative "../lib/data_request.rb"
 require_relative "../lib/fesom_output_dir.rb"
 require_relative "../lib/fesom_possible_var.rb"
 require_relative "../lib/matcher.rb"
+require_relative "../lib/controlled_vocabularies.rb"
 
 ENV['GLI_DEBUG']='true' # set environment GLI_DEBUG=true to show the full backtrace
 
@@ -19,8 +20,8 @@ arguments :strict
 
 desc 'Print data request variables for json tables at PATH'
 arg "tables_dir"
-command :print_request do |c|  
-  c.action do |global_opts,opts,args|    
+command :print_request do |c|
+  c.action do |global_opts,opts,args|
     puts DataRequest.new_from_tables_dir args.first
   end
 end
@@ -28,16 +29,16 @@ end
 
 desc 'Print FESOM output variables available at PATH'
 arg "FESOM_output_dir"
-command :print_available do |c|  
-  c.action do |global_opts,opts,args|    
+command :print_available do |c|
+  c.action do |global_opts,opts,args|
     puts FesomOutputDir.new(args.first)
   end
 end
 
 
 desc 'Print variables FESOM (r550) could possibly produce'
-command :print_possible do |c|  
-  c.action do |global_opts,opts,args|    
+command :print_possible do |c|
+  c.action do |global_opts,opts,args|
     vars = FesomPossibleVar.create_from_fortran_code(FESOM_VARIABLE_INITIALIZATION_CODE)
     vars.each {|v| puts v}
   end
@@ -47,8 +48,8 @@ end
 desc 'Print matches of FESOM output variables and a given data request'
 arg "tables_dir"
 arg "FESOM_output_dir"
-command :match_available do |c|  
-  c.action do |global_opts,opts,args|    
+command :match_available do |c|
+  c.action do |global_opts,opts,args|
     Matcher.print_matching_available(request_dir: args[0], output_dir: args[1])
   end
 end
@@ -56,9 +57,18 @@ end
 
 desc 'Print matches of variables FESOM could possibly produce and a given data request'
 arg "tables_dir"
-command :match_possible do |c|  
-  c.action do |global_opts,opts,args|    
+command :match_possible do |c|
+  c.action do |global_opts,opts,args|
     Matcher.print_matching_possible(request_dir: args[0])
+  end
+end
+
+
+desc 'Print experiment ids from controlled vocabulary file'
+arg "file"
+command :print_experiment_ids do |c|
+  c.action do |global_opts,opts,args|
+    ControlledVocabularies.print_experiment_ids args[0]
   end
 end
 
