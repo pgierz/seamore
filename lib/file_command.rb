@@ -77,3 +77,16 @@ class FESOM_MEAN_TIMESTAMP_ADJUST_cmd < InplaceCommand
     %Q(#{bin} #{file})
   end
 end
+
+
+class NCATTED_ADD_GLOBAL_ATTRIBUTES_cmd < OutofplaceCommand
+  def initialize(attributes_hash)
+    @attributes = attributes_hash
+  end
+
+  def cmd_txt_outofplace(infiles, outfile)
+    att_args = ""
+    @attributes.each {|att_name, att_txt| att_args += %Q( -a #{att_name},global,o,c,"#{att_txt}") }
+    %Q(ncatted -h#{att_args} #{outfile})
+  end
+end
