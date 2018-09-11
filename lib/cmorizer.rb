@@ -33,7 +33,7 @@ module CMORizer
                 end
               end
 
-            chain.execute(filtered_fesom_files)
+            chain.execute(filtered_fesom_files, experiment)
           end        
         end
       end
@@ -161,8 +161,12 @@ module CMORizer
     end
     
     
-    def execute(fesom_files)
+    def execute(fesom_files, experiment)
       puts "#{@fesom_variable_description} ==> #{@cmor_variable_description}"
+      
+      # offer info about the current experiment to all step objects
+      @steps.each {|s| s.set_experiment(experiment)}
+      
       # fill the first step with all the passed files
       fesom_files.each do |f|
         @steps.first.add_input(f.path, [f.year], fesom_files.size)

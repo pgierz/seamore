@@ -7,6 +7,11 @@ module CMORizer
         @next_step = next_step
         @available_inputs = {}
       end
+      
+      
+      def set_experiment(experiment)
+        @experiment = experiment
+      end
 
 
       def add_input(input, years, number_of_eventual_input_years)
