@@ -18,11 +18,11 @@ class GlobalAttributesBuilder
   end
   
   
-  def set_variable_info(id:, frequency:, table_id:, table_realm:)
+  def set_variable_info(id:, frequency:, table_id:, realms:)
     @variable_info = OpenStruct.new(:id => id,
                                     :frequency => frequency,
                                     :table_id => table_id,
-                                    :table_realm => table_realm)
+                                    :realms => realms)
   end
   
   
@@ -73,7 +73,7 @@ class GlobalAttributes
     @attributes['physics_index'] = "1"
     @attributes['product'] = "model-output"
     @attributes['realization_index'] = "1"
-    @attributes['realm'] = variable_info.table_realm
+    @attributes['realm'] = variable_info.realms.join(' ')
     @attributes['source'] = grid_info.source_id
     @attributes['source_id'] = @attributes['source']
     @attributes['source_type'] = "AOGCM"
