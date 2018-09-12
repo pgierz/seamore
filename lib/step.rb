@@ -9,8 +9,12 @@ module CMORizer
       end
       
       
-      def set_experiment(experiment)
+      def set_info(experiment:, variable_id:, frequency:, table_id:, realms:)
         @experiment = experiment
+        @variable_id = variable_id
+        @frequency = frequency
+        @table_id = table_id
+        @realms = realms
       end
 
 

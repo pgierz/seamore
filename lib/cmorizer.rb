@@ -27,13 +27,13 @@ module CMORizer
             filtered_fesom_files =
               fesom_output_files.select do |ff|
                 if year_range.first <= ff.year && ff.year <= year_range.last
-                  if "#{ff.variable_id}_#{ff.frequency}" == chain.fesom_variable_description
+                  if ff.variable_id == chain.fesom_variable_name && ff.frequency == chain.fesom_available_frequency
                     true
                   end
                 end
               end
 
-            chain.execute(filtered_fesom_files, experiment)
+            chain.execute(filtered_fesom_files, experiment, @data_request)
           end        
         end
       end
@@ -146,11 +146,14 @@ module CMORizer
   
   
   class StepsChain
-    attr_reader :fesom_variable_description
+    attr_reader :fesom_variable_name, :fesom_available_frequency
     
-    def initialize(from, to, &block)
-      @fesom_variable_description = from
-      @cmor_variable_description = to
+    # fesom_variable_description: "fesom name"_"available frequency"
+    # cmor_variable_description: "variable_id"_"CMIP table_id"
+    def initialize(fesom_variable_description, cmor_variable_description, &block)
+      @fesom_variable_name, @fesom_available_frequency = fesom_variable_description.split('_')
+      @cmor_variable_id, @cmor_table_id = cmor_variable_description.split('_')
+
       @step_classes = []
       @eval_mode = true
       instance_eval(&block) if block_given?
@@ -167,11 +170,17 @@ module CMORizer
     end
     
     
-    def execute(fesom_files, experiment)
-      puts "#{@fesom_variable_description} ==> #{@cmor_variable_description}"
+    def execute(fesom_files, experiment, data_request)
+      puts "#{@fesom_variable_name}_#{@fesom_available_frequency} ==> #{@cmor_variable_id}_#{@cmor_table_id}"
       
-      # offer info about the current experiment to all step objects
-      @steps.each {|s| s.set_experiment(experiment)}
+      # offer info about the current experiment and variable to all step objects
+      data_request_variable = data_request.find @cmor_variable_id
+      frequency = data_request_variable.frequency_in_table(@cmor_table_id)
+      @steps.each {|s| s.set_info(experiment: experiment,
+                                  variable_id: data_request_variable.variable_id,
+                                  frequency: frequency,
+                                  table_id: @cmor_table_id,
+                                  realms: data_request_variable.realms)}
       
       # fill the first step with all the passed files
       fesom_files.each do |f|
