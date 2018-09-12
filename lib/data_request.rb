@@ -119,20 +119,21 @@ end
 
 
 class DataRequestVariable
-  attr_reader :variable_id, :unit, :description, :time_method, :frequencies
+  attr_reader :variable_id, :unit, :description, :time_method, :frequencies, :realms
 
   def self.new_from_table_var_entry(var_entry)
-    DataRequestVariable.new(var_entry.variable_id, var_entry.unit, var_entry.description, var_entry.time_method, var_entry.table, var_entry.frequency_name)
+    DataRequestVariable.new(var_entry.variable_id, var_entry.unit, var_entry.description, var_entry.time_method, var_entry.table, var_entry.frequency_name, var_entry.realms)
   end
 
 
-  def initialize(variable_id, unit, description, time_method, table, frequency)
+  def initialize(variable_id, unit, description, time_method, table, frequency, realms)
     @variable_id = variable_id
     @unit = unit
     @description = description
     @time_method = time_method
     @tables = [table]
     @frequencies = [frequency]
+    @realms = realms
   end
   
   
@@ -185,6 +186,11 @@ class TableVarEntry
 
   def description
      @data['comment']
+  end
+  
+  
+  def realms
+    @data['modeling_realm'].split(' ')
   end
 end
 
