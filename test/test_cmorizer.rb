@@ -14,6 +14,7 @@ class CMORizerTests < Minitest::Test
   
   def test_project_can_eval_experiment_id
     src_txt = <<~EOFHEREDOC
+      cmip6_cmor_tables "01.00.27", "#{__dir__}/fixtures"
       cmip6_cvs_dir "#{__dir__}/fixtures/CV"
       experiment_id "highres-future" do
         indir ""

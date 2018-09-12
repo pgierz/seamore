@@ -40,6 +40,12 @@ module CMORizer
     end
   
   
+    def cmip6_cmor_tables(version, dir)
+      @data_request = DataRequest.new_from_tables_dir(File.expand_path dir)
+      raise "data request at #{dir} has version #{@data_request.version} but requested version is #{version}" unless version == @data_request.version
+    end
+  
+  
     def cmip6_cvs_dir(d)
       d = File.expand_path d
       @controlled_vocabularies = ControlledVocabularies.new_from_dir d
