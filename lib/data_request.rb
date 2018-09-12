@@ -148,6 +148,12 @@ class DataRequestVariable
   end
   
   
+  def frequency_in_table(table_id)
+    i = table_ids.index(table_id)
+    @frequencies[i]
+  end
+  
+  
   def to_s
     "#{variable_id} '#{unit}' [#{frequencies.join(' ')}] [#{@tables.map{|t| t.table_id}.join(' ')}]"
   end
