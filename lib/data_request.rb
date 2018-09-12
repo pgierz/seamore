@@ -82,6 +82,11 @@ class DataRequest
   end
 
 
+  def find(variable_id)
+    @variables.find {|v| variable_id == v.variable_id}
+  end
+
+
   def variable_ids
     @variables.map {|v| v.variable_id}
   end

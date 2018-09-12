@@ -46,6 +46,12 @@ class DataRequestTests < Minitest::Test
     DataRequest.new(@datarequest_paths)
   end
   
+
+  def test_finds_variable_tos
+    var = DataRequest.new(@datarequest_paths).find("tos")
+    assert var
+    assert_equal "tos", var.variable_id
+  end  
 end
 
 
