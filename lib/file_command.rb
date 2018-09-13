@@ -90,3 +90,16 @@ class NCATTED_ADD_GLOBAL_ATTRIBUTES_cmd < InplaceCommand
     %Q(ncatted -h#{att_args} #{file})
   end
 end
+
+
+class NCATTED_DELETE_GLOBAL_ATTRIBUTES_cmd < InplaceCommand
+  def initialize(attribute_names)
+    @attribute_names = attribute_names
+  end
+
+  def cmd_txt_inplace(file)
+    att_args = ""
+    @attribute_names.each {|n| att_args += %Q( -a #{n},global,d,,)}
+    %Q(ncatted -h#{att_args} #{file})
+  end
+end
