@@ -116,3 +116,18 @@ class NCATTED_SET_VARIABLE_DESCRIPTION_cmd < InplaceCommand
     %Q(ncatted -h -a description,#{@var_name},o,c,"#{@description}" #{file})
   end
 end
+
+
+class NCRENAME_RENAME_VARIABLE_cmd < InplaceCommand
+  def initialize(old_name, new_name)
+    @old_name, @new_name = old_name, new_name
+  end
+
+  def cmd_txt_inplace(file)
+    if @old_name == @new_name
+      %Q(:) # shell noop as ncrename fails with an error if the new name is the same as the old name
+    else
+      %Q(ncrename -h -v #{@old_name},#{@new_name} #{file})
+    end
+  end
+end
