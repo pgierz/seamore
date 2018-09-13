@@ -63,7 +63,7 @@ module CMORizer
 
 
     def experiment_id(*args, &block)
-      @experiments << Experiment.new(args.shift, @controlled_vocabularies['experiment_id'], &block)
+      @experiments << Experiment.new(@source_id, args.shift, @data_request.version, @controlled_vocabularies, &block)
     end
   
   
@@ -103,12 +103,19 @@ module CMORizer
   end
 
 
-  class Experiment    
-    def initialize(experiment_id, experiment_controlled_vocabularies, &block)
+  class Experiment
+    attr_reader :variant_label, :source_id, :nominal_resolution, :grid_txt, :data_request_version
+    
+    def initialize(source_id, experiment_id, data_request_version, controlled_vocabularies, &block)
+      @source_id = source_id
       @experiment_id = experiment_id
-      raise "experiment_id #{@experiment_id} does not exist in controlled vocabularies" unless experiment_controlled_vocabularies.has_key?(@experiment_id)
-      @experiment_cv = experiment_controlled_vocabularies[@experiment_id]
+      @data_request_version = data_request_version
+      @experiment_cv = controlled_vocabularies['experiment_id'][@experiment_id]
+      raise "experiment_id #{@experiment_id} does not exist in controlled vocabularies" unless @experiment_cv
       instance_eval(&block) if block_given?
+      @variant_label = "r1i1p1f002"
+      @nominal_resolution = controlled_vocabularies['source_id'][source_id]['model_component']['ocean']['native_nominal_resolution']
+      @grid_txt = controlled_vocabularies['source_id'][source_id]['model_component']['ocean']['description']
     end
     
     
