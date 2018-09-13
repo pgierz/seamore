@@ -1,4 +1,4 @@
-
+require 'fileutils'
 
 module CMORizer
   module Step
@@ -41,9 +41,26 @@ module CMORizer
       end
             
       
-      def process(inputs, years, opath)
+      private def process(inputs, years, opath) # pipe input files through all our FileCommand objects
         puts "\t#{self.class} #{inputs.join(', ')} #{opath}"
-        return inputs, years
+        *commands = file_commands
+        command_inputs = inputs
+        command_opath = nil
+        commands.each_with_index do |cmd, i|
+          command_opath = "#{opath}.#{i}"
+          cmd.run(command_inputs, command_opath)
+          command_inputs = [command_opath]
+        end
+        
+        raise "file exists: #{opath}" if File.exist? opath
+        FileUtils.mv command_opath, opath
+
+        return [opath], years
+      end
+            
+      
+      def file_commands
+        raise "overwrite with concrete implementation which returns one or many FileCommand objects"
       end
       
       
@@ -83,10 +100,8 @@ require_relative "global_attributes.rb"
 module CMORizer
   module Step
     class MERGEFILES < JoinedBaseStep
-      def process(inputs, years, opath)
-        CDO_MERGE_cmd.new.run(inputs, opath)
-        
-        return [opath], years
+      def file_commands
+        CDO_MERGE_cmd.new        
       end
     end
     
@@ -97,11 +112,11 @@ module CMORizer
 
     class APPLY_CMOR_FILENAME < IndividualBaseStep
     end
-
-
+    
+    
     class APPLY_GLOBAL_ATTRIBUTES < IndividualBaseStep
-      def process(inputs, years, opath)
         #delete_global_attributes %w(output_schedule history CDO CDI Conventions)
+      def file_commands
 
         builder = GlobalAttributesBuilder.new
         builder.set_experiment_info(id: @experiment.experiment_id,
@@ -123,18 +138,14 @@ module CMORizer
         global_attributes = ga.attributes
 
         # apply global attributes
-        NCATTED_ADD_GLOBAL_ATTRIBUTES_cmd.new(global_attributes).run(inputs, opath)
-                
-        return [opath], years
+        NCATTED_ADD_GLOBAL_ATTRIBUTES_cmd.new(global_attributes)
       end
     end
     
     
     class FESOM_MEAN_TIMESTAMP_ADJUST < IndividualBaseStep
-      def process(inputs, years, opath)      
-        FESOM_MEAN_TIMESTAMP_ADJUST_cmd.new.run(inputs, opath)
-        
-        return [opath], years
+      def file_commands
+        FESOM_MEAN_TIMESTAMP_ADJUST_cmd.new
       end
     end
     
@@ -144,10 +155,8 @@ module CMORizer
     
 
     class TIME_SECONDS_TO_DAYS < IndividualBaseStep
-      def process(inputs, years, opath)        
-        CDO_SET_T_UNITS_DAYS_cmd.new.run(inputs, opath)
-        
-        return [opath], years
+      def file_commands
+        CDO_SET_T_UNITS_DAYS_cmd.new
       end
 
     end
