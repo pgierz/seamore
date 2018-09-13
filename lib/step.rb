@@ -115,8 +115,9 @@ module CMORizer
     
     
     class APPLY_GLOBAL_ATTRIBUTES < IndividualBaseStep
-        #delete_global_attributes %w(output_schedule history CDO CDI Conventions)
       def file_commands
+        cmds = []
+        cmds << NCATTED_DELETE_GLOBAL_ATTRIBUTES_cmd.new(%w(output_schedule history CDO CDI Conventions))
 
         builder = GlobalAttributesBuilder.new
         builder.set_experiment_info(id: @experiment.experiment_id,
@@ -138,7 +139,8 @@ module CMORizer
         global_attributes = ga.attributes
 
         # apply global attributes
-        NCATTED_ADD_GLOBAL_ATTRIBUTES_cmd.new(global_attributes)
+        cmds << NCATTED_ADD_GLOBAL_ATTRIBUTES_cmd.new(global_attributes)
+        cmds
       end
     end
     
