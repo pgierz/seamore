@@ -116,6 +116,19 @@ module CMORizer
     end
     
     
+    class APPLY_LOCAL_ATTRIBUTES < IndividualBaseStep
+      def file_commands
+        cmds = []
+        # rename our variable
+        cmds << NCRENAME_RENAME_VARIABLE_cmd.new(@fesom_variable_name, @variable_id)
+        
+        # apply description
+        cmds << NCATTED_SET_VARIABLE_DESCRIPTION_cmd.new(@variable_id, @description)
+        cmds
+      end
+    end
+
+
     class APPLY_GLOBAL_ATTRIBUTES < IndividualBaseStep
       def file_commands
         cmds = []
