@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'open3'
 
 
 class FileCommand
@@ -24,7 +25,8 @@ class FileCommand
     t0 = Time.now
     prefix = "#{Thread.current.name}" if Thread.current.name
     puts "#{prefix}=> #{t0.strftime "%H:%M:%S"}  #{cmd}"
-    raise cmd unless system cmd
+    out, err, status = Open3.capture3(cmd)
+    raise "#{cmd} : #{err}" unless status.success?
     puts "#{prefix}<= #{sprintf('%5.1f',Time.now-t0)} sec"
   end
 end
