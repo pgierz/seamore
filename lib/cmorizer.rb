@@ -198,10 +198,12 @@ module CMORizer
       data_request_variable = data_request.find @cmor_variable_id
       frequency = data_request_variable.frequency_in_table(@cmor_table_id)
       @steps.each {|s| s.set_info(experiment: experiment,
+                                  fesom_variable_name: @fesom_variable_name,
                                   variable_id: data_request_variable.variable_id,
                                   frequency: frequency,
                                   table_id: @cmor_table_id,
-                                  realms: data_request_variable.realms)}
+                                  realms: data_request_variable.realms,
+                                  description: data_request_variable.description)}
       
       # fill the first step with all the passed files
       fesom_files.each do |f|
