@@ -33,7 +33,7 @@ module CMORizer
                 end
               end
 
-            chain.execute(filtered_fesom_files, experiment, @data_request)
+            chain.execute(filtered_fesom_files, experiment, @data_request) unless filtered_fesom_files.empty?
           end        
         end
       end
