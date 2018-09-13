@@ -128,6 +128,15 @@ module CMORizer
     end
 
 
+    def parent_experiment(pe=nil) # optinal DSL setter
+      @parent_experiment = pe
+      def self.parent_experiment # redefine to behave as getter
+        @parent_experiment
+      end
+      @parent_experiment
+    end
+
+
     def first_year
       start_year
     end
