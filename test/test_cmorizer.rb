@@ -16,6 +16,7 @@ class CMORizerTests < Minitest::Test
     src_txt = <<~EOFHEREDOC
       cmip6_cmor_tables "01.00.27", "#{__dir__}/fixtures"
       cmip6_cvs_dir "#{__dir__}/fixtures/CV"
+      source_id "AWI-CM-1-1-LR"
       experiment_id "highres-future" do
         indir ""
         outdir ""

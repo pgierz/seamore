@@ -46,14 +46,19 @@ module CMORizer
     end
   
   
-    def cmip6_cvs_dir(d)
+    def cmip6_cvs_dir(d) # DSL setter
       d = File.expand_path d
       @controlled_vocabularies = ControlledVocabularies.new_from_dir d
     end
     
     
-    def merge_years_step(s)
+    def merge_years_step(s) # DSL setter
       @years_step = s
+    end
+    
+    
+    def source_id(id) # DSL setter
+      @source_id = id
     end
 
 
