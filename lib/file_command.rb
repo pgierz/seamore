@@ -105,3 +105,14 @@ class NCATTED_DELETE_GLOBAL_ATTRIBUTES_cmd < InplaceCommand
     %Q(ncatted -h#{att_args} #{file})
   end
 end
+
+
+class NCATTED_SET_VARIABLE_DESCRIPTION_cmd < InplaceCommand
+  def initialize(var_name, description)
+    @var_name, @description = var_name, description
+  end
+
+  def cmd_txt_inplace(file)
+    %Q(ncatted -h -a description,#{@var_name},o,c,"#{@description}" #{file})
+  end
+end
