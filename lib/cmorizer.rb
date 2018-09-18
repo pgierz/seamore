@@ -1,6 +1,7 @@
 require_relative "step.rb"
 require_relative "controlled_vocabularies.rb"
 require_relative "fesom_output_dir.rb"
+require_relative "global_attributes.rb"
 
 
 module CMORizer
@@ -198,18 +199,42 @@ module CMORizer
       # offer info about the current experiment and variable to all step objects
       data_request_variable = data_request.find @cmor_variable_id
       frequency = data_request_variable.frequency_in_table(@cmor_table_id)
-      @steps.each {|s| s.set_info(experiment: experiment,
+      global_attributes = create_global_attributes(experiment: experiment,
+                                          variable_id: data_request_variable.variable_id,
+                                          frequency: frequency,
+                                          table_id: @cmor_table_id,
+                                          realms: data_request_variable.realms)
+      
+      @steps.each {|s| s.set_info(global_attributes: global_attributes,
                                   fesom_variable_name: @fesom_variable_name,
                                   variable_id: data_request_variable.variable_id,
-                                  frequency: frequency,
-                                  table_id: @cmor_table_id,
-                                  realms: data_request_variable.realms,
                                   description: data_request_variable.description)}
       
       # fill the first step with all the passed files
       fesom_files.each do |f|
         @steps.first.add_input(f.path, [f.year], fesom_files.size)
       end
+    end
+    
+    
+    private def create_global_attributes(experiment:, variable_id:, frequency:, table_id:, realms:)
+      builder = GlobalAttributesBuilder.new
+      builder.set_experiment_info(id: experiment.experiment_id,
+                                  variant_label: experiment.variant_label,
+                                  first_year: experiment.first_year)
+      parent = experiment.parent_experiment
+      if(parent)
+        builder.set_parent_experiment_info(id: parent.experiment_id,
+                                    variant_label: parent.variant_label,
+                                    first_year: parent.first_year)
+      end
+      builder.set_variable_info(id: variable_id, frequency: frequency, table_id: table_id, realms: realms)
+      source_id = experiment.source_id
+      builder.set_grid_info(source_id: source_id,
+                            nominal_resolution: experiment.nominal_resolution,
+                            txt: experiment.grid_txt)
+  
+      builder.build_global_attributes(data_specs_version: experiment.data_request_version)
     end
 
 

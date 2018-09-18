@@ -12,13 +12,10 @@ module CMORizer
       end
       
       
-      def set_info(experiment:, fesom_variable_name:, variable_id:, frequency:, table_id:, realms:, description:)
-        @experiment = experiment
+      def set_info(global_attributes:, fesom_variable_name:, variable_id:, description:)
+        @global_attributes = global_attributes
         @fesom_variable_name = fesom_variable_name
         @variable_id = variable_id
-        @frequency = frequency
-        @table_id = table_id
-        @realms = realms
         @description = description
       end
 
@@ -105,7 +102,6 @@ end
 
 
 require_relative "file_command.rb"
-require_relative "global_attributes.rb"
 module CMORizer
   module Step
     class MERGEFILES < JoinedBaseStep
@@ -141,24 +137,7 @@ module CMORizer
         cmds = []
         cmds << NCATTED_DELETE_GLOBAL_ATTRIBUTES_cmd.new(%w(output_schedule history CDO CDI Conventions))
 
-        builder = GlobalAttributesBuilder.new
-        builder.set_experiment_info(id: @experiment.experiment_id,
-                                    variant_label: @experiment.variant_label,
-                                    first_year: @experiment.first_year)
-        parent = @experiment.parent_experiment
-        if(parent)
-          builder.set_parent_experiment_info(id: parent.experiment_id,
-                                      variant_label: parent.variant_label,
-                                      first_year: parent.first_year)
-        end
-        builder.set_variable_info(id: @variable_id, frequency: @frequency, table_id: @table_id, realms: @realms)
-        source_id = @experiment.source_id
-        builder.set_grid_info(source_id: source_id,
-                              nominal_resolution: @experiment.nominal_resolution,
-                              txt: @experiment.grid_txt)
-    
-        ga = builder.build_global_attributes(data_specs_version: @experiment.data_request_version)
-        global_attributes_hash = ga.as_hash
+        global_attributes_hash = @global_attributes.as_hash
 
         # apply global attributes
         cmds << NCATTED_ADD_GLOBAL_ATTRIBUTES_cmd.new(global_attributes_hash)
