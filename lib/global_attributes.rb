@@ -45,8 +45,6 @@ end
 
 # required global netcdf attributes as described here: https://docs.google.com/document/d/1h0r8RZr_f3-8egBMMh7aqLwy3snpD6_MrDz1q8n5XUk/edit
 class GlobalAttributes
-  attr_reader :attributes
-
   def initialize(data_specs_version:, variable_info:, grid_info:, experiment_info:, parent_experiment_info:nil)
     institution_id = "AWI"
     mip_era = "CMIP6"
@@ -100,6 +98,11 @@ class GlobalAttributes
   end
 
 
+  def as_hash
+    @attributes
+  end
+  
+  
   private def creation_date_txt(time)
     # YYY-MM-DDTHH:MM:SSZ (Z is special timezone designator for UTC)
     time.gmtime.strftime "%Y-%m-%dT%H:%M:%SZ"

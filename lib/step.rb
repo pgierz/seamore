@@ -158,10 +158,10 @@ module CMORizer
                               txt: @experiment.grid_txt)
     
         ga = builder.build_global_attributes(data_specs_version: @experiment.data_request_version)
-        global_attributes = ga.attributes
+        global_attributes_hash = ga.as_hash
 
         # apply global attributes
-        cmds << NCATTED_ADD_GLOBAL_ATTRIBUTES_cmd.new(global_attributes)
+        cmds << NCATTED_ADD_GLOBAL_ATTRIBUTES_cmd.new(global_attributes_hash)
         cmds
       end
     end
