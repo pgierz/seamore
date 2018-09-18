@@ -188,6 +188,7 @@ module CMORizer
         @steps << next_step
       end
       @steps.reverse!
+      @steps[0].forbid_inplace = true unless @steps.empty? # do not modify the original input files
     end
     
     

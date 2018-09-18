@@ -3,9 +3,12 @@ require 'fileutils'
 module CMORizer
   module Step
     class BaseStep
+      attr_writer :forbid_inplace
+    
       def initialize(next_step)
         @next_step = next_step
         @available_inputs = {}
+        @forbid_inplace = false
       end
       
       
@@ -46,6 +49,10 @@ module CMORizer
       private def process(inputs, years, opath) # pipe input files through all our FileCommand objects
         puts "\t#{self.class} #{inputs.join(', ')} #{opath}"
         *commands = file_commands
+        if @forbid_inplace # bail out if this step is set to not manipulate a file inplace but all FileCommands of this step act inplace
+          raise "#{self.class.to_s.split('::').last} is an inplace command" if commands.all? {|c| c.inplace?}
+        end
+        
         command_inputs = inputs
         command_opath = nil
         commands.each_with_index do |cmd, i|
