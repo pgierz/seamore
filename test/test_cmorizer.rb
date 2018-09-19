@@ -80,6 +80,18 @@ class CMORizerTests < Minitest::Test
   end
 
 
+  def test_year_ranges_major_digits_can_start_1before_major_digit1_with_step20
+    ranges = CMORizer::Project.year_ranges_major_digits(first: 2050, last: 2080, step: 20, major_first_digit:1)
+    assert_equal [[2050,2050], [2051,2070], [2071,2080]], ranges
+  end
+
+
+  def test_year_ranges_major_digits_can_start_1before_major_digit1_with_step1
+    ranges = CMORizer::Project.year_ranges_major_digits(first: 2050, last: 2055, step: 1, major_first_digit:1)
+    assert_equal [[2050,2050], [2051,2051], [2052,2052], [2053,2053], [2054,2054], [2055,2055]], ranges
+  end
+
+
   def test_year_ranges_split_evenly
     ranges = CMORizer::Project.year_ranges(first: 2000, last: 2029, step: 10)
     assert_equal [[2000,2009], [2010,2019], [2020,2029]], ranges
