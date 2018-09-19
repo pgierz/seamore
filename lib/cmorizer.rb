@@ -221,6 +221,8 @@ module CMORizer
       data_request_variable = data_request.find @cmor_variable_id
       frequency = data_request_variable.frequency_in_table(@cmor_table_id)
       global_attributes = create_global_attributes(experiment: experiment,
+                                          first_file_year: fesom_files.first.year,
+                                          last_file_year: fesom_files.last.year,
                                           variable_id: data_request_variable.variable_id,
                                           frequency: frequency,
                                           table_id: @cmor_table_id,
@@ -241,12 +243,12 @@ module CMORizer
     end
     
     
-    private def create_global_attributes(experiment:, variable_id:, frequency:, table_id:, realms:)
+    private def create_global_attributes(experiment:, first_file_year:, last_file_year:, variable_id:, frequency:, table_id:, realms:)
       builder = GlobalAttributesBuilder.new
       builder.set_experiment_info(id: experiment.experiment_id,
                                   variant_label: experiment.variant_label,
-                                  first_year: experiment.first_year,
-                                  last_year: experiment.last_year)
+                                  first_year: first_file_year,
+                                  last_year: last_file_year)
       parent = experiment.parent_experiment
       if(parent)
         builder.set_parent_experiment_info(id: parent.experiment_id,
