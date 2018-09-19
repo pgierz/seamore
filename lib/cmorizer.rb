@@ -81,6 +81,25 @@ module CMORizer
     end
     
     
+    # generate year ranges, but prefer to start with the given major digit
+    # i.e. if the major first digit is 1 and step is 10, we could get the ranges 50-50,51-60,61-70,71-72
+    # if the major first digit is 0 and step is 10, we could get the ranges      50-59,60-69,70-72
+    def self.year_ranges_major_digits(first:, last:, step:, major_first_digit:)
+      raise "not a single digit: #{major_first_digit}" if major_first_digit.to_s.chars.size != 1
+      
+      first_digit = first.to_s.chars.last.to_i
+      major_first = first + major_first_digit - first_digit
+      major_first += 10 if major_first < first
+
+      if(first < major_first)
+        ranges = year_ranges(first: first, last: major_first-1, step: step)
+        ranges.concat year_ranges(first: major_first, last: last, step: step)
+      end
+      
+      ranges
+    end
+    
+
     def self.year_ranges(first:, last:, step:)
       # this looks too complicated, but I am tired and it passes the tests
       ranges = []
