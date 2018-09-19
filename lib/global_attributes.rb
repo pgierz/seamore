@@ -112,4 +112,21 @@ class GlobalAttributes
   def days_in_year(year)
     Date.new(year+1, 1, 1).next_day(-1).yday
   end
+
+
+  private def filename_time_range(first_year, last_year, frequency_txt)
+  # see https://docs.google.com/document/d/1h0r8RZr_f3-8egBMMh7aqLwy3snpD6_MrDz1q8n5XUk/edit table 2
+    case frequency_txt
+    when "mon"
+      "#{first_year}01-#{last_year}12"
+    when "day"
+      "#{first_year}0101-#{last_year}1231"
+    when "3hr"
+      "#{first_year}01010000-#{last_year}12312359"
+    when "3hrPt"
+      "#{first_year}01010130-#{last_year}12312230"
+    else
+      raise "unknown frequency <#{frequency_txt}>"
+    end
+  end  
 end
