@@ -205,14 +205,16 @@ module CMORizer
                                           table_id: @cmor_table_id,
                                           realms: data_request_variable.realms)
       
-      @steps.each {|s| s.set_info(global_attributes: global_attributes,
-                                  fesom_variable_name: @fesom_variable_name,
-                                  variable_id: data_request_variable.variable_id,
-                                  description: data_request_variable.description)}
+      unless File.exist?(File.join(File.dirname(fesom_files[0].path), global_attributes.filename))
+        @steps.each {|s| s.set_info(global_attributes: global_attributes,
+                                    fesom_variable_name: @fesom_variable_name,
+                                    variable_id: data_request_variable.variable_id,
+                                    description: data_request_variable.description)}
       
-      # fill the first step with all the passed files
-      fesom_files.each do |f|
-        @steps.first.add_input(f.path, [f.year], fesom_files.size)
+        # fill the first step with all the passed files
+        fesom_files.each do |f|
+          @steps.first.add_input(f.path, [f.year], fesom_files.size)
+        end
       end
     end
     
