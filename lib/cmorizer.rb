@@ -20,6 +20,8 @@ module CMORizer
       @experiments.each do |experiment|
         experiment_year_ranges = Project.year_ranges(first: experiment.first_year.to_i, last: experiment.last_year.to_i, step: @years_step)
         fesom_output_files = FesomOutputDir.new(experiment.indir).variable_files
+        # sort the fesom files
+        fesom_output_files = fesom_output_files.sort_by {|ff| "#{ff.variable_id}#{ff.year}"}
         
         @cmorization_steps_chains.each do |chain|
           experiment_year_ranges.each do |year_range|
