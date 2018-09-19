@@ -59,7 +59,12 @@ module CMORizer
         end
         
         raise "file exists: #{opath}" if File.exist? opath
-        FileUtils.mv command_opath, opath
+        if command_opath # i.e. commands array is empty
+          FileUtils.mv command_opath, opath
+        else
+          raise "can not rename multiple inputs to a single output" if inputs.size > 1
+          FileUtils.mv inputs[0], opath
+        end
 
         return [opath], years
       end
