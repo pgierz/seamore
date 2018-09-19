@@ -205,8 +205,9 @@ module CMORizer
                                           table_id: @cmor_table_id,
                                           realms: data_request_variable.realms)
       
-      unless File.exist?(File.join(File.dirname(fesom_files[0].path), global_attributes.filename))
-        @steps.each {|s| s.set_info(global_attributes: global_attributes,
+      unless File.exist?(File.join(experiment.outdir, global_attributes.filename))
+        @steps.each {|s| s.set_info(outdir: experiment.outdir,
+                                    global_attributes: global_attributes,
                                     fesom_variable_name: @fesom_variable_name,
                                     variable_id: data_request_variable.variable_id,
                                     description: data_request_variable.description)}

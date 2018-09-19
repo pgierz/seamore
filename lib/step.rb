@@ -12,7 +12,8 @@ module CMORizer
       end
       
       
-      def set_info(global_attributes:, fesom_variable_name:, variable_id:, description:)
+      def set_info(outdir:, global_attributes:, fesom_variable_name:, variable_id:, description:)
+        @outdir = outdir
         @global_attributes = global_attributes
         @fesom_variable_name = fesom_variable_name
         @variable_id = variable_id
@@ -76,7 +77,6 @@ module CMORizer
       
       
       def create_outpath(*inpaths)
-        outdir = File.dirname(inpaths.first)
         step_suffix = self.class.to_s.split('::').last
         outname = 
           if inpaths.size == 1
@@ -85,7 +85,7 @@ module CMORizer
             "#{File.basename(inpaths.first, ".*")}--#{File.basename(inpaths.last)}.#{step_suffix}"
           end
         
-        File.join outdir, outname
+        File.join @outdir, outname
       end
     end
     
@@ -124,10 +124,9 @@ module CMORizer
       def create_outpath(*inpaths)
         raise "can not create CMOR filename for multiple inputs" if inpaths.size > 1
 
-        outdir = File.dirname(inpaths.first)
         outname = @global_attributes.filename
                 
-        File.join outdir, outname
+        File.join @outdir, outname
       end
       
       def file_commands
