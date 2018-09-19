@@ -28,7 +28,7 @@ module CMORizer
             filtered_fesom_files =
               fesom_output_files.select do |ff|
                 if year_range.first <= ff.year && ff.year <= year_range.last
-                  if ff.variable_id == chain.fesom_variable_name && ff.frequency == chain.fesom_available_frequency
+                  if ff.variable_id == chain.input_variable_name && ff.frequency == chain.input_frequency
                     true
                   end
                 end
@@ -168,12 +168,12 @@ module CMORizer
   
   
   class StepsChain
-    attr_reader :fesom_variable_name, :fesom_available_frequency
+    attr_reader :input_variable_name, :input_frequency
     
     # fesom_variable_description: "fesom name"_"available frequency"
     # cmor_variable_description: "variable_id"_"CMIP table_id"
     def initialize(fesom_variable_description, cmor_variable_description, &block)
-      @fesom_variable_name, @fesom_available_frequency = fesom_variable_description.split('_')
+      @input_variable_name, @input_frequency = fesom_variable_description.split('_')
       @cmor_variable_id, @cmor_table_id = cmor_variable_description.split('_')
 
       @step_classes = []
@@ -194,7 +194,7 @@ module CMORizer
     
     
     def execute(fesom_files, experiment, data_request)
-      puts "#{@fesom_variable_name}_#{@fesom_available_frequency} ==> #{@cmor_variable_id}_#{@cmor_table_id}"
+      puts "#{@input_variable_name}_#{@input_frequency} ==> #{@cmor_variable_id}_#{@cmor_table_id}"
       
       # offer info about the current experiment and variable to all step objects
       data_request_variable = data_request.find @cmor_variable_id
@@ -208,7 +208,7 @@ module CMORizer
       unless File.exist?(File.join(experiment.outdir, global_attributes.filename))
         @steps.each {|s| s.set_info(outdir: experiment.outdir,
                                     global_attributes: global_attributes,
-                                    fesom_variable_name: @fesom_variable_name,
+                                    fesom_variable_name: @input_variable_name,
                                     variable_id: data_request_variable.variable_id,
                                     description: data_request_variable.description)}
       
