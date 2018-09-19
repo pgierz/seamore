@@ -221,7 +221,8 @@ module CMORizer
       builder = GlobalAttributesBuilder.new
       builder.set_experiment_info(id: experiment.experiment_id,
                                   variant_label: experiment.variant_label,
-                                  first_year: experiment.first_year)
+                                  first_year: experiment.first_year,
+                                  last_year: experiment.last_year)
       parent = experiment.parent_experiment
       if(parent)
         builder.set_parent_experiment_info(id: parent.experiment_id,

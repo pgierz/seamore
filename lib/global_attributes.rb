@@ -4,17 +4,19 @@ require 'date'
 
 
 class GlobalAttributesBuilder
-  def set_experiment_info(id:, variant_label:, first_year:)
+  def set_experiment_info(id:, variant_label:, first_year:, last_year:)
     @experiment_info = OpenStruct.new(:id => id,
                                       :variant_label => variant_label,
-                                      :first_year => first_year)
+                                      :first_year => first_year,
+                                      :last_year => last_year)
   end
 
 
-  def set_parent_experiment_info(id:, variant_label:, first_year:)
+  def set_parent_experiment_info(id:, variant_label:, first_year:, last_year:)
     @parent_experiment_info = OpenStruct.new(:id => id,
                                              :variant_label => variant_label,
-                                             :first_year => first_year)
+                                             :first_year => first_year,
+                                             :last_year => last_year)
   end
   
   
@@ -45,6 +47,8 @@ end
 
 # required global netcdf attributes as described here: https://docs.google.com/document/d/1h0r8RZr_f3-8egBMMh7aqLwy3snpD6_MrDz1q8n5XUk/edit
 class GlobalAttributes
+  attr_reader :filename
+
   def initialize(data_specs_version:, variable_info:, grid_info:, experiment_info:, parent_experiment_info:nil)
     institution_id = "AWI"
     mip_era = "CMIP6"
@@ -95,6 +99,7 @@ class GlobalAttributes
       @attributes['parent_variant_label'] = parent_experiment_info.variant_label
     end
 
+    @filename = create_filename(@attributes, experiment_info.first_year, experiment_info.last_year, variable_info.frequency)
   end
 
 
