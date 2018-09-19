@@ -68,6 +68,12 @@ class CMORizerTests < Minitest::Test
   end
 
 
+  def test_year_ranges_major_digits_can_have_no_complete_range
+    ranges = CMORizer::Project.year_ranges_major_digits(first: 2050, last: 2055, step: 10, major_first_digit:1)
+    assert_equal [[2050,2050], [2051,2055]], ranges
+  end
+
+
   def test_year_ranges_major_digits_can_start_3before_major_digit3
     ranges = CMORizer::Project.year_ranges_major_digits(first: 2050, last: 2070, step: 10, major_first_digit:3)
     assert_equal [[2050,2052], [2053,2062], [2063,2070]], ranges
