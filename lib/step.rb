@@ -121,6 +121,18 @@ module CMORizer
     
 
     class APPLY_CMOR_FILENAME < IndividualBaseStep
+      def create_outpath(*inpaths)
+        raise "can not create CMOR filename for multiple inputs" if inpaths.size > 1
+
+        outdir = File.dirname(inpaths.first)
+        outname = @global_attributes.filename
+                
+        File.join outdir, outname
+      end
+      
+      def file_commands
+        []
+      end
     end
     
     
