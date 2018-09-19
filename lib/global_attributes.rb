@@ -112,6 +112,20 @@ class GlobalAttributes
   def days_in_year(year)
     Date.new(year+1, 1, 1).next_day(-1).yday
   end
+  
+  
+  private def create_filename(att_hash, first_year, last_year, frequency_txt)
+    # see https://docs.google.com/document/d/1h0r8RZr_f3-8egBMMh7aqLwy3snpD6_MrDz1q8n5XUk/edit page 13
+    # <variable_id>_<table_id>_<source_id>_<experiment_id>_<member_id>_<grid_label>[_<time_range>].nc
+    if(att_hash['sub_experiment_id'] == "none")
+      member_id = att_hash['variant_label']
+    else
+      member_id = "#{att_hash['sub_experiment_id']}-#{att_hash['variant_label']}"
+    end
+    time_range = filename_time_range(first_year, last_year, frequency_txt)
+    
+    "#{att_hash['variable_id']}_#{att_hash['table_id']}_#{att_hash['source_id']}_#{att_hash['experiment_id']}_#{member_id}_#{att_hash['grid_label']}_#{time_range}.nc"
+  end
 
 
   private def filename_time_range(first_year, last_year, frequency_txt)
