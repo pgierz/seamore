@@ -82,6 +82,22 @@ module CMORizer
     def experiment_id(*args, &block)
       @experiments << Experiment.new(@source_id, args.shift, @data_request.version, @controlled_vocabularies, &block)
     end
+
+
+    def cmorize_defaults(*args, &block)
+      evaluater = Object.new
+      def evaluater.method_missing(method_sym, *args, &block)
+        # we assume every unknown method designates a default step
+        sym = method_sym.upcase
+        @default_steps ||= []
+        @default_steps << sym
+      end
+      def evaluater.default_steps
+        @default_steps
+      end
+      evaluater.instance_eval(&block)
+      @default_step_classes = evaluater.default_steps
+    end
   
   
     # "fesom name"_"available frequency" => ["variable_id"_"CMIP table_id"]
