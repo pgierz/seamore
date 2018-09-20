@@ -18,10 +18,24 @@ module CMORizer
   
     def execute
       @experiments.each do |experiment|
-        experiment_year_ranges = Project.year_ranges_major_digits(first: experiment.first_year.to_i, last: experiment.last_year.to_i, step: @years_step, major_first_digit:1)
         fesom_output_files = FesomOutputDir.new(experiment.indir).variable_files
         # sort the fesom files
         fesom_output_files = fesom_output_files.sort_by {|ff| "#{ff.variable_id}#{ff.year}"}
+
+        if(experiment.first_year)
+          first_year = experiment.first_year
+        else
+          # no year given in experiment, search for the lowest year in all files
+          first_year = (fesom_output_files.min {|a,b| a.year <=> b.year}).year
+        end
+
+        if(experiment.last_year)
+          last_year = experiment.last_year
+        else
+          # no year given in experiment, search for the highest year in all files
+          last_year = (fesom_output_files.max {|a,b| a.year <=> b.year}).year
+        end
+        experiment_year_ranges = Project.year_ranges_major_digits(first: first_year.to_i, last: last_year.to_i, step: @years_step, major_first_digit:1)
         
         @cmorization_steps_chains.each do |chain|
           experiment_year_ranges.each do |year_range|
@@ -167,12 +181,20 @@ module CMORizer
 
 
     def first_year
-      start_year
+      if start_year.empty?
+        nil # some experiment_id controlled vocabularies do not have a start_year, e.g. control-1950
+      else
+        start_year
+      end
     end
 
 
     def last_year
-      end_year
+      if end_year.empty?
+        nil # some experiment_id controlled vocabularies do not have a end_year, e.g. control-1950
+      else
+        end_year
+      end
     end
 
 
