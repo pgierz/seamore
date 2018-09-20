@@ -10,7 +10,7 @@ class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
     @path = path
     begin
       cdl = %x(ncdump -h #{path})
-      @frequency = FesomYearlyOutputFile.frequency_from_cdl cdl
+      @frequency = FesomYearlyOutputFile.frequency_from_netcdf path
       @unit = FesomYearlyOutputFile.unit_from_cdl variable_id, cdl
     rescue RuntimeError => e
       raise "file #{path}: #{e.message}"
@@ -40,7 +40,9 @@ class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
 
   # fetch frequency from native fesom file CDL (i.e. ncdump)
   # https://github.com/WCRP-CMIP/CMIP6_CVs/blob/master/CMIP6_frequency.json
-  def self.frequency_from_cdl(cdl)
+  def self.frequency_from_netcdf(path)
+    cdl = %x(ncdump -h #{path})
+    
     match = /^.*?output_schedule.*/.match cdl
     sout = match.to_s
 
@@ -56,13 +58,13 @@ class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
       "day"
     when /s\d+/
       # this frequency is based on fesom time steps, i.e. might be used to express 3-hourly
-      puts "NOTE: assuming frequency rate of #{unit}#{rate} equals 3hr for netcdf CDL"
+      puts "NOTE: assuming frequency rate of #{unit}#{rate} equals 3hr for netcdf #{path}"
       # solution: read the time axis and see what delta t we really have
 
       # for tso the frequency should be 3hrPt now (i.e. instantaneous)      
       "3hrPt" # this is hackish but does apply for the PRIMAVERA runs (tso is the only 3-hourly variable)      
     else
-      raise "unknown unit+rate <#{unit}#{rate}> for netcdf CDL"
+      raise "unknown unit+rate <#{unit}#{rate}> for netcdf #{path}"
     end    
   end
 
