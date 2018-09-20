@@ -9,7 +9,7 @@ class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
     @year = year.to_i
     @path = path
     begin
-      cdl = %x(ncdump -h #{path})
+      cdl = ncdump_h
       @frequency = frequency_from_netcdf
       @unit = FesomYearlyOutputFile.unit_from_cdl variable_id, cdl
     rescue RuntimeError => e
@@ -18,6 +18,12 @@ class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
     @approx_interval = Frequency.for_name(@frequency).approx_interval
     
     @time_method = Frequency.for_name(@frequency).time_method
+  end
+  
+
+  private def ncdump_h # cache ncdump results
+    @ncdump_h_cache ||= %x(ncdump -h #{@path})
+    @ncdump_h_cache
   end
   
   
@@ -40,8 +46,8 @@ class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
 
   # fetch frequency from native fesom file CDL (i.e. ncdump)
   # https://github.com/WCRP-CMIP/CMIP6_CVs/blob/master/CMIP6_frequency.json
-    cdl = %x(ncdump -h #{path})
   private def frequency_from_netcdf
+    cdl = ncdump_h
     
     match = /^.*?output_schedule.*/.match cdl
     sout = match.to_s
