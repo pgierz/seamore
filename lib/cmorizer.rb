@@ -7,6 +7,7 @@ require_relative "global_attributes.rb"
 module CMORizer
   class Project
     def initialize(src_txt)
+      @default_step_classes = []
       @cmorization_steps_chains = []
       @experiments = []
       @years_step = 1
@@ -96,7 +97,7 @@ module CMORizer
         @default_steps
       end
       evaluater.instance_eval(&block)
-      @default_step_classes = evaluater.default_steps
+      @default_step_classes = evaluater.default_steps.map {|sym| CMORizer::Step.const_get sym}
     end
   
   
@@ -106,7 +107,7 @@ module CMORizer
       src = hash.keys.first
       results = hash.values.first
       results.each do |r|
-        @cmorization_steps_chains << StepsChain.new(src, r, &block)
+        @cmorization_steps_chains << StepsChain.new(@default_step_classes, src, r, &block)
       end
     end
     
@@ -231,7 +232,7 @@ module CMORizer
     
     # fesom_variable_description: "fesom name"_"available frequency"
     # cmor_variable_description: "variable_id"_"CMIP table_id"
-    def initialize(fesom_variable_description, cmor_variable_description, &block)
+    def initialize(default_step_classes, fesom_variable_description, cmor_variable_description, &block)
       @input_variable_name, @input_frequency = fesom_variable_description.split('_')
       @cmor_variable_id, @cmor_table_id = cmor_variable_description.split('_')
 
@@ -239,6 +240,8 @@ module CMORizer
       @eval_mode = true
       instance_eval(&block) if block_given?
       @eval_mode = false
+            
+      @step_classes = default_step_classes if @step_classes.empty?
       
       # create step instances
       @steps = []
