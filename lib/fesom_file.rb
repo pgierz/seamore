@@ -10,7 +10,7 @@ class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
     @path = path
     begin
       cdl = %x(ncdump -h #{path})
-      @frequency = frequency_from_netcdf path
+      @frequency = frequency_from_netcdf
       @unit = FesomYearlyOutputFile.unit_from_cdl variable_id, cdl
     rescue RuntimeError => e
       raise "file #{path}: #{e.message}"
@@ -40,8 +40,8 @@ class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
 
   # fetch frequency from native fesom file CDL (i.e. ncdump)
   # https://github.com/WCRP-CMIP/CMIP6_CVs/blob/master/CMIP6_frequency.json
-  def frequency_from_netcdf(path)
     cdl = %x(ncdump -h #{path})
+  private def frequency_from_netcdf
     
     match = /^.*?output_schedule.*/.match cdl
     sout = match.to_s
@@ -57,15 +57,15 @@ class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
     when "d1"
       "day"
     when /s\d+/
-      raise "can not determine frequency for netcdf #{path}" unless @variable_id == "tso"
+      raise "can not determine frequency for netcdf #{@path}" unless @variable_id == "tso"
       # for tso the frequency should be '3hrPt' (i.e. instantaneous) tso is the only 3-hourly ocean variable we have in CMIP
       # this frequency is based on fesom time steps, i.e. might be used to express 3-hourly
       # read the time axis and see what delta t we really have
-      dt = FesomYearlyOutputFile.timestep_delta_from_cdl(%x(ncdump -v time #{path}))
-      raise "tso frequency is not 10800 sec (3h) but #{dt} sec for netcdf #{path}" if( dt != 3*3600)
+      dt = FesomYearlyOutputFile.timestep_delta_from_cdl(%x(ncdump -v time #{@path}))
+      raise "tso frequency is not 10800 sec (3h) but #{dt} sec for netcdf #{@path}" if( dt != 3*3600)
       "3hrPt"
     else
-      raise "unknown unit+rate <#{unit}#{rate}> for netcdf #{path}"
+      raise "unknown unit+rate <#{unit}#{rate}> for netcdf #{@path}"
     end    
   end
 
