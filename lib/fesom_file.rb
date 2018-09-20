@@ -33,7 +33,7 @@ class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
 
   # variable unit from native fesom file CDL (i.e. ncdump)
   def self.unit_from_cdl(variable_id, cdl)
-     match = /#{variable_id}:units = "(?<unit>.+)"/.match cdl # there seems to be an error with rubys "".=~ as we do not get access to the unis variable then interpolating variable_id, using //.match seems to solve this
+     match = /#{variable_id}:units = "(?<unit>.+)"/.match cdl # there seems to be an error with rubys "".=~ as we do not get access to the unit variable then interpolating variable_id, using //.match seems to solve this
      match[:unit]
   end
 
