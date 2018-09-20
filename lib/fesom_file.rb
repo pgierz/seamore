@@ -72,4 +72,14 @@ class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
     end    
   end
 
+
+  # fetch time axis from native fesom file CDL (i.e. ncdump -v time)
+  def self.timestep_delta_from_cdl(cdl)
+    txt = cdl.split("// global attributes:").last
+    match = /^.*?time.*/.match txt
+    txt = match.to_s
+    /(?<t0>\d+), (?<t1>\d+)/ =~ txt
+    t1.to_f - t0.to_f
+  end
+
 end
