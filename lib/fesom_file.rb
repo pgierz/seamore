@@ -4,22 +4,16 @@ require_relative 'frequency.rb'
 class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
   attr_reader :variable_id, :year, :path, :approx_interval, :frequency, :unit, :time_method
 
-  def initialize(variable_id:, year:, month:, day:, path:, cdl_data: nil)
-    raise "can not have both set: a path and CDL data" if (path && cdl_data)
+  def initialize(variable_id:, year:, month:, day:, path:)
     @variable_id = variable_id
     @year = year.to_i
     @path = path
-    if path
-      begin
-        cdl = %x(ncdump -h #{path})
-        @frequency = FesomYearlyOutputFile.frequency_from_cdl cdl
-        @unit = FesomYearlyOutputFile.unit_from_cdl variable_id, cdl
-      rescue RuntimeError => e
-        raise "file #{path}: #{e.message}"
-      end
-    elsif cdl_data
-      @frequency = FesomYearlyOutputFile.frequency_from_cdl cdl_data
-      @unit = FesomYearlyOutputFile.unit_from_cdl variable_id, cdl_data
+    begin
+      cdl = %x(ncdump -h #{path})
+      @frequency = FesomYearlyOutputFile.frequency_from_cdl cdl
+      @unit = FesomYearlyOutputFile.unit_from_cdl variable_id, cdl
+    rescue RuntimeError => e
+      raise "file #{path}: #{e.message}"
     end
     @approx_interval = Frequency.for_name(@frequency).approx_interval
     
