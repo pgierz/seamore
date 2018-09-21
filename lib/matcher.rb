@@ -20,7 +20,8 @@ class Matcher
   end
 
 
-  def self.print_matching(request, fesom_variables)    
+  def self.print_matching(request, fesom_variables)
+    fesom_variables.uniq! {|fevar| [fevar.variable_id, fevar.time_method, fevar.unit]}
     fesom_variables.each do |fevar|
       cmipvar = request.variables.find {|v| v.variable_id == fevar.variable_id && v.time_method == fevar.time_method && v.unit == fevar.unit}
       if(cmipvar)
