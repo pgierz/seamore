@@ -45,7 +45,7 @@ module CMORizer
             filtered_fesom_files =
               fesom_output_files.select do |ff|
                 if year_range.first <= ff.year && ff.year <= year_range.last
-                  if ff.variable_id == chain.input_variable_name && ff.frequency == chain.input_frequency
+                  if ff.variable_id == chain.input_variable_name && ff.frequency == chain.input_frequency_name
                     true
                   end
                 end
@@ -228,12 +228,12 @@ module CMORizer
   
   
   class StepsChain
-    attr_reader :input_variable_name, :input_frequency
+    attr_reader :input_variable_name, :input_frequency_name
     
     # fesom_variable_description: "fesom name"_"available frequency"
     # cmor_variable_description: "variable_id"_"CMIP table_id"
     def initialize(default_step_classes, fesom_variable_description, cmor_variable_description, &block)
-      @input_variable_name, @input_frequency = fesom_variable_description.split('_')
+      @input_variable_name, @input_frequency_name = fesom_variable_description.split('_')
       @cmor_variable_id, @cmor_table_id = cmor_variable_description.split('_')
 
       @step_classes = []
@@ -256,7 +256,7 @@ module CMORizer
     
     
     def execute(fesom_files, experiment, data_request)
-      puts "#{@input_variable_name}_#{@input_frequency} ==> #{@cmor_variable_id}_#{@cmor_table_id}"
+      puts "#{@input_variable_name}_#{@input_frequency_name} ==> #{@cmor_variable_id}_#{@cmor_table_id}"
       
       # offer info about the current experiment and variable to all step objects
       data_request_variable = data_request.find @cmor_variable_id
