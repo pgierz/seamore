@@ -33,7 +33,7 @@ class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
   
   
   def to_s
-    "#{@variable_id} '#{unit}' [#{@frequency}]"
+    "#{@variable_id} '#{unit}' #{@frequency}"
   end
   
 
