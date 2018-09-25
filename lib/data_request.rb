@@ -82,8 +82,8 @@ class DataRequest
   end
 
 
-  def find(variable_id)
-    @variables.find {|v| variable_id == v.variable_id}
+  def find(variable_id, frequency_name)
+    @variables.find {|v| variable_id == v.variable_id && v.frequencies.include?(frequency_name)}
   end
 
 

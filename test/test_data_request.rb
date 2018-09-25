@@ -48,14 +48,14 @@ class DataRequestTests < Minitest::Test
   
 
   def test_finds_variable_tos
-    var = DataRequest.new(@datarequest_paths).find("tos")
+    var = DataRequest.new(@datarequest_paths).find("tos", "3hrPt")
     assert var
     assert_equal "tos", var.variable_id
   end  
   
 
   def test_sithick_has_realms_seaIce_and_ocean
-    var = DataRequest.new(@datarequest_paths).find("sithick")
+    var = DataRequest.new(@datarequest_paths).find("sithick", "day")
     assert var
     assert_equal %w(seaIce ocean), var.realms
   end  
