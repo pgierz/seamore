@@ -151,7 +151,7 @@ class DataRequestVariable
   
   def frequency_in_table(table_id)
     i = table_ids.index(table_id)
-    raise "variable_id '#{variable_id}' is not associated with table_id '#{table_id}'" unless i
+    raise "variable_id '#{variable_id}' is not associated with table_id '#{table_id}', available table_id(s): #{table_ids.join(', ')}" unless i
     @frequencies[i]
   end
   
