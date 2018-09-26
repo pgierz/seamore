@@ -3,12 +3,13 @@ require 'fileutils'
 module CMORizer
   module Step
     class BaseStep
-      attr_writer :forbid_inplace
+      attr_writer :forbid_inplace, :initial_prefix
     
       def initialize(next_step)
         @next_step = next_step
         @available_inputs = {}
         @forbid_inplace = false
+        @initial_prefix = nil
       end
       
       
@@ -79,11 +80,13 @@ module CMORizer
       
       def create_outpath(*inpaths)
         step_suffix = self.class.to_s.split('::').last
+        prefix = ""
+        prefix = "#{@initial_prefix}__" if @initial_prefix
         outname = 
           if inpaths.size == 1
-            "#{File.basename(inpaths.last)}.#{step_suffix}"
+            "#{prefix}#{File.basename(inpaths.last)}.#{step_suffix}"
           else
-            "#{File.basename(inpaths.first, ".*")}--#{File.basename(inpaths.last)}.#{step_suffix}"
+            "#{prefix}#{File.basename(inpaths.first, ".*")}--#{File.basename(inpaths.last)}.#{step_suffix}"
           end
         
         File.join @outdir, outname

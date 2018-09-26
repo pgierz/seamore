@@ -258,7 +258,10 @@ module CMORizer
         @steps << next_step
       end
       @steps.reverse!
-      @steps[0].forbid_inplace = true unless @steps.empty? # do not modify the original input files
+      unless @steps.empty?
+        @steps[0].forbid_inplace = true # do not modify the original input files
+        @steps[0].initial_prefix = "#{@input_variable_name}_#{@input_frequency_name}-TO-#{@cmor_variable_id}_#{@cmor_table_id}"
+      end
     end
     
     
