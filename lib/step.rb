@@ -136,6 +136,17 @@ module CMORizer
     end
     
     
+    class APPLY_GRID < IndividualBaseStep
+      def file_commands
+        cmds = []
+        cmds << NCRENAME_DIMENSION_NODES_XD_TO_NCELLS_cmd.new
+        cmds << NCKS_APPEND_GRID_cmd.new(@grid_description_file)
+        cmds << NCATTED_APPEND_COORDINATES_VALUE_cmd.new(@variable_id)
+        cmds
+      end
+    end
+    
+    
     class APPLY_LOCAL_ATTRIBUTES < IndividualBaseStep
       def file_commands
         cmds = []
