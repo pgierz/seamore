@@ -78,6 +78,12 @@ module CMORizer
     def source_id(id) # DSL setter
       @source_id = id
     end
+  
+  
+    def grid_description_file(f) # DSL setter
+      f = File.expand_path f
+      @grid_description_file = f
+    end
 
 
     def experiment_id(*args, &block)
