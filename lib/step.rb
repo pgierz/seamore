@@ -12,8 +12,9 @@ module CMORizer
       end
       
       
-      def set_info(outdir:, global_attributes:, fesom_variable_name:, variable_id:, description:)
+      def set_info(outdir:, grid_description_file:, global_attributes:, fesom_variable_name:, variable_id:, description:)
         @outdir = outdir
+        @grid_description_file = grid_description_file
         @global_attributes = global_attributes
         @fesom_variable_name = fesom_variable_name
         @variable_id = variable_id

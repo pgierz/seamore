@@ -51,7 +51,7 @@ module CMORizer
                 end
               end
 
-            chain.execute(filtered_fesom_files, experiment, @data_request) unless filtered_fesom_files.empty?
+            chain.execute(filtered_fesom_files, experiment, @data_request, @grid_description_file) unless filtered_fesom_files.empty?
           end        
         end
       end
@@ -82,6 +82,7 @@ module CMORizer
   
     def grid_description_file(f) # DSL setter
       f = File.expand_path f
+      raise "grid description file not readable: #{f}" unless File.readable?(f)
       @grid_description_file = f
     end
 
@@ -261,7 +262,7 @@ module CMORizer
     end
     
     
-    def execute(fesom_files, experiment, data_request)
+    def execute(fesom_files, experiment, data_request, grid_description_file)
       puts "#{@input_variable_name}_#{@input_frequency_name} ==> #{@cmor_variable_id}_#{@cmor_table_id}"
       
       # offer info about the current experiment and variable to all step objects
@@ -278,6 +279,7 @@ module CMORizer
       
       unless File.exist?(File.join(experiment.outdir, global_attributes.filename))
         @steps.each {|s| s.set_info(outdir: experiment.outdir,
+                                    grid_description_file: grid_description_file,
                                     global_attributes: global_attributes,
                                     fesom_variable_name: @input_variable_name,
                                     variable_id: data_request_variable.variable_id,
