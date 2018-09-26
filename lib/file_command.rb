@@ -131,3 +131,38 @@ class NCRENAME_RENAME_VARIABLE_cmd < InplaceCommand
     end
   end
 end
+
+
+class NCRENAME_DIMENSION_NODES_XD_TO_NCELLS_cmd < InplaceCommand
+  def cmd_txt_inplace(file)
+    # from the docs: "ncrename will change the names of the input-file in place"
+    %Q(ncrename -h -d .nodes_2d,ncells -d .nodes_3d,ncells #{file}) # the dot '.' prefix tells ncrename that it is an optional rename
+  end
+end
+
+
+class NCKS_APPEND_GRID_cmd < InplaceCommand
+  def initialize(grid_description_file)
+    @grid_description_file = grid_description_file
+  end
+
+  def cmd_txt_inplace(file)
+    # ncks will create a temporary copy of the file
+    # see section "2.3 Temporary Output Files" in the docs
+    %Q(ncks --create_ram --no_tmp_fl -A -v lat,lon,lat_bnds,lon_bnds #{@grid_description_file} #{file}) # the nodes dimension must be identical in geid description and variable file, e.g. 'ncells'
+  end
+end
+
+
+class NCATTED_APPEND_COORDINATES_VALUE_cmd < InplaceCommand
+  def initialize(variable_id)
+    @variable_id = variable_id
+  end
+
+  def cmd_txt_inplace(file)
+    # this does not seem to create a temporary file, but no mention of in-place operation in the ncatted docs
+    %Q(ncatted -a coordinates,#{@variable_id},a,c,'lat lon' #{file})
+  end
+end
+
+
