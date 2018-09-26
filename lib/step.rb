@@ -73,7 +73,7 @@ module CMORizer
             
       
       def file_commands
-        raise "overwrite with concrete implementation which returns one or many FileCommand objects"
+        raise "overwrite with concrete implementation for #{self.class} which returns one or many FileCommand objects"
       end
       
       
