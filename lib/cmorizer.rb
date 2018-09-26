@@ -260,7 +260,7 @@ module CMORizer
       
       # offer info about the current experiment and variable to all step objects
       data_request_variable = data_request.find @cmor_variable_id, @input_frequency_name
-      raise "data request does contain variable #{@cmor_variable_id} #{@input_frequency_name}" unless data_request_variable
+      raise "data request does not contain variable #{@cmor_variable_id} #{@input_frequency_name}" unless data_request_variable
       frequency = data_request_variable.frequency_in_table(@cmor_table_id)
       global_attributes = create_global_attributes(experiment: experiment,
                                           first_file_year: fesom_files.first.year,
