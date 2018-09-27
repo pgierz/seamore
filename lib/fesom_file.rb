@@ -1,6 +1,21 @@
 require_relative 'frequency.rb'
 
 
+# use cached ncdump output for files with same variable_id and size to speed up scanning an output directory
+class NcdumpCache
+  @@ncdump_h_cache = {}
+  @@ncdump_v_time_cache = {}
+
+  def self.ncdump_h(variable_id, file)
+    @@ncdump_h_cache[[variable_id,File.size(file)]] ||= %x(ncdump -h #{file})
+  end
+
+  def self.ncdump_v_time(variable_id, file)
+    @@ncdump_v_time_cache[[variable_id,File.size(file)]] ||= %x(ncdump -v time #{file})
+  end
+end
+
+
 class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
   attr_reader :variable_id, :year, :path, :approx_interval, :frequency, :unit, :time_method
 
@@ -9,7 +24,7 @@ class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
     @year = year.to_i
     @path = path
     begin
-      cdl = ncdump_h
+      cdl = NcdumpCache::ncdump_h(@variable_id, @path)
       @frequency = frequency_from_netcdf
       @unit = FesomYearlyOutputFile.unit_from_cdl variable_id, cdl
     rescue RuntimeError => e
@@ -21,12 +36,6 @@ class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
   end
   
 
-  private def ncdump_h # cache ncdump results
-    @ncdump_h_cache ||= %x(ncdump -h #{@path})
-    @ncdump_h_cache
-  end
-  
-  
   def <=>(other)
     "#{@variable_id} #{@approx_interval} #{@frequency}" <=> "#{other.variable_id} #{other.approx_interval} #{other.frequency}"
   end
@@ -47,7 +56,7 @@ class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
   # fetch frequency from native fesom file CDL (i.e. ncdump)
   # https://github.com/WCRP-CMIP/CMIP6_CVs/blob/master/CMIP6_frequency.json
   private def frequency_from_netcdf
-    cdl = ncdump_h
+    cdl = NcdumpCache::ncdump_h(@variable_id, @path)
     
     match = /^.*?output_schedule.*/.match cdl
     sout = match.to_s
@@ -67,7 +76,7 @@ class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
       # for tso the frequency should be '3hrPt' (i.e. instantaneous) tso is the only 3-hourly ocean variable we have in CMIP
       # this frequency is based on fesom time steps, i.e. might be used to express 3-hourly
       # read the time axis and see what delta t we really have
-      dt = FesomYearlyOutputFile.timestep_delta_from_cdl(%x(ncdump -v time #{@path}))
+      dt = FesomYearlyOutputFile.timestep_delta_from_cdl( NcdumpCache::ncdump_v_time(@variable_id, @path) )
       raise "tso frequency is not 10800 sec (3h) but #{dt} sec for netcdf #{@path}" if( dt != 3*3600)
       "3hrPt"
     else
