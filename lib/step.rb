@@ -53,20 +53,21 @@ module CMORizer
           raise "#{self.class.to_s.split('::').last} is an inplace command" if commands.all? {|c| c.inplace?}
         end
         
-        command_inputs = inputs
-        command_opath = nil
-        commands.each_with_index do |cmd, i|
-          command_opath = "#{opath}.#{i}"
-          cmd.run(command_inputs, command_opath)
-          command_inputs = [command_opath]
-        end
+        unless File.exist? opath # only run this step if its output does not already exist
+          command_inputs = inputs
+          command_opath = nil
+          commands.each_with_index do |cmd, i|
+            command_opath = "#{opath}.#{i}"
+            cmd.run(command_inputs, command_opath)
+            command_inputs = [command_opath]
+          end
         
-        raise "file exists: #{opath}" if File.exist? opath
-        if command_opath # i.e. commands array is empty
-          FileUtils.mv command_opath, opath
-        else
-          raise "can not rename multiple inputs to a single output" if inputs.size > 1
-          FileUtils.mv inputs[0], opath
+          if command_opath # i.e. commands array is empty
+            FileUtils.mv command_opath, opath
+          else
+            raise "can not rename multiple inputs to a single output" if inputs.size > 1
+            FileUtils.mv inputs[0], opath
+          end
         end
 
         return [opath], years
