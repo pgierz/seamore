@@ -39,23 +39,28 @@ module CMORizer
         experiment_year_ranges = Project.year_ranges_major_digits(first: first_year.to_i, last: last_year.to_i, step: @years_step, major_first_digit:1)
         
         @cmorization_steps_chains.each do |chain|
-          experiment_year_ranges.each do |year_range|
-
-            # fetch files for chain.fesom_variable_description + year_range
-            filtered_fesom_files =
-              fesom_output_files.select do |ff|
-                if year_range.first <= ff.year && ff.year <= year_range.last
-                  if ff.variable_id == chain.input_variable_name && ff.frequency == chain.input_frequency_name
-                    true
-                  end
-                end
-              end
-
-            chain.execute(filtered_fesom_files, experiment, @data_request, @grid_description_file) unless filtered_fesom_files.empty?
-          end        
+          execute_chain(chain, experiment, experiment_year_ranges, fesom_output_files)
         end
       end
     end
+
+
+    private def execute_chain(chain, experiment, experiment_year_ranges, fesom_output_files)
+      experiment_year_ranges.each do |year_range|
+
+        # fetch files for chain.fesom_variable_description + year_range
+        filtered_fesom_files =
+          fesom_output_files.select do |ff|
+            if year_range.first <= ff.year && ff.year <= year_range.last
+              if ff.variable_id == chain.input_variable_name && ff.frequency == chain.input_frequency_name
+                true
+              end
+            end
+          end
+
+        chain.execute(filtered_fesom_files, experiment, @data_request, @grid_description_file) unless filtered_fesom_files.empty?
+      end
+    end                 
   
   
     def cmip6_cmor_tables(version, dir)
