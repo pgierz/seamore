@@ -82,7 +82,7 @@ module CMORizer
       def create_outpath(*inpaths)
         step_suffix = self.class.to_s.split('::').last
         prefix = ""
-        prefix = "#{@initial_prefix}__" if @initial_prefix
+        prefix = "#{@initial_prefix}" if @initial_prefix
         outname = 
           if inpaths.size == 1
             "#{prefix}#{File.basename(inpaths.last)}.#{step_suffix}"
