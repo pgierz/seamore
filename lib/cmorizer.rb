@@ -38,9 +38,25 @@ module CMORizer
         end
         experiment_year_ranges = Project.year_ranges_major_digits(first: first_year.to_i, last: last_year.to_i, step: @years_step, major_first_digit:1)
         
-        @cmorization_steps_chains.each do |chain|
-          execute_chain(chain, experiment, experiment_year_ranges, fesom_output_files)
+        threadcount = 1
+        threads = []
+        chains_queue = Queue.new
+        @cmorization_steps_chains.each {|chain| chains_queue << chain}
+
+        threadcount.times do
+          threads << Thread.new(threads.size) do |threadname|
+            Thread.current.name = "T#{threadname}"
+        
+            while !chains_queue.empty?
+              chain = chains_queue.pop
+              execute_chain(chain, experiment, experiment_year_ranges, fesom_output_files)
+            end
+          
+          end
         end
+
+        threads.each(&:join)
+        threads.clear
       end
     end
 
