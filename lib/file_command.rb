@@ -23,7 +23,7 @@ class FileCommand
   private
   def system_call(cmd)
     t0 = Time.now
-    prefix = "#{Thread.current.name}" if Thread.current.name
+    prefix = "#{Thread.current.name}: " if Thread.current.name
     puts "#{prefix}=> #{t0.strftime "%H:%M:%S"}  #{cmd}"
     out, err, status = Open3.capture3(cmd)
     raise "#{cmd} : #{err}" unless status.success?
