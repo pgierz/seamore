@@ -33,8 +33,9 @@ module CMORizer
           sorted_inputs = @available_inputs.values_at(*sorted_years_arrays)
 
           sorted_years = sorted_years_arrays.flatten
-          results, result_years = process(sorted_inputs, sorted_years, opath)
           opath = create_outpath(sorted_years)
+          process(sorted_inputs, sorted_years, opath, dry_run)
+          results, result_years = [opath], sorted_years
           
           if results && @next_step
             results.each_index do |i|
@@ -69,8 +70,6 @@ module CMORizer
             FileUtils.mv inputs[0], opath
           end
         end
-
-        return [opath], years
       end
             
       
