@@ -4,12 +4,14 @@ module CMORizer
   module Step
     class BaseStep
       attr_writer :forbid_inplace, :initial_prefix
+      attr_reader :resultpath
     
       def initialize(next_step)
         @next_step = next_step
         @available_inputs = {}
         @forbid_inplace = false
         @initial_prefix = nil
+        @resultpath = nil
       end
       
       
@@ -23,17 +25,7 @@ module CMORizer
       end
 
 
-      def add_input(input, years, number_of_eventual_input_years)
-        final_opath = add_input_internal(input, years, number_of_eventual_input_years, false)
-        @available_inputs.clear
-        unless File.exist? final_opath
-          add_input_internal(input, years, number_of_eventual_input_years, true)
-        end
-      end
-      
-      
-      protected
-      def add_input_internal(input, years, number_of_eventual_input_years, should_process)
+      def add_input(input, years, number_of_eventual_input_years, should_process)
         @available_inputs[years] = input
         
         # some steps might be able to process each file as soon as it arrives
@@ -43,17 +35,16 @@ module CMORizer
           sorted_inputs = @available_inputs.values_at(*sorted_years_arrays)
 
           sorted_years = sorted_years_arrays.flatten
-          opath = create_outpath(*sorted_inputs)
-          process(sorted_inputs, sorted_years, opath) if should_process
-          results, result_years = [opath], sorted_years
+          @resultpath = create_outpath(*sorted_inputs)
+          process(sorted_inputs, sorted_years, @resultpath) if should_process
+          results, result_years = [@resultpath], sorted_years
           
           if results && @next_step
             results.each_index do |i|
-              opath = @next_step.add_input_internal(results[i], [result_years[i]], number_of_eventual_input_years, should_process)
+              @next_step.add_input(results[i], [result_years[i]], number_of_eventual_input_years, should_process)
             end
           end
           @available_inputs.clear
-          opath
         end
       end
                   
@@ -79,7 +70,7 @@ module CMORizer
           else
             raise "can not rename multiple inputs to a single output" if inputs.size > 1
             FileUtils.mv inputs[0], opath
-          end
+          end          
         end
       end
             

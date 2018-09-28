@@ -2,6 +2,7 @@ require_relative "step.rb"
 require_relative "controlled_vocabularies.rb"
 require_relative "fesom_output_dir.rb"
 require_relative "global_attributes.rb"
+require 'fileutils'
 
 
 module CMORizer
@@ -308,9 +309,15 @@ module CMORizer
                                   variable_id: data_request_variable.variable_id,
                                   description: data_request_variable.description)}
     
-      # fill the first step with all the passed files
+      # fill the first step with all the passed files without executing
       fesom_files.each do |f|
-        @steps.first.add_input(f.path, [f.year], fesom_files.size)
+        @steps.first.add_input(f.path, [f.year], fesom_files.size, false)
+      end
+      # if the resultpath of the last step (i.e. the final path) does not exist, execute the steps
+      unless(File.exist? @steps.last.resultpath)
+        fesom_files.each do |f|
+          @steps.first.add_input(f.path, [f.year], fesom_files.size, true)
+        end
       end
     end
     
