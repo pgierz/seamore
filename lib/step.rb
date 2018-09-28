@@ -42,7 +42,7 @@ module CMORizer
 
           sorted_years = sorted_years_arrays.flatten
           opath = create_outpath(*sorted_inputs)
-          process(sorted_inputs, sorted_years, opath, should_process)
+          process(sorted_inputs, sorted_years, opath) if should_process
           results, result_years = [opath], sorted_years
           
           if results && @next_step
@@ -55,8 +55,8 @@ module CMORizer
       end
                   
       
-      private def process(inputs, years, opath, should_process) # pipe input files through all our FileCommand objects
-        puts "\t#{self.class} #{inputs.join(', ')} #{opath}" if should_process
+      private def process(inputs, years, opath) # pipe input files through all our FileCommand objects
+        puts "\t#{self.class} #{inputs.join(', ')} #{opath}"
         *commands = file_commands
         if @forbid_inplace # bail out if this step is set to not manipulate a file inplace but all FileCommands of this step act inplace
           raise "#{self.class.to_s.split('::').last} is an inplace command" if commands.all? {|c| c.inplace?}
@@ -67,15 +67,15 @@ module CMORizer
           command_opath = nil
           commands.each_with_index do |cmd, i|
             command_opath = "#{opath}.#{i}"
-            cmd.run(command_inputs, command_opath) if should_process
+            cmd.run(command_inputs, command_opath)
             command_inputs = [command_opath]
           end
         
           if command_opath # i.e. commands array is empty
-            FileUtils.mv command_opath, opath if should_process
+            FileUtils.mv command_opath, opath
           else
             raise "can not rename multiple inputs to a single output" if inputs.size > 1
-            FileUtils.mv inputs[0], opath if should_process
+            FileUtils.mv inputs[0], opath
           end
         end
       end
