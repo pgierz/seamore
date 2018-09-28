@@ -39,7 +39,7 @@ module CMORizer
         end
         experiment_year_ranges = Project.year_ranges_major_digits(first: first_year.to_i, last: last_year.to_i, step: @years_step, major_first_digit:1)
         
-        threadcount = 1
+        threadcount = 20
         threads = []
         chains_queue = Queue.new
         @cmorization_steps_chains.each {|chain| chains_queue << chain}
