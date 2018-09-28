@@ -33,8 +33,8 @@ module CMORizer
           sorted_inputs = @available_inputs.values_at(*sorted_years_arrays)
 
           sorted_years = sorted_years_arrays.flatten
-          opath = create_outpath(*sorted_inputs)
           results, result_years = process(sorted_inputs, sorted_years, opath)
+          opath = create_outpath(sorted_years)
           
           if results && @next_step
             results.each_index do |i|
@@ -79,16 +79,13 @@ module CMORizer
       end
       
       
-      def create_outpath(*inpaths)
+      def create_outpath(years)
         step_suffix = self.class.to_s.split('::').last
-        prefix = ""
-        prefix = "#{@initial_prefix}" if @initial_prefix
-        outname = 
-          if inpaths.size == 1
-            "#{prefix}#{File.basename(inpaths.last)}.#{step_suffix}"
-          else
-            "#{prefix}#{File.basename(inpaths.first, ".*")}--#{File.basename(inpaths.last)}.#{step_suffix}"
-          end
+        prefix = (@initial_prefix) ? "#{@initial_prefix}" : ""
+        from = "#{years.min}"
+        to = "#{years.max}"
+        
+        outname = "#{prefix}#{from}--#{to}.#{step_suffix}"
         
         File.join @outdir, outname
       end
@@ -126,9 +123,7 @@ module CMORizer
     
 
     class APPLY_CMOR_FILENAME < IndividualBaseStep
-      def create_outpath(*inpaths)
-        raise "can not create CMOR filename for multiple inputs" if inpaths.size > 1
-
+      def create_outpath(years)
         outname = @global_attributes.filename
                 
         File.join @outdir, outname
