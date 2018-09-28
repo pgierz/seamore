@@ -318,6 +318,13 @@ module CMORizer
         fesom_files.each do |f|
           @steps.first.add_input(f.path, [f.year], fesom_files.size, true)
         end
+
+        # remove all step results except the last one, we did set @steps[0].forbid_inplace = true, so the first step has created a copy of the original input
+        if(File.exist? @steps.last.resultpath)
+          @steps[0..-2].each do |s|
+            FileUtils.rm(s.resultpath) if File.exist?(s.resultpath) # if the step processes all files inplace, the resultpath from the previous step has been renamed and does not exist anymore
+          end
+        end
       end
     end
     
