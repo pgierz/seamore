@@ -24,9 +24,11 @@ module CMORizer
 
 
       def add_input(input, years, number_of_eventual_input_years)
-        add_input_internal(input, years, number_of_eventual_input_years, false)
+        final_opath = add_input_internal(input, years, number_of_eventual_input_years, false)
         @available_inputs.clear
-        add_input_internal(input, years, number_of_eventual_input_years, true)
+        unless File.exist? final_opath
+          add_input_internal(input, years, number_of_eventual_input_years, true)
+        end
       end
       
       
@@ -47,10 +49,11 @@ module CMORizer
           
           if results && @next_step
             results.each_index do |i|
-              @next_step.add_input_internal(results[i], [result_years[i]], number_of_eventual_input_years, should_process)
+              opath = @next_step.add_input_internal(results[i], [result_years[i]], number_of_eventual_input_years, should_process)
             end
           end
           @available_inputs.clear
+          opath
         end
       end
                   
