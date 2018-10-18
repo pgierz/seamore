@@ -48,11 +48,14 @@ module CMORizer
           threads << Thread.new(threads.size) do |threadname|
             Thread.current.name = "T#{threadname}"
         
+            didanything = false
             while !chains_queue.empty?
               chain = chains_queue.pop
               execute_chain(chain, experiment, experiment_year_ranges, fesom_output_files)
+              didanything = true
             end
           
+            puts "#{Thread.current.name}: => #{Time.now} DONE <=" if didanything
           end
         end
 
