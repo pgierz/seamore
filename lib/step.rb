@@ -82,9 +82,10 @@ module CMORizer
       
       def create_outpath(*inpaths)
         step_suffix = self.class.to_s.split('::').last
+        step_suffix = step_suffix[0..9] # truncate to 10 characters so we do not get too long file names (apparently 255 chars max on mistral)
         prefix = (@initial_prefix) ? "#{@initial_prefix}" : ""
         from = "#{File.basename(inpaths[0])}"
-        to = (inpaths.size > 1) ? "--#{File.basename(inpaths.last)}" : ""
+        to = (inpaths.size > 1) ? "-#{File.basename(inpaths.last)}" : ""
         
         outname = "#{prefix}#{from}#{to}.#{step_suffix}"
         
