@@ -20,13 +20,22 @@ class FileCommand
   end
 
 
+  # determine if a command has been executed successfully
+  def command_success?(out, err, status)
+    return false unless status.success?
+    return false unless err.empty?
+    
+    true
+  end
+
+
   private
   def system_call(cmd)
     t0 = Time.now
     prefix = "#{Thread.current.name}: " if Thread.current.name
     puts "#{prefix}=> #{t0.strftime "%H:%M:%S"}  #{cmd}"
     out, err, status = Open3.capture3(cmd)
-    raise "#{cmd} : #{err}" unless status.success?
+    raise "#{cmd} : #{err}" unless command_success?(out, err, status)
     puts "#{prefix}<= #{sprintf('%5.1f',Time.now-t0)} sec"
   end
 end
@@ -58,14 +67,23 @@ class InplaceCommand < FileCommand
 end
 
 
-class CDO_MERGE_cmd < OutofplaceCommand
+class CDO_cmd < OutofplaceCommand
+  def command_success?(out, err, status) # cdo almost always prints something to the error stream
+    return false unless status.success?
+        
+    true
+  end
+end
+
+
+class CDO_MERGE_cmd < CDO_cmd
   def cmd_txt_outofplace(infiles, outfile)
     %Q(cdo mergetime #{infiles.join(' ')} #{outfile})
   end
 end
 
 
-class CDO_SET_T_UNITS_DAYS_cmd < OutofplaceCommand
+class CDO_SET_T_UNITS_DAYS_cmd < CDO_cmd
   def cmd_txt_outofplace(infiles, outfile)
     %Q(cdo settunits,days #{infiles.join(' ')} #{outfile})
   end
