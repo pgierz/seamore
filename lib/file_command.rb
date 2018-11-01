@@ -107,7 +107,7 @@ class NCATTED_ADD_GLOBAL_ATTRIBUTES_cmd < InplaceCommand
   def cmd_txt_inplace(file)
     att_args = ""
     @attributes.each {|att_name, att_txt| att_args += %Q( -a #{att_name},global,o,c,"#{att_txt}") }
-    %Q(ncatted --create_ram --no_tmp_fl -h#{att_args} #{file})
+    %Q(ncatted --create_ram -h#{att_args} #{file})
   end
 end
 
@@ -120,7 +120,7 @@ class NCATTED_DELETE_GLOBAL_ATTRIBUTES_cmd < InplaceCommand
   def cmd_txt_inplace(file)
     att_args = ""
     @attribute_names.each {|n| att_args += %Q( -a #{n},global,d,,)}
-    %Q(ncatted --create_ram --no_tmp_fl -h#{att_args} #{file})
+    %Q(ncatted --create_ram -h#{att_args} #{file})
   end
 end
 
@@ -131,7 +131,7 @@ class NCATTED_SET_VARIABLE_DESCRIPTION_cmd < InplaceCommand
   end
 
   def cmd_txt_inplace(file)
-    %Q(ncatted --create_ram --no_tmp_fl -h -a description,#{@var_name},o,c,"#{@description}" #{file})
+    %Q(ncatted --create_ram -h -a description,#{@var_name},o,c,"#{@description}" #{file})
   end
 end
 
@@ -179,7 +179,7 @@ class NCATTED_APPEND_COORDINATES_VALUE_cmd < InplaceCommand
 
   def cmd_txt_inplace(file)
     # this does not seem to create a temporary file, but no mention of in-place operation in the ncatted docs
-    %Q(ncatted --create_ram --no_tmp_fl -a coordinates,#{@variable_id},a,c,'lat lon' #{file})
+    %Q(ncatted --create_ram -a coordinates,#{@variable_id},a,c,'lat lon' #{file})
   end
 end
 
