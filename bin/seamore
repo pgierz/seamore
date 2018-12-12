@@ -46,7 +46,7 @@ command :print_possible do |c|
 end
 
 
-desc 'Print matches of FESOM output variables and a given data request'
+desc 'Print matches of FESOM output variables for a given data request'
 arg "tables_directory"
 arg "FESOM_output_directory"
 command :match_available do |c|
@@ -56,7 +56,7 @@ command :match_available do |c|
 end
 
 
-desc 'Print matches of variables FESOM could possibly produce and a given data request'
+desc 'Print matches of variables FESOM could possibly produce for a given data request'
 arg "tables_directory"
 command :match_possible do |c|
   c.action do |global_opts,opts,args|
