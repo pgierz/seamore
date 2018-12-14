@@ -87,6 +87,11 @@ class DataRequest
   end
 
 
+  def find_variable_id_in_table_id(variable_id, table_id)
+    @variables.find {|v| variable_id == v.variable_id && v.table_ids.include?(table_id)}
+  end
+
+
   def variable_ids
     @variables.map {|v| v.variable_id}
   end

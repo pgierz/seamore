@@ -294,7 +294,7 @@ module CMORizer
       puts "#{@input_variable_name}_#{@input_frequency_name} ==> #{@cmor_variable_id}_#{@cmor_table_id}"
       
       # offer info about the current experiment and variable to all step objects
-      data_request_variable = data_request.find @cmor_variable_id, @input_frequency_name
+      data_request_variable = data_request.find_variable_id_in_table_id(@cmor_variable_id, @cmor_table_id) # the variable from the data request might have a different frequency than the input variable
       raise "data request does not contain variable #{@cmor_variable_id} #{@input_frequency_name}" unless data_request_variable
       cmor_frequency_name = data_request_variable.frequency_in_table(@cmor_table_id)
       global_attributes = create_global_attributes(experiment: experiment,
