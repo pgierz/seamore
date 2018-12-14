@@ -15,11 +15,12 @@ module CMORizer
       end
       
       
-      def set_info(outdir:, grid_description_file:, global_attributes:, fesom_variable_name:, variable_id:, description:)
+      def set_info(outdir:, grid_description_file:, global_attributes:, fesom_variable_name:, fesom_variable_frequency:, variable_id:, description:)
         @outdir = outdir
         @grid_description_file = grid_description_file
         @global_attributes = global_attributes
         @fesom_variable_name = fesom_variable_name
+        @fesom_variable_frequency = fesom_variable_frequency
         @variable_id = variable_id
         @description = description
       end
@@ -116,6 +117,28 @@ module CMORizer
     class MERGEFILES < JoinedBaseStep
       def file_commands
         CDO_MERGE_cmd.new        
+      end
+    end
+    
+    
+    class AUTOMATICALLY_DOWNSAMPLE_FREQUENCY < IndividualBaseStep
+      def file_commands
+        cmds = []
+        
+        in_freq = Frequency.for_name(@fesom_variable_frequency)
+        out_freq = Frequency.for_name(@global_attributes.frequency)
+
+        if(in_freq != out_freq)          
+          case [in_freq.name, out_freq.name]
+          when ["day", "mon"]
+            # cdo monmean day_file mon_file
+            cmds << CDO_MONMEAN_cmd.new
+          else
+            raise "can not automatically downsample frequency from '#{in_freq.name}' to '#{out_freq.name}'"
+          end
+        end
+        
+        cmds
       end
     end
     

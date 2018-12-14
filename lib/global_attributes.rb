@@ -102,6 +102,11 @@ class GlobalAttributes
     @filename = create_filename(@attributes, experiment_info.first_year, experiment_info.last_year, variable_info.frequency)
   end
 
+  
+  def frequency
+    @attributes['frequency']
+  end
+  
 
   def as_hash
     @attributes

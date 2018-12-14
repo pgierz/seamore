@@ -54,7 +54,7 @@ module CMORizer
               execute_chain(chain, experiment, experiment_year_ranges, fesom_output_files)
               didanything = true
             end
-          
+            
             puts "#{Thread.current.name}: => #{Time.now} DONE <=" if didanything
           end
         end
@@ -292,7 +292,7 @@ module CMORizer
     
     def execute(fesom_files, experiment, data_request, grid_description_file)
       puts "#{@input_variable_name}_#{@input_frequency_name} ==> #{@cmor_variable_id}_#{@cmor_table_id}"
-      
+            
       # offer info about the current experiment and variable to all step objects
       data_request_variable = data_request.find_variable_id_in_table_id(@cmor_variable_id, @cmor_table_id) # the variable from the data request might have a different frequency than the input variable
       raise "data request does not contain variable #{@cmor_variable_id} #{@input_frequency_name}" unless data_request_variable
@@ -309,6 +309,7 @@ module CMORizer
                                   grid_description_file: grid_description_file,
                                   global_attributes: global_attributes,
                                   fesom_variable_name: @input_variable_name,
+                                  fesom_variable_frequency: @input_frequency_name,
                                   variable_id: data_request_variable.variable_id,
                                   description: data_request_variable.description)}
     
