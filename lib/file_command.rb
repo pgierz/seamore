@@ -90,6 +90,13 @@ class CDO_SET_T_UNITS_DAYS_cmd < CDO_cmd
 end
 
 
+class CDO_MONMEAN_cmd < CDO_cmd
+  def cmd_txt_outofplace(infiles, outfile)
+    %Q(cdo monmean #{infiles.join(' ')} #{outfile})
+  end
+end
+
+
 class FESOM_MEAN_TIMESTAMP_ADJUST_cmd < InplaceCommand
   def cmd_txt_inplace(file)
     bin = ENV["FESOM_MEAN_TIMESTAMP_ADJUST_BIN"]
