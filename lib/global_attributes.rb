@@ -56,7 +56,7 @@ class GlobalAttributes
     sub_experiment_id = "none"
     
     @attributes = {}
-    @attributes['activity_id'] = "HighResMIP"
+    @attributes['activity_id'] = "CMIP"
     @attributes['Conventions'] = "CF-1.7 CMIP-6.0" # this depends on the version of the file https://docs.google.com/document/d/1h0r8RZr_f3-8egBMMh7aqLwy3snpD6_MrDz1q8n5XUk/edit
     @attributes['creation_date'] = creation_date_txt(Time.now)
     @attributes['data_specs_version'] = data_specs_version
@@ -92,7 +92,7 @@ class GlobalAttributes
       @attributes['branch_time_in_child'] = "0.0D0"
       d = 0; parent_experiment_info.first_year.upto(experiment_info.first_year) {|y| d += days_in_year y}
       @attributes['branch_time_in_parent'] = "#{d}.0D0"
-      @attributes['parent_activity_id'] = "HighResMIP"
+      @attributes['parent_activity_id'] = "CMIP"
       @attributes['parent_experiment_id'] = parent_experiment_info.id
       @attributes['parent_mip_era'] = "CMIP6"
       @attributes['parent_source_id'] = parent_experiment_info.source_id
