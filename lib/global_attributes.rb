@@ -4,16 +4,18 @@ require 'date'
 
 
 class GlobalAttributesBuilder
-  def set_experiment_info(id:, variant_label:, first_year:, last_year:)
+  def set_experiment_info(id:, source_id:, variant_label:, first_year:, last_year:)
     @experiment_info = OpenStruct.new(:id => id,
+                                      :source_id => source_id,
                                       :variant_label => variant_label,
                                       :first_year => first_year,
                                       :last_year => last_year)
   end
 
 
-  def set_parent_experiment_info(id:, variant_label:, first_year:, last_year:)
+  def set_parent_experiment_info(id:, source_id:, variant_label:, first_year:, last_year:)
     @parent_experiment_info = OpenStruct.new(:id => id,
+                                             :source_id => source_id,
                                              :variant_label => variant_label,
                                              :first_year => first_year,
                                              :last_year => last_year)
@@ -28,9 +30,8 @@ class GlobalAttributesBuilder
   end
   
   
-  def set_grid_info(source_id:, nominal_resolution:, txt:)
-    @grid_info = OpenStruct.new(:source_id => source_id,
-                                :nominal_resolution => nominal_resolution,
+  def set_grid_info(nominal_resolution:, txt:)
+    @grid_info = OpenStruct.new(:nominal_resolution => nominal_resolution,
                                 :txt => txt)
   end
   
@@ -76,7 +77,7 @@ class GlobalAttributes
     @attributes['product'] = "model-output"
     @attributes['realization_index'] = "1"
     @attributes['realm'] = variable_info.realms.join(' ')
-    @attributes['source'] = grid_info.source_id
+    @attributes['source'] = experiment_info.source_id
     @attributes['source_id'] = @attributes['source']
     @attributes['source_type'] = "AOGCM"
     @attributes['sub_experiment'] = "none"

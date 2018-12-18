@@ -336,19 +336,19 @@ module CMORizer
     private def create_global_attributes(experiment:, first_file_year:, last_file_year:, variable_id:, frequency:, table_id:, realms:)
       builder = GlobalAttributesBuilder.new
       builder.set_experiment_info(id: experiment.experiment_id,
+                                  source_id: experiment.source_id,
                                   variant_label: experiment.variant_label,
                                   first_year: first_file_year,
                                   last_year: last_file_year)
       parent = experiment.parent_experiment
       if(parent)
         builder.set_parent_experiment_info(id: parent.experiment_id,
+                                    source_id: experiment.source_id,
                                     variant_label: parent.variant_label,
                                     first_year: parent.first_year)
       end
       builder.set_variable_info(id: variable_id, frequency: frequency, table_id: table_id, realms: realms)
-      source_id = experiment.source_id
-      builder.set_grid_info(source_id: source_id,
-                            nominal_resolution: experiment.nominal_resolution,
+      builder.set_grid_info(nominal_resolution: experiment.nominal_resolution,
                             txt: experiment.grid_txt)
   
       builder.build_global_attributes(data_specs_version: experiment.data_request_version)
