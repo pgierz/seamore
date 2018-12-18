@@ -78,7 +78,7 @@ module CMORizer
             end
           end
 
-        chain.execute(filtered_fesom_files, experiment, @data_request, @grid_description_file) unless filtered_fesom_files.empty?
+        chain.execute(filtered_fesom_files, experiment, @data_request, @grid_description_file, @version_date) unless filtered_fesom_files.empty?
       end
     end                 
   
@@ -97,6 +97,11 @@ module CMORizer
     
     def merge_years_step(s) # DSL setter
       @years_step = s
+    end
+    
+    
+    def version_date(y,m,d) # DSL setter
+      @version_date = [y,m,d]
     end
     
     
@@ -290,7 +295,7 @@ module CMORizer
     end
     
     
-    def execute(fesom_files, experiment, data_request, grid_description_file)
+    def execute(fesom_files, experiment, data_request, grid_description_file, version_date)
       puts "#{@input_variable_name}_#{@input_frequency_name} ==> #{@cmor_variable_id}_#{@cmor_table_id}"
             
       # offer info about the current experiment and variable to all step objects
@@ -303,7 +308,8 @@ module CMORizer
                                           variable_id: data_request_variable.variable_id,
                                           frequency: cmor_frequency_name,
                                           table_id: @cmor_table_id,
-                                          realms: data_request_variable.realms)
+                                          realms: data_request_variable.realms,
+                                          version_date: version_date)
       
       @steps.each {|s| s.set_info(outdir: experiment.outdir,
                                   grid_description_file: grid_description_file,
@@ -333,7 +339,7 @@ module CMORizer
     end
     
     
-    private def create_global_attributes(experiment:, first_file_year:, last_file_year:, variable_id:, frequency:, table_id:, realms:)
+    private def create_global_attributes(experiment:, first_file_year:, last_file_year:, variable_id:, frequency:, table_id:, realms:, version_date:)
       builder = GlobalAttributesBuilder.new
       builder.set_experiment_info(id: experiment.experiment_id,
                                   source_id: experiment.source_id,
@@ -351,7 +357,7 @@ module CMORizer
       builder.set_grid_info(nominal_resolution: experiment.nominal_resolution,
                             txt: experiment.grid_txt)
   
-      builder.build_global_attributes(data_specs_version: experiment.data_request_version)
+      builder.build_global_attributes(version_date: version_date, data_specs_version: experiment.data_request_version)
     end
 
 

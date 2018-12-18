@@ -36,8 +36,9 @@ class GlobalAttributesBuilder
   end
   
   
-  def build_global_attributes(data_specs_version:)
-    GlobalAttributes.new(data_specs_version: data_specs_version,
+  def build_global_attributes(version_date:, data_specs_version:)
+    GlobalAttributes.new(version_date: version_date,
+                         data_specs_version: data_specs_version,
                          variable_info: @variable_info,
                          grid_info: @grid_info,
                          experiment_info: @experiment_info,
@@ -50,7 +51,7 @@ end
 class GlobalAttributes
   attr_reader :filename
 
-  def initialize(data_specs_version:, variable_info:, grid_info:, experiment_info:, parent_experiment_info:nil)
+  def initialize(version_date:, data_specs_version:, variable_info:, grid_info:, experiment_info:, parent_experiment_info:nil)
     institution_id = "AWI"
     mip_era = "CMIP6"
     sub_experiment_id = "none"
@@ -58,7 +59,7 @@ class GlobalAttributes
     @attributes = {}
     @attributes['activity_id'] = "CMIP"
     @attributes['Conventions'] = "CF-1.7 CMIP-6.0" # this depends on the version of the file https://docs.google.com/document/d/1h0r8RZr_f3-8egBMMh7aqLwy3snpD6_MrDz1q8n5XUk/edit
-    @attributes['creation_date'] = creation_date_txt(Time.now)
+    @attributes['creation_date'] = "#{version_date.map{|x| sprintf('%02d',x)}.join('-')}T12:00:00Z" # we decided to use the same date as the date from the version directory (vYYYYMMDD), see section "Directory structure template" in https://docs.google.com/document/d/1h0r8RZr_f3-8egBMMh7aqLwy3snpD6_MrDz1q8n5XUk/edit
     @attributes['data_specs_version'] = data_specs_version
     @attributes['experiment'] = experiment_info.id
     @attributes['experiment_id'] = @attributes['experiment']
