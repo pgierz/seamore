@@ -143,6 +143,14 @@ class NCATTED_SET_VARIABLE_DESCRIPTION_cmd < InplaceCommand
 end
 
 
+class NCATTED_SET_LAT_LON_BNDS_STANDARD_NAME_cmd < InplaceCommand
+  def cmd_txt_inplace(file)
+    # set standard_name according to the CF conventions
+    %Q(ncatted --create_ram -h -a standard_name,lat_bnds,o,c,"lat_bnds" -a standard_name,lon_bnds,o,c,"lon_bnds" #{file})
+  end
+end
+
+
 class NCRENAME_RENAME_VARIABLE_cmd < InplaceCommand
   def initialize(old_name, new_name)
     @old_name, @new_name = old_name, new_name

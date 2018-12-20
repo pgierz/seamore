@@ -197,6 +197,15 @@ module CMORizer
         cmds
       end
     end
+
+
+    class FIX_CF_NAMES < IndividualBaseStep
+      def file_commands
+        cmds = []
+        cmds << NCATTED_SET_LAT_LON_BNDS_STANDARD_NAME_cmd.new
+        cmds
+      end
+    end
     
     
     class FESOM_MEAN_TIMESTAMP_ADJUST < IndividualBaseStep
