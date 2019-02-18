@@ -97,10 +97,9 @@ class CDO_MONMEAN_cmd < CDO_cmd
 end
 
 
-class FESOM_MEAN_TIMESTAMP_ADJUST_cmd < InplaceCommand
+class MEAN_TIMESTAMP_ADJUST_cmd < InplaceCommand
   def cmd_txt_inplace(file)
-    bin = ENV["FESOM_MEAN_TIMESTAMP_ADJUST_BIN"]
-    bin = "fesom_mean_timestamp_adjust" unless bin # env not set, assume binary is available via PATH
+    bin = "ncn mean_timestamp_adjust" unless bin # assume binary is known via PATH
     %Q(#{bin} #{file})
   end
 end

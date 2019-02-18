@@ -208,9 +208,9 @@ module CMORizer
     end
     
     
-    class FESOM_MEAN_TIMESTAMP_ADJUST < IndividualBaseStep
+    class MEAN_TIMESTAMP_ADJUST < IndividualBaseStep
       def file_commands
-        FESOM_MEAN_TIMESTAMP_ADJUST_cmd.new
+        MEAN_TIMESTAMP_ADJUST_cmd.new
       end
     end
     
