@@ -120,7 +120,13 @@ class NCATTED_ADD_GLOBAL_ATTRIBUTES_cmd < InplaceCommand
 
   def cmd_txt_inplace(file)
     att_args = ""
-    @attributes.each {|att_name, att_txt| att_args += %Q( -a #{att_name},global,o,c,"#{att_txt}") }
+    @attributes.each do |att_name, att_txt|
+      if att_txt.is_a? Integer
+        att_args += %Q( -a #{att_name},global,o,l,#{att_txt})
+      else
+        att_args += %Q( -a #{att_name},global,o,c,"#{att_txt}")
+      end
+    end
     %Q(ncatted --create_ram -h#{att_args} #{file})
   end
 end
