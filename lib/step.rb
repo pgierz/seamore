@@ -215,6 +215,13 @@ module CMORizer
     end
     
     
+    class INSERT_TIME_BOUNDS < IndividualBaseStep
+      def file_commands
+        INSERT_TIME_BOUNDS_cmd.new
+      end
+    end
+    
+    
     class Unit_K_to_degC < IndividualBaseStep
     end
     

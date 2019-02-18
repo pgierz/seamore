@@ -105,6 +105,14 @@ class MEAN_TIMESTAMP_ADJUST_cmd < InplaceCommand
 end
 
 
+class INSERT_TIME_BOUNDS_cmd < InplaceCommand
+  def cmd_txt_inplace(file)
+    bin = "ncn insert_time_bounds" unless bin # assume binary is known via PATH
+    %Q(#{bin} #{file})
+  end
+end
+
+
 class NCATTED_ADD_GLOBAL_ATTRIBUTES_cmd < InplaceCommand
   def initialize(attributes_hash)
     @attributes = attributes_hash
