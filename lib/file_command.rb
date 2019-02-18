@@ -145,6 +145,20 @@ class NCATTED_DELETE_GLOBAL_ATTRIBUTES_cmd < InplaceCommand
 end
 
 
+class NCATTED_DELETE_VARIABLE_ATTRIBUTES_cmd < InplaceCommand
+  def initialize(var_name, attribute_names)
+    @var_name = var_name
+    @attribute_names = attribute_names
+  end
+
+  def cmd_txt_inplace(file)
+    att_args = ""
+    @attribute_names.each {|n| att_args += %Q( -a #{n},#{@var_name},d,,)}
+    %Q(ncatted --create_ram -h#{att_args} #{file})
+  end
+end
+
+
 class NCATTED_SET_VARIABLE_DESCRIPTION_cmd < InplaceCommand
   def initialize(var_name, description)
     @var_name, @description = var_name, description

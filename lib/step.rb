@@ -203,6 +203,8 @@ module CMORizer
       def file_commands
         cmds = []
         cmds << NCATTED_SET_LAT_LON_BNDS_STANDARD_NAME_cmd.new
+        cmds << NCATTED_DELETE_VARIABLE_ATTRIBUTES_cmd.new("lat_bnds", %w(units standard_name centers))
+        cmds << NCATTED_DELETE_VARIABLE_ATTRIBUTES_cmd.new("lon_bnds", %w(units standard_name centers))
         cmds
       end
     end
