@@ -119,10 +119,10 @@ class GlobalAttributes
   private def indices_hash_from_variant_label(variant_label)
     /^r(?<ri>\d+)i(?<ii>\d+)p(?<pi>\d+)f(?<fi>\d+)$/ =~ variant_label
     h = {}
-    h['realization_index'] = ri
-    h['initialization_index'] = ii
-    h['physics_index'] = pi
-    h['forcing_index'] = fi
+    h['realization_index'] = ri.to_i
+    h['initialization_index'] = ii.to_i
+    h['physics_index'] = pi.to_i
+    h['forcing_index'] = fi.to_i
     h
   end
   
