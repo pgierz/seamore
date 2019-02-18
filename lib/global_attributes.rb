@@ -55,6 +55,7 @@ class GlobalAttributes
     institution_id = "AWI"
     mip_era = "CMIP6"
     sub_experiment_id = "none"
+    indices_hash = indices_hash_from_variant_label(experiment_info.variant_label)
     
     @attributes = {}
     @attributes['activity_id'] = "CMIP"
@@ -63,20 +64,20 @@ class GlobalAttributes
     @attributes['data_specs_version'] = data_specs_version
     @attributes['experiment'] = experiment_info.id
     @attributes['experiment_id'] = @attributes['experiment']
-    @attributes['forcing_index'] = "2"
+    @attributes['forcing_index'] = indices_hash['forcing_index']
     @attributes['frequency'] = variable_info.frequency
     @attributes['further_info_url'] = "http://furtherinfo.es-doc.org/#{mip_era}.#{institution_id}.#{experiment_info.source_id}.#{experiment_info.id}.#{sub_experiment_id}.#{experiment_info.variant_label}"
     @attributes['grid'] = grid_info.txt #cv['source_id'][experiment_info.source_id].model_component.ocean.description
     @attributes['grid_label'] = "gn"
-    @attributes['initialization_index'] = "1"
+    @attributes['initialization_index'] = indices_hash['initialization_index']
     @attributes['institution'] = "Alfred Wegener Institute, Helmholtz Centre for Polar and Marine Research, Am Handelshafen 12, 27570 Bremerhaven, Germany"
     @attributes['institution_id'] = institution_id
     @attributes['license'] = "CMIP6 model data produced by Alfred Wegener Institute, Helmholtz Centre for Polar and Marine Research, Am Handelshafen 12, 27570 Bremerhaven, Germany is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (https://creativecommons.org/licenses/). Consult https://pcmdi.llnl.gov/CMIP6/TermsOfUse for terms of use governing CMIP6 output, including citation requirements and proper acknowledgment. Further information about this data, including some limitations, can be found via the further_info_url (recorded as a global attribute in this file). The data producers and data providers make no warranty, either express or implied, including, but not limited to, warranties of merchantability and fitness for a particular purpose. All liabilities arising from the supply of the information (including any liability arising in negligence) are excluded to the fullest extent permitted by law."
     @attributes['mip_era'] = mip_era
     @attributes['nominal_resolution'] = grid_info.nominal_resolution
-    @attributes['physics_index'] = "1"
+    @attributes['physics_index'] = indices_hash['physics_index']
     @attributes['product'] = "model-output"
-    @attributes['realization_index'] = "1"
+    @attributes['realization_index'] = indices_hash['realization_index']
     @attributes['realm'] = variable_info.realms.join(' ')
     @attributes['source'] = experiment_info.source_id
     @attributes['source_id'] = @attributes['source']
@@ -112,6 +113,17 @@ class GlobalAttributes
 
   def as_hash
     @attributes
+  end
+  
+  
+  private def indices_hash_from_variant_label(variant_label)
+    /^r(?<ri>\d+)i(?<ii>\d+)p(?<pi>\d+)f(?<fi>\d+)$/ =~ variant_label
+    h = {}
+    h['realization_index'] = ri
+    h['initialization_index'] = ii
+    h['physics_index'] = pi
+    h['forcing_index'] = fi
+    h
   end
   
   
