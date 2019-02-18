@@ -63,7 +63,7 @@ class GlobalAttributes
     @attributes['data_specs_version'] = data_specs_version
     @attributes['experiment'] = experiment_info.id
     @attributes['experiment_id'] = @attributes['experiment']
-    @attributes['forcing_index'] = "002"
+    @attributes['forcing_index'] = "2"
     @attributes['frequency'] = variable_info.frequency
     @attributes['further_info_url'] = "http://furtherinfo.es-doc.org/#{mip_era}.#{institution_id}.#{experiment_info.source_id}.#{experiment_info.id}.#{sub_experiment_id}.#{experiment_info.variant_label}"
     @attributes['grid'] = grid_info.txt #cv['source_id'][experiment_info.source_id].model_component.ocean.description
