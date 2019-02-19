@@ -20,6 +20,7 @@ class CMORizerTests < Minitest::Test
       experiment_id "highres-future" do
         indir ""
         outdir ""
+        variant_label "r1i1p1f1"
       end
     EOFHEREDOC
   
