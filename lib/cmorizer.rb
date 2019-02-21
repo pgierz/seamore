@@ -237,7 +237,9 @@ module CMORizer
       
       @parent_experiment_info =
       if parent_experiment_cv
-        OpenStruct.new(:experiment_id => parent_experiment_id, :source_id => source_id, :variant_label => @parent_variant_label, :first_year => @parent_first_year)
+        parent_activity_id = parent_experiment_cv['activity_id']
+        parent_activity_id = parent_activity_id.join if parent_activity_id.is_a? Array
+        OpenStruct.new(:experiment_id => parent_experiment_id, :source_id => source_id, :activity_id => parent_activity_id, :variant_label => @parent_variant_label, :first_year => @parent_first_year)
       else
         nil
       end      
@@ -401,6 +403,7 @@ module CMORizer
       builder = GlobalAttributesBuilder.new
       builder.set_experiment_info(id: experiment.experiment_id,
                                   source_id: experiment.source_id,
+                                  activity_id: experiment.activity_id,
                                   variant_label: experiment.variant_label,
                                   first_year: first_file_year,
                                   last_year: last_file_year)
@@ -408,6 +411,7 @@ module CMORizer
       if(parent_info)
         builder.set_parent_experiment_info(id: parent_info.experiment_id,
                                     source_id: parent_info.source_id,
+                                    activity_id: parent_info.activity_id,
                                     variant_label: parent_info.variant_label,
                                     first_year: parent_info.first_year)
       end

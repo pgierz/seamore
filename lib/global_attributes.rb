@@ -4,18 +4,20 @@ require 'date'
 
 
 class GlobalAttributesBuilder
-  def set_experiment_info(id:, source_id:, variant_label:, first_year:, last_year:)
+  def set_experiment_info(id:, source_id:, activity_id:, variant_label:, first_year:, last_year:)
     @experiment_info = OpenStruct.new(:id => id,
                                       :source_id => source_id,
+                                      :activity_id => activity_id,
                                       :variant_label => variant_label,
                                       :first_year => first_year,
                                       :last_year => last_year)
   end
 
 
-  def set_parent_experiment_info(id:, source_id:, variant_label:, first_year:)
+  def set_parent_experiment_info(id:, source_id:, activity_id:, variant_label:, first_year:)
     @parent_experiment_info = OpenStruct.new(:id => id,
                                              :source_id => source_id,
+                                             :activity_id => activity_id,
                                              :variant_label => variant_label,
                                              :first_year => first_year)
   end
@@ -57,7 +59,7 @@ class GlobalAttributes
     indices_hash = indices_hash_from_variant_label(experiment_info.variant_label)
     
     @attributes = {}
-    @attributes['activity_id'] = "CMIP"
+    @attributes['activity_id'] = experiment_info.activity_id
     @attributes['Conventions'] = "CF-1.7 CMIP-6.0" # this depends on the version of the file https://docs.google.com/document/d/1h0r8RZr_f3-8egBMMh7aqLwy3snpD6_MrDz1q8n5XUk/edit
     @attributes['creation_date'] = "#{version_date.map{|x| sprintf('%02d',x)}.join('-')}T12:00:00Z" # we decided to use the same date as the date from the version directory (vYYYYMMDD), see section "Directory structure template" in https://docs.google.com/document/d/1h0r8RZr_f3-8egBMMh7aqLwy3snpD6_MrDz1q8n5XUk/edit
     @attributes['data_specs_version'] = data_specs_version
@@ -93,7 +95,7 @@ class GlobalAttributes
       @attributes['branch_time_in_child'] = "0.0D0"
       d = 0; parent_experiment_info.first_year.upto(experiment_info.first_year) {|y| d += days_in_year y}
       @attributes['branch_time_in_parent'] = "#{d}.0D0"
-      @attributes['parent_activity_id'] = "CMIP"
+      @attributes['parent_activity_id'] = parent_experiment_info.activity_id
       @attributes['parent_experiment_id'] = parent_experiment_info.id
       @attributes['parent_mip_era'] = "CMIP6"
       @attributes['parent_source_id'] = parent_experiment_info.source_id
