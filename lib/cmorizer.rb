@@ -207,7 +207,7 @@ module CMORizer
       @grid_txt = controlled_vocabularies['source_id'][source_id]['model_component']['ocean']['description']
       
       parent_experiment_id = @experiment_cv['parent_experiment_id']
-      parent_experiment_id = parent_experiment_id.first if parent_experiment_id.is_a? Array
+      parent_experiment_id = parent_experiment_id.join if parent_experiment_id.is_a? Array
       
       # parent_experiment_id might be set to "no parent", in which case our parent_experiment_cv would be nil
       parent_experiment_cv = controlled_vocabularies['experiment_id'][parent_experiment_id]
