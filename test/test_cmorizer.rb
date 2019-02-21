@@ -21,6 +21,7 @@ class CMORizerTests < Minitest::Test
         indir ""
         outdir ""
         variant_label "r1i1p1f1"
+        parent_variant_label "r1i1p1f1"
       end
     EOFHEREDOC
   

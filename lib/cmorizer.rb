@@ -231,6 +231,15 @@ module CMORizer
       end
     end
 
+    
+    def parent_variant_label(l=nil) # optional DSL setter (required if there is a parent)
+      @parent_variant_label = l
+      def self.parent_variant_label # redefine to behave as getter
+        @parent_variant_label
+      end
+      @parent_variant_label
+    end
+
 
     def parent_experiment(pe=nil) # optinal DSL setter
       @parent_experiment = pe
@@ -238,6 +247,15 @@ module CMORizer
         @parent_experiment
       end
       @parent_experiment
+    end
+
+    
+    def parent_first_year(y=nil) # optional DSL setter (required if there is a parent)
+      @parent_first_year = y
+      def self.parent_first_year # redefine to behave as getter
+        @parent_first_year
+      end
+      @parent_first_year
     end
 
 
