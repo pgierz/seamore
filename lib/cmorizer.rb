@@ -194,7 +194,7 @@ module CMORizer
 
 
   class Experiment
-    attr_reader :variant_label, :source_id, :nominal_resolution, :grid_txt, :data_request_version
+    attr_reader :variant_label, :source_id, :nominal_resolution, :grid_txt, :data_request_version, :parent_experiment_info
     
     def initialize(source_id, experiment_id, data_request_version, controlled_vocabularies, &block)
       @source_id = source_id
@@ -274,15 +274,6 @@ module CMORizer
         @parent_variant_label
       end
       @parent_variant_label
-    end
-
-
-    def parent_experiment(pe=nil) # optinal DSL setter
-      @parent_experiment = pe
-      def self.parent_experiment # redefine to behave as getter
-        @parent_experiment
-      end
-      @parent_experiment
     end
 
     
@@ -407,12 +398,12 @@ module CMORizer
                                   variant_label: experiment.variant_label,
                                   first_year: first_file_year,
                                   last_year: last_file_year)
-      parent = experiment.parent_experiment
-      if(parent)
-        builder.set_parent_experiment_info(id: parent.experiment_id,
-                                    source_id: experiment.source_id,
-                                    variant_label: parent.variant_label,
-                                    first_year: parent.first_year)
+      parent_info = experiment.parent_experiment_info
+      if(parent_info)
+        builder.set_parent_experiment_info(id: parent_info.experiment_id,
+                                    source_id: parent_info.source_id,
+                                    variant_label: parent_info.variant_label,
+                                    first_year: parent_info.first_year)
       end
       builder.set_variable_info(id: variable_id, frequency: frequency, table_id: table_id, realms: realms)
       builder.set_grid_info(nominal_resolution: experiment.nominal_resolution,

@@ -13,12 +13,11 @@ class GlobalAttributesBuilder
   end
 
 
-  def set_parent_experiment_info(id:, source_id:, variant_label:, first_year:, last_year:)
+  def set_parent_experiment_info(id:, source_id:, variant_label:, first_year:)
     @parent_experiment_info = OpenStruct.new(:id => id,
                                              :source_id => source_id,
                                              :variant_label => variant_label,
-                                             :first_year => first_year,
-                                             :last_year => last_year)
+                                             :first_year => first_year)
   end
   
   
