@@ -308,6 +308,12 @@ module CMORizer
       return super if (!args.empty? && !block_given?)
       # we assume we should get a key from our CV hash
       if @experiment_cv.has_key? method_sym.to_s
+        if %w(parent_experiment_id activity_id sub_experiment_id).any? method_sym.to_s
+          # the controlled vocabularies json files contain arrays here, but only a single item is allowed
+          r = @experiment_cv[method_sym.to_s]
+          r = r.join if r.is_a? Array
+          return r
+        end
         return @experiment_cv[method_sym.to_s]
       else
         super # not a hash key, so treat as a non-existing method
