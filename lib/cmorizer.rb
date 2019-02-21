@@ -205,6 +205,42 @@ module CMORizer
       instance_eval(&block) if block_given?
       @nominal_resolution = controlled_vocabularies['source_id'][source_id]['model_component']['ocean']['native_nominal_resolution']
       @grid_txt = controlled_vocabularies['source_id'][source_id]['model_component']['ocean']['description']
+      
+      parent_experiment_id = @experiment_cv['parent_experiment_id']
+      parent_experiment_id = parent_experiment_id.first if parent_experiment_id.is_a? Array
+      
+      # parent_experiment_id might be set to "no parent", in which case our parent_experiment_cv would be nil
+      parent_experiment_cv = controlled_vocabularies['experiment_id'][parent_experiment_id]
+      if parent_experiment_cv.nil?
+        if parent_variant_label || parent_first_year
+          raise "we can not have parent_variant_label or parent_first_year set if parent_experiment_id is not present via controlled vocabularies experiment_id '#{@experiment_id}'"
+        end
+      else
+        if parent_variant_label.nil?
+          raise "we must have parent_variant_label set if parent_experiment_id is known ('#{parent_experiment_id}') via controlled vocabularies experiment_id '#{@experiment_id}'"
+        end
+        
+        # see if we have a start year for the parent in the controlled vocabulary
+        cv_parent_first_year = parent_experiment_cv['start_year']
+        cv_parent_first_year = nil if cv_parent_first_year.empty?
+        if cv_parent_first_year != nil
+          @parent_first_year = cv_parent_first_year
+          if parent_first_year != nil
+            raise "we can not have a parent_first_year set if a start_year is known ('#{cv_parent_first_year}') via controlled vocabularies parent_experiment_id '#{parent_experiment_id}'"
+          end
+        else
+          if parent_first_year.nil?
+            raise "we must have a parent_first_year set if a start_year is nost known via controlled vocabularies parent_experiment_id '#{parent_experiment_id}'"
+          end
+        end
+      end
+      
+      @parent_experiment_info =
+      if parent_experiment_cv
+        OpenStruct.new(:experiment_id => parent_experiment_id, :source_id => source_id, :variant_label => @parent_variant_label, :first_year => @parent_first_year)
+      else
+        nil
+      end      
     end
     
     
