@@ -67,6 +67,14 @@ class InplaceCommand < FileCommand
 end
 
 
+class NCCOPY_COMPRESS_cmd < OutofplaceCommand
+  def cmd_txt_outofplace(infiles, outfile)
+    raise "can handle only 1 file in #{self.class} but got #{infiles.size} #{infiles.inspect}" if infiles.size != 1
+    %Q(nccopy -k netCDF-4 -d 1 -s #{infiles[0]} #{outfile})
+  end
+end
+
+
 class CDO_cmd < OutofplaceCommand
   def command_success?(out, err, status) # cdo almost always prints something to the error stream
     return false unless status.success?

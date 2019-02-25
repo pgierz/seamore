@@ -232,7 +232,14 @@ module CMORizer
       def file_commands
         CDO_SET_T_UNITS_DAYS_cmd.new
       end
-
     end
+
+
+    class COMPRESS < IndividualBaseStep
+      def file_commands
+        NCCOPY_COMPRESS_cmd.new
+      end
+    end
+
   end
 end
