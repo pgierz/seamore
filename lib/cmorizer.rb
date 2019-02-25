@@ -230,7 +230,7 @@ module CMORizer
           end
         else
           if parent_first_year.nil?
-            raise "we must have a parent_first_year set if a start_year is nost known via controlled vocabularies parent_experiment_id '#{parent_experiment_id}'"
+            raise "we must have a parent_first_year set if a start_year is not known via controlled vocabularies parent_experiment_id '#{parent_experiment_id}'"
           end
         end
       end
