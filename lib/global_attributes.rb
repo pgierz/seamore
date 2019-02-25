@@ -60,14 +60,14 @@ class GlobalAttributes
     
     @attributes = {}
     @attributes['activity_id'] = experiment_info.activity_id
-    @attributes['Conventions'] = "CF-1.7 CMIP-6.0" # this depends on the version of the file https://docs.google.com/document/d/1h0r8RZr_f3-8egBMMh7aqLwy3snpD6_MrDz1q8n5XUk/edit
+    @attributes['Conventions'] = "CF-1.7 CMIP-6.2" # this depends on the version of the file https://docs.google.com/document/d/1h0r8RZr_f3-8egBMMh7aqLwy3snpD6_MrDz1q8n5XUk/edit
     @attributes['creation_date'] = "#{version_date.map{|x| sprintf('%02d',x)}.join('-')}T12:00:00Z" # we decided to use the same date as the date from the version directory (vYYYYMMDD), see section "Directory structure template" in https://docs.google.com/document/d/1h0r8RZr_f3-8egBMMh7aqLwy3snpD6_MrDz1q8n5XUk/edit
     @attributes['data_specs_version'] = data_specs_version
     @attributes['experiment'] = experiment_info.id
     @attributes['experiment_id'] = @attributes['experiment']
     @attributes['forcing_index'] = indices_hash['forcing_index']
     @attributes['frequency'] = variable_info.frequency
-    @attributes['further_info_url'] = "http://furtherinfo.es-doc.org/#{mip_era}.#{institution_id}.#{experiment_info.source_id}.#{experiment_info.id}.#{sub_experiment_id}.#{experiment_info.variant_label}"
+    @attributes['further_info_url'] = "https://furtherinfo.es-doc.org/#{mip_era}.#{institution_id}.#{experiment_info.source_id}.#{experiment_info.id}.#{sub_experiment_id}.#{experiment_info.variant_label}"
     @attributes['grid'] = grid_info.txt #cv['source_id'][experiment_info.source_id].model_component.ocean.description
     @attributes['grid_label'] = "gn"
     @attributes['initialization_index'] = indices_hash['initialization_index']
