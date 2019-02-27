@@ -20,7 +20,7 @@ module CMORizer
   
     def execute
       @experiments.each do |experiment|
-        fesom_output_files = FesomOutputDir.new(experiment.indir).variable_files
+        fesom_output_files = FesomOutputDir.new(experiment.indir, experiment.indir_first_year, experiment.indir_last_year).variable_files
         # sort the fesom files
         fesom_output_files = fesom_output_files.sort_by {|ff| "#{ff.variable_id}#{ff.year}"}
 
@@ -194,7 +194,7 @@ module CMORizer
 
 
   class Experiment
-    attr_reader :variant_label, :source_id, :nominal_resolution, :grid_txt, :data_request_version, :parent_experiment_info
+    attr_reader :variant_label, :source_id, :nominal_resolution, :grid_txt, :data_request_version, :parent_experiment_info, :indir_first_year, :indir_last_year
     
     def initialize(source_id, experiment_id, data_request_version, controlled_vocabularies, &block)
       @source_id = source_id
@@ -246,8 +246,10 @@ module CMORizer
     end
     
     
-    def indir(d)
+    def indir(d, first_year=nil, last_year=nil)
       @indir = File.expand_path d # DSL setter
+      @indir_first_year = first_year
+      @indir_last_year = last_year
       def self.indir # redefine to behave as getter
         @indir
       end
