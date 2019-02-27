@@ -66,6 +66,8 @@ module CMORizer
 
 
     private def execute_chain(chain, experiment, experiment_year_ranges, fesom_output_files)
+      FileUtils.mkdir_p experiment.outdir
+      
       experiment_year_ranges.each do |year_range|
 
         # fetch files for chain.fesom_variable_description + year_range
