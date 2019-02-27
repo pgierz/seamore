@@ -161,7 +161,7 @@ module CMORizer
       major_first = first + major_first_digit - first_digit
       major_first += 10 if major_first < first
 
-      if(first < major_first)
+      if(first <= major_first)
         ranges = year_ranges(first: first, last: major_first-1, step: step)
         ranges.concat year_ranges(first: major_first, last: last, step: step)
       end
