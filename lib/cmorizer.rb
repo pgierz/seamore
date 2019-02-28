@@ -40,19 +40,26 @@ module CMORizer
         end
         experiment_year_ranges = Project.year_ranges_major_digits(first: first_year.to_i, last: last_year.to_i, step: @years_step, major_first_digit:1)
         
+        FileUtils.mkdir_p experiment.outdir
+
+        queue = Queue.new
+        @cmorization_steps_chains.each do |chain|
+          experiment_year_ranges.each do |year_range|
+            queue << [chain, experiment, year_range, fesom_output_files]
+          end
+        end
+
         threadcount = 20
         threads = []
-        chains_queue = Queue.new
-        @cmorization_steps_chains.each {|chain| chains_queue << chain}
 
         threadcount.times do
           threads << Thread.new(threads.size) do |threadname|
             Thread.current.name = "T#{threadname}"
         
             didanything = false
-            while !chains_queue.empty?
-              chain = chains_queue.pop
-              execute_chain(chain, experiment, experiment_year_ranges, fesom_output_files)
+            while !queue.empty?
+              args = queue.pop
+              execute_year_range(*args)
               didanything = true
             end
             
@@ -66,23 +73,20 @@ module CMORizer
     end
 
 
-    private def execute_chain(chain, experiment, experiment_year_ranges, fesom_output_files)
-      FileUtils.mkdir_p experiment.outdir
-      
-      experiment_year_ranges.each do |year_range|
+    # executes cmorization for a year_range within a cmor-chain within an experiment, e.g. 10 years for a single variable of one experiment
+    private def execute_year_range(chain, experiment, year_range, fesom_output_files)
 
-        # fetch files for chain.fesom_variable_description + year_range
-        filtered_fesom_files =
-          fesom_output_files.select do |ff|
-            if year_range.first <= ff.year && ff.year <= year_range.last
-              if ff.variable_id == chain.input_variable_name && ff.frequency == chain.input_frequency_name
-                true
-              end
+      # fetch files for chain.fesom_variable_description + year_range
+      filtered_fesom_files =
+        fesom_output_files.select do |ff|
+          if year_range.first <= ff.year && ff.year <= year_range.last
+            if ff.variable_id == chain.input_variable_name && ff.frequency == chain.input_frequency_name
+              true
             end
           end
+        end 
 
-        chain.execute(filtered_fesom_files, experiment, @data_request, @grid_description_file, @version_date) unless filtered_fesom_files.empty?
-      end
+      chain.execute(filtered_fesom_files, experiment, @data_request, @grid_description_file, @version_date) unless filtered_fesom_files.empty?
     end                 
   
   
