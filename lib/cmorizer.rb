@@ -86,7 +86,10 @@ module CMORizer
           end
         end 
 
-      chain.execute(filtered_fesom_files, experiment, @data_request, @grid_description_file, @version_date) unless filtered_fesom_files.empty?
+      unless filtered_fesom_files.empty?
+        puts "#{Thread.current.name}: #{chain} #{year_range.first}-#{year_range.last}"
+        chain.execute(filtered_fesom_files, experiment, @data_request, @grid_description_file, @version_date)
+      end
     end                 
   
   
@@ -351,9 +354,12 @@ module CMORizer
     end
     
     
-    def execute(fesom_files, experiment, data_request, grid_description_file, version_date)
-      puts "#{@input_variable_name}_#{@input_frequency_name} ==> #{@cmor_variable_id}_#{@cmor_table_id}"
-      
+    def to_s
+      "#{@input_variable_name}_#{@input_frequency_name} ==> #{@cmor_variable_id}_#{@cmor_table_id}"
+    end
+    
+    
+    def execute(fesom_files, experiment, data_request, grid_description_file, version_date)      
       # create new step instances here for each call to execute to have this method thread safe
       steps = []
       next_step = nil
