@@ -344,24 +344,24 @@ module CMORizer
       @eval_mode = false
             
       @step_classes = default_step_classes if @step_classes.empty?
-      
-      # create step instances
-      @steps = []
-      next_step = nil
-      @step_classes.reverse_each do |cls|
-        next_step = cls.new(next_step)
-        @steps << next_step
-      end
-      @steps.reverse!
-      unless @steps.empty?
-        @steps[0].forbid_inplace = true # do not modify the original input files
-        @steps[0].initial_prefix = "_#{@input_variable_name}_#{@input_frequency_name}--#{@cmor_variable_id}_#{@cmor_table_id}_"
-      end
     end
     
     
     def execute(fesom_files, experiment, data_request, grid_description_file, version_date)
       puts "#{@input_variable_name}_#{@input_frequency_name} ==> #{@cmor_variable_id}_#{@cmor_table_id}"
+      
+      # create new step instances here for each call to execute to have this method thread safe
+      steps = []
+      next_step = nil
+      @step_classes.reverse_each do |cls|
+        next_step = cls.new(next_step)
+        steps << next_step
+      end
+      steps.reverse!
+      unless steps.empty?
+        steps[0].forbid_inplace = true # do not modify the original input files
+        steps[0].initial_prefix = "_#{@input_variable_name}_#{@input_frequency_name}--#{@cmor_variable_id}_#{@cmor_table_id}_"
+      end
             
       # offer info about the current experiment and variable to all step objects
       data_request_variable = data_request.find_variable_id_in_table_id(@cmor_variable_id, @cmor_table_id) # the variable from the data request might have a different frequency than the input variable
@@ -376,7 +376,7 @@ module CMORizer
                                           realms: data_request_variable.realms,
                                           version_date: version_date)
       
-      @steps.each {|s| s.set_info(outdir: experiment.outdir,
+      steps.each {|s| s.set_info(outdir: experiment.outdir,
                                   grid_description_file: grid_description_file,
                                   global_attributes: global_attributes,
                                   fesom_variable_name: @input_variable_name,
@@ -386,17 +386,17 @@ module CMORizer
     
       # fill the first step with all the passed files without executing
       fesom_files.each do |f|
-        @steps.first.add_input(f.path, [f.year], fesom_files.size, false)
+        steps.first.add_input(f.path, [f.year], fesom_files.size, false)
       end
       # if the resultpath of the last step (i.e. the final path) does not exist, execute the steps
-      unless(File.exist? @steps.last.resultpath)
+      unless(File.exist? steps.last.resultpath)
         fesom_files.each do |f|
-          @steps.first.add_input(f.path, [f.year], fesom_files.size, true)
+          steps.first.add_input(f.path, [f.year], fesom_files.size, true)
         end
 
-        # remove all step results except the last one, we did set @steps[0].forbid_inplace = true, so the first step has created a copy of the original input
-        if(File.exist? @steps.last.resultpath)
-          @steps[0..-2].each do |s|
+        # remove all step results except the last one, we did set steps[0].forbid_inplace = true, so the first step has created a copy of the original input
+        if(File.exist? steps.last.resultpath)
+          steps[0..-2].each do |s|
             FileUtils.rm(s.resultpath) if File.exist?(s.resultpath) # if the step processes all files inplace, the resultpath from the previous step has been renamed and does not exist anymore
           end
         end
