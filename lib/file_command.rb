@@ -67,7 +67,24 @@ class InplaceCommand < FileCommand
 end
 
 
+# nco utilities issue a warning to stderr if the path of an input file has more than 254 characters
+# we want to ignore this 20th century warning and do not abort if it appears on stderr
+# https://github.com/nco/nco/blob/405aea3e6777dc9dd3ccb931471bdc9d8440ca7e/src/nco/nco_fl_utl.c#L386
+module NCO_warning_filter
+  def command_success?(out, err, status)
+    return false unless status.success?
+    unless err.empty?
+      return false unless err =~ /and may not be portable to older operating systems/
+    end
+    
+    true
+  end
+end
+
+
 class NCCOPY_COMPRESS_cmd < OutofplaceCommand
+  include NCO_warning_filter
+
   def cmd_txt_outofplace(infiles, outfile)
     raise "can handle only 1 file in #{self.class} but got #{infiles.size} #{infiles.inspect}" if infiles.size != 1
     %Q(nccopy -k netCDF-4 -d 1 -s #{infiles[0]} #{outfile})
@@ -122,6 +139,8 @@ end
 
 
 class NCATTED_ADD_GLOBAL_ATTRIBUTES_cmd < InplaceCommand
+  include NCO_warning_filter
+
   def initialize(attributes_hash)
     @attributes = attributes_hash
   end
@@ -141,6 +160,8 @@ end
 
 
 class NCATTED_DELETE_GLOBAL_ATTRIBUTES_cmd < InplaceCommand
+  include NCO_warning_filter
+
   def initialize(attribute_names)
     @attribute_names = attribute_names
   end
@@ -154,6 +175,8 @@ end
 
 
 class NCATTED_DELETE_VARIABLE_ATTRIBUTES_cmd < InplaceCommand
+  include NCO_warning_filter
+
   def initialize(var_name, attribute_names)
     @var_name = var_name
     @attribute_names = attribute_names
@@ -168,6 +191,8 @@ end
 
 
 class NCATTED_SET_VARIABLE_DESCRIPTION_cmd < InplaceCommand
+  include NCO_warning_filter
+
   def initialize(var_name, description)
     @var_name, @description = var_name, description
   end
@@ -179,6 +204,8 @@ end
 
 
 class NCATTED_SET_LAT_LON_BNDS_STANDARD_NAME_cmd < InplaceCommand
+  include NCO_warning_filter
+
   def cmd_txt_inplace(file)
     # set standard_name according to the CF conventions
     %Q(ncatted --create_ram -h -a standard_name,lat_bnds,o,c,"lat_bnds" -a standard_name,lon_bnds,o,c,"lon_bnds" #{file})
@@ -187,6 +214,8 @@ end
 
 
 class NCRENAME_RENAME_VARIABLE_cmd < InplaceCommand
+  include NCO_warning_filter
+
   def initialize(old_name, new_name)
     @old_name, @new_name = old_name, new_name
   end
@@ -202,6 +231,8 @@ end
 
 
 class NCRENAME_DIMENSION_NODES_XD_TO_NCELLS_cmd < InplaceCommand
+  include NCO_warning_filter
+
   def cmd_txt_inplace(file)
     # from the docs: "ncrename will change the names of the input-file in place"
     %Q(ncrename -h -d .nodes_2d,ncells -d .nodes_3d,ncells #{file}) # the dot '.' prefix tells ncrename that it is an optional rename
@@ -210,6 +241,8 @@ end
 
 
 class NCKS_APPEND_GRID_cmd < InplaceCommand
+  include NCO_warning_filter
+
   def initialize(grid_description_file)
     @grid_description_file = grid_description_file
   end
@@ -223,6 +256,8 @@ end
 
 
 class NCATTED_APPEND_COORDINATES_VALUE_cmd < InplaceCommand
+  include NCO_warning_filter
+
   def initialize(variable_id)
     @variable_id = variable_id
   end
