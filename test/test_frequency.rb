@@ -37,7 +37,13 @@ class FrequencyTests < Minitest::Test
   end
 
 
-  def test_3hr_doe_not_equal_3hrPt
+  def test_3hr_does_not_equal_3hrPt
      refute_equal Frequency::F_3hr, Frequency::F_3hrPt
+  end
+
+
+  def test_3hr_is_less_than_day
+     assert Frequency::F_3hr < Frequency::F_day
+     assert Frequency::F_3hrPt < Frequency::F_day
   end
 end

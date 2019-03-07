@@ -122,20 +122,35 @@ module CMORizer
     end
     
     
-    class AUTOMATICALLY_DOWNSAMPLE_FREQUENCY < IndividualBaseStep
+    class AUTOMATICALLY_DOWNSAMPLE_FREQUENCY < BaseStep
+      def can_process?(number_of_eventual_input_years)
+        in_freq = Frequency.for_name(@fesom_variable_frequency)
+        out_freq = Frequency.for_name(@global_attributes.frequency)
+        
+        if out_freq.name == "dec" && in_freq < out_freq
+          raise "can not produce decadal output from #{number_of_eventual_input_years} input years (must have 10 years)" if number_of_eventual_input_years != 10
+          return number_of_eventual_input_years == 10
+        else
+          return true
+        end        
+      end
+
+
       def file_commands
         cmds = []
         
         in_freq = Frequency.for_name(@fesom_variable_frequency)
         out_freq = Frequency.for_name(@global_attributes.frequency)
 
-        if(in_freq != out_freq)          
+        if(in_freq != out_freq)
           case [in_freq.name, out_freq.name]
           when ["day", "mon"]
             # cdo monmean day_file mon_file
             cmds << CDO_MONMEAN_cmd.new
           when ["mon", "yr"]
             cmds << CDO_YEARMEAN_cmd.new
+          when ["mon", "dec"]
+            cmds << CDO_TIMMEAN_cmd.new # this will just create a single mean output, so make sure we put in a 10 years file
           else
             raise "can not automatically downsample frequency from '#{in_freq.name}' to '#{out_freq.name}'"
           end

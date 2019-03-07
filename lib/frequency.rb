@@ -5,6 +5,7 @@ end
 
 # https://github.com/WCRP-CMIP/CMIP6_CVs/blob/master/CMIP6_frequency.json
 class Frequency
+  include Comparable
   attr_reader :name, :approx_interval, :time_method
   
 
@@ -44,5 +45,10 @@ class Frequency
   
   def <=>(other)
     @approx_interval <=> other.approx_interval
+  end
+
+
+  def ==(other)
+    @name == other.name
   end
 end
