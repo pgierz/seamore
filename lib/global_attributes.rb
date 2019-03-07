@@ -92,9 +92,9 @@ class GlobalAttributes
 #    @attributes['external_variables'] = #FESOM: areacello ECHAM: areacella # we do not reference any of these, so it is "not appropriate" to include this attribute
     if(parent_experiment_info)
       @attributes['branch_method'] = "standard"
-      @attributes['branch_time_in_child'] = "0.0D0"
+      @attributes['branch_time_in_child'] = 0.0
       d = 0; parent_experiment_info.first_year.upto(experiment_info.first_year) {|y| d += days_in_year y}
-      @attributes['branch_time_in_parent'] = "#{d}.0D0"
+      @attributes['branch_time_in_parent'] = d.to_f
       @attributes['parent_activity_id'] = parent_experiment_info.activity_id
       @attributes['parent_experiment_id'] = parent_experiment_info.id
       @attributes['parent_mip_era'] = "CMIP6"

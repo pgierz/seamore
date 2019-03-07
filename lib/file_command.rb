@@ -150,6 +150,8 @@ class NCATTED_ADD_GLOBAL_ATTRIBUTES_cmd < InplaceCommand
     @attributes.each do |att_name, att_txt|
       if att_txt.is_a? Integer
         att_args += %Q( -a #{att_name},global,o,l,#{att_txt})
+      elsif att_txt.is_a? Float
+        att_args += %Q( -a #{att_name},global,o,d,#{att_txt})
       else
         att_args += %Q( -a #{att_name},global,o,c,"#{att_txt}")
       end
