@@ -15,7 +15,7 @@ module CMORizer
       end
       
       
-      def set_info(outdir:, grid_description_file:, global_attributes:, fesom_variable_name:, fesom_variable_frequency:, variable_id:, description:)
+      def set_info(outdir:, grid_description_file:, global_attributes:, fesom_variable_name:, fesom_variable_frequency:, variable_id:, description:, standard_name:)
         @outdir = outdir
         @grid_description_file = grid_description_file
         @global_attributes = global_attributes
@@ -23,6 +23,7 @@ module CMORizer
         @fesom_variable_frequency = fesom_variable_frequency
         @variable_id = variable_id
         @description = description
+        @standard_name = standard_name
       end
 
 
@@ -177,6 +178,9 @@ module CMORizer
         cmds = []
         # rename our variable
         cmds << NCRENAME_RENAME_VARIABLE_cmd.new(@fesom_variable_name, @variable_id)
+
+        # set standard_name from the data request cmip6-cmor-tables
+        cmds << NCATTED_SET_VARIABLE_STANDARD_NAME_cmd.new(@variable_id, @standard_name)
         
         # apply description
         cmds << NCATTED_SET_VARIABLE_DESCRIPTION_cmd.new(@variable_id, @description)

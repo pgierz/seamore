@@ -392,7 +392,8 @@ module CMORizer
                                   fesom_variable_name: @input_variable_name,
                                   fesom_variable_frequency: @input_frequency_name,
                                   variable_id: data_request_variable.variable_id,
-                                  description: data_request_variable.description)}
+                                  description: data_request_variable.description,
+                                  standard_name: data_request_variable.standard_name)}
     
       # fill the first step with all the passed files without executing
       fesom_files.each do |f|
