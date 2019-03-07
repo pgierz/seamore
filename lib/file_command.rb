@@ -205,6 +205,19 @@ class NCATTED_SET_VARIABLE_DESCRIPTION_cmd < InplaceCommand
 end
 
 
+class NCATTED_SET_VARIABLE_STANDARD_NAME_cmd < InplaceCommand
+  include NCO_warning_filter
+
+  def initialize(var_name, standard_name)
+    @var_name, @standard_name = var_name, standard_name
+  end
+
+  def cmd_txt_inplace(file)
+    %Q(ncatted --create_ram -h -a standard_name,#{@var_name},o,c,"#{@standard_name}" #{file})
+  end
+end
+
+
 class NCATTED_SET_LAT_LON_BNDS_STANDARD_NAME_cmd < InplaceCommand
   include NCO_warning_filter
 
