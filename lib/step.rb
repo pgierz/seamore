@@ -149,7 +149,7 @@ module CMORizer
             cmds << CDO_MONMEAN_cmd.new
           when ["mon", "yr"]
             cmds << CDO_YEARMEAN_cmd.new
-          when ["mon", "dec"]
+          when ["day", "dec"], ["mon", "dec"]
             cmds << CDO_TIMMEAN_cmd.new # this will just create a single mean output, so make sure we put in a 10 years file
           else
             raise "can not automatically downsample frequency from '#{in_freq.name}' to '#{out_freq.name}'"
