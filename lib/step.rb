@@ -134,6 +134,8 @@ module CMORizer
           when ["day", "mon"]
             # cdo monmean day_file mon_file
             cmds << CDO_MONMEAN_cmd.new
+          when ["mon", "yr"]
+            cmds << CDO_YEARMEAN_cmd.new
           else
             raise "can not automatically downsample frequency from '#{in_freq.name}' to '#{out_freq.name}'"
           end

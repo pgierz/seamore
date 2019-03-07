@@ -122,6 +122,13 @@ class CDO_MONMEAN_cmd < CDO_cmd
 end
 
 
+class CDO_YEARMEAN_cmd < CDO_cmd
+  def cmd_txt_outofplace(infiles, outfile)
+    %Q(cdo yearmean #{infiles.join(' ')} #{outfile})
+  end
+end
+
+
 class MEAN_TIMESTAMP_ADJUST_cmd < InplaceCommand
   def cmd_txt_inplace(file)
     bin = "ncn mean_timestamp_adjust" unless bin # assume binary is known via PATH
