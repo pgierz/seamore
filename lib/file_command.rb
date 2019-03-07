@@ -207,6 +207,9 @@ class NCATTED_SET_VARIABLE_DESCRIPTION_cmd < InplaceCommand
   end
 
   def cmd_txt_inplace(file)
+    # there seems to be an error when setting chars with ncatted:
+    # a single quote ' always results in a \' in the netcdf. the same effect as putting a \' in the first place
+    # so we currently can not put all variable descriptions correctly, as some contain single quotes
     %Q(ncatted --create_ram -h -a description,#{@var_name},o,c,"#{@description}" #{file})
   end
 end
