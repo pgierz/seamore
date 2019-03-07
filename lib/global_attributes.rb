@@ -156,6 +156,8 @@ class GlobalAttributes
   private def filename_time_range(first_year, last_year, frequency_txt)
   # see https://docs.google.com/document/d/1h0r8RZr_f3-8egBMMh7aqLwy3snpD6_MrDz1q8n5XUk/edit table 2
     case frequency_txt
+    when "yr", "dec"
+      "#{first_year}-#{last_year}"
     when "mon"
       "#{first_year}01-#{last_year}12"
     when "day"
