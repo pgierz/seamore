@@ -391,6 +391,8 @@ module CMORizer
                                   global_attributes: global_attributes,
                                   fesom_variable_name: @input_variable_name,
                                   fesom_variable_frequency: @input_frequency_name,
+                                  fesom_unit: fesom_files.first.unit,
+                                  out_unit: data_request_variable.unit,
                                   variable_id: data_request_variable.variable_id,
                                   description: data_request_variable.description,
                                   standard_name: data_request_variable.standard_name)}
