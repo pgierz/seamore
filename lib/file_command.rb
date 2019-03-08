@@ -222,6 +222,20 @@ class NCATTED_SET_VARIABLE_DESCRIPTION_cmd < InplaceCommand
 end
 
 
+class NCATTED_SET_VARIABLE_UNITS_cmd < InplaceCommand
+  include NCO_warning_filter
+
+  def initialize(var_name, unit)
+    @var_name, @unit = var_name, unit
+  end
+
+  def cmd_txt_inplace(file)
+    # beware: the attribute is called 'units' (with 's')
+    %Q(ncatted --create_ram -h -a units,#{@var_name},o,c,"#{@unit}" #{file})
+  end
+end
+
+
 class NCATTED_SET_VARIABLE_STANDARD_NAME_cmd < InplaceCommand
   include NCO_warning_filter
 
