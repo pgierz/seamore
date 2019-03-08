@@ -163,6 +163,27 @@ module CMORizer
     end
     
     
+    class AUTOMATICALLY_CONVERT_UNIT < IndividualBaseStep
+      def file_commands
+        cmds = []
+
+        if(@fesom_unit != @out_unit)
+          case [@fesom_unit, @out_unit]
+          when ["psu", "0.001"] # noop
+          when ["W/m^2", "W m-2"] # noop
+          when ["1.0", "1"] # noop
+          else
+            raise "can not automatically convert unit from '#{@fesom_unit}' to '#{@out_unit}'"
+          end
+          
+         # apply unit
+         cmds << NCATTED_SET_VARIABLE_UNITS_cmd.new(@variable_id, @out_unit)
+        end
+        cmds
+      end
+    end
+    
+    
     class CMOR_FILE < IndividualBaseStep
     end    
     
