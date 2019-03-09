@@ -144,7 +144,11 @@ module CMORizer
         @default_steps
       end
       evaluater.instance_eval(&block)
-      @default_step_classes = evaluater.default_steps.map {|sym| CMORizer::Step.const_get sym}
+      @default_step_classes = evaluater.default_steps.map do |sym|
+        c = CMORizer::Step.const_get(sym, false)
+        raise "#{c} is not a class" unless c.is_a? Class
+        c
+      end
     end
   
   
