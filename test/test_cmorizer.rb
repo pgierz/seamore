@@ -52,18 +52,6 @@ class CMORizerTests < Minitest::Test
   end
   
   
-  def test_cmorization_can_have_KtodegC_unit_step_in_block
-    src_txt = <<~EOFHEREDOC
-      cmorize tso_3hrPt => [tos_3hr] do
-        unit 'K' => 'degC'
-      end
-    EOFHEREDOC
-  
-    project = CMORizer::Project.new src_txt
-    assert_kind_of CMORizer::Project, project
-  end
-  
-    
   def test_year_ranges_major_digits_first_can_end_with_major_first_digit
     ranges = CMORizer::Project.year_ranges_major_digits(first: 2701, last: 2720, step: 10, major_first_digit:1)
     assert_equal [[2701,2710],[2711,2720]], ranges

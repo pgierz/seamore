@@ -116,13 +116,5 @@ module CMORizer
       sym = method_sym.upcase
       add_step sym
     end
-
-
-    def unit(hash)
-      from = hash.keys.first
-      to = hash.values.first
-      sym = "Unit_#{from}_to_#{to}".to_sym
-      add_step sym
-    end
   end
 end
