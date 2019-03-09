@@ -12,6 +12,9 @@ class FileCommand
   def execute_atomically(infiles, outfile)
     outfile_inprogress = "#{outfile}.inprogress"
 
+    # this might be an incomplete step from a previous aborted run,
+    # the .inprogress file might be removed to resume cmorization
+    # should they be removed automatically?
     raise "file exists: #{outfile_inprogress}" if File.exist?(outfile_inprogress)
     system_call cmd_txt(infiles, outfile_inprogress)
     
