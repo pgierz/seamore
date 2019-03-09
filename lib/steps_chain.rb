@@ -104,7 +104,7 @@ module CMORizer
     end
 
 
-    def add_step(sym)
+    private def add_step(sym)
       cls = CMORizer::Step.const_get sym
       @step_classes << cls
     end
