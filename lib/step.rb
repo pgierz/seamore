@@ -137,7 +137,7 @@ module CMORizer
     end
     
     
-    class AUTOMATICALLY_DOWNSAMPLE_FREQUENCY < BaseStep
+    class AUTO_DOWNSAMPLE_FREQUENCY < BaseStep
       def can_process?(number_of_eventual_input_years)
         in_freq = Frequency.for_name(@fesom_variable_frequency)
         out_freq = Frequency.for_name(@global_attributes.frequency)
@@ -176,7 +176,7 @@ module CMORizer
     end
     
     
-    class AUTOMATICALLY_CONVERT_UNIT < IndividualBaseStep
+    class AUTO_CONVERT_UNIT < IndividualBaseStep
       def file_commands
         cmds = []
 
