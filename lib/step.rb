@@ -85,9 +85,21 @@ module CMORizer
       end
       
       
+      # truncate to 10 characters so we do not get too long file names (apparently 255 chars max on mistral)
+      # remove characters from the middle to make the result somewhat more readable
+      def truncate_string(s)
+        chars = s.chars
+        loop do
+          break if chars.size < 11
+          chars.slice! 6
+        end
+        chars.join
+      end
+      
+      
       def create_outpath(*inpaths)
         step_suffix = self.class.to_s.split('::').last
-        step_suffix = step_suffix[0..9] # truncate to 10 characters so we do not get too long file names (apparently 255 chars max on mistral)
+        step_suffix = truncate_string(step_suffix)        
         prefix = (@initial_prefix) ? "#{@initial_prefix}" : ""
         from = "#{File.basename(inpaths[0])}"
         to = (inpaths.size > 1) ? "-#{File.basename(inpaths.last)}" : ""
