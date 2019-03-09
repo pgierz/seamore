@@ -54,7 +54,8 @@ module CMORizer
                   
       
       private def process(inputs, years, opath) # pipe input files through all our FileCommand objects
-        puts "\t#{self.class} #{inputs.join(', ')} #{opath}"
+        prefix = "#{Thread.current.name}: " if Thread.current.name
+        puts "#{prefix}\t#{self.class} #{inputs.join(', ')} #{opath}"
         *commands = file_commands
         if @forbid_inplace # bail out if this step is set to not manipulate a file inplace but all FileCommands of this step act inplace
           raise "#{self.class.to_s.split('::').last} is an inplace command" if commands.all? {|c| c.inplace?}
