@@ -156,10 +156,10 @@ module CMORizer
     # "fesom name"_"available frequency" => ["variable_id"_"CMIP table_id"]
     def cmorize(*args, &block)
       hash = args.first
-      src = hash.keys.first
-      results = hash.values.first
-      results.each do |r|
-        @cmorization_steps_chains << StepsChain.new(@default_step_classes, src, r, &block)
+      in_description = hash.keys.first
+      out_descriptions = hash.values.first
+      out_descriptions.each do |out_desc|
+        @cmorization_steps_chains << StepsChain.new(@default_step_classes, in_description, out_desc, &block)
       end
     end
     
