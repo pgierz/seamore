@@ -94,7 +94,8 @@ module CMORizer
                                     source_id: parent_info.source_id,
                                     activity_id: parent_info.activity_id,
                                     variant_label: parent_info.variant_label,
-                                    first_year: parent_info.first_year)
+                                    first_year: parent_info.first_year,
+                                    branch_year: parent_info.branch_year)
       end
       builder.set_variable_info(id: variable_id, frequency: frequency, table_id: table_id, realms: realms)
       builder.set_grid_info(nominal_resolution: experiment.nominal_resolution,

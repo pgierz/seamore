@@ -14,12 +14,13 @@ class GlobalAttributesBuilder
   end
 
 
-  def set_parent_experiment_info(id:, source_id:, activity_id:, variant_label:, first_year:)
+  def set_parent_experiment_info(id:, source_id:, activity_id:, variant_label:, first_year:, branch_year:)
     @parent_experiment_info = OpenStruct.new(:id => id,
                                              :source_id => source_id,
                                              :activity_id => activity_id,
                                              :variant_label => variant_label,
-                                             :first_year => first_year)
+                                             :first_year => first_year,
+                                             :branch_year => branch_year)
   end
   
   
@@ -93,7 +94,7 @@ class GlobalAttributes
     if(parent_experiment_info)
       @attributes['branch_method'] = "standard"
       @attributes['branch_time_in_child'] = 0.0
-      d = 0; parent_experiment_info.first_year.upto(experiment_info.first_year) {|y| d += days_in_year y}
+      d = 0; parent_experiment_info.first_year.upto(parent_experiment_info.branch_year-1) {|y| d += days_in_year y}
       @attributes['branch_time_in_parent'] = d.to_f
       @attributes['parent_activity_id'] = parent_experiment_info.activity_id
       @attributes['parent_experiment_id'] = parent_experiment_info.id

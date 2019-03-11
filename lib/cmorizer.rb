@@ -254,7 +254,7 @@ module CMORizer
       if parent_experiment_cv
         parent_activity_id = parent_experiment_cv['activity_id']
         parent_activity_id = parent_activity_id.join if parent_activity_id.is_a? Array
-        OpenStruct.new(:experiment_id => parent_experiment_id, :source_id => source_id, :activity_id => parent_activity_id, :variant_label => @parent_variant_label, :first_year => @parent_first_year)
+        OpenStruct.new(:experiment_id => parent_experiment_id, :source_id => source_id, :activity_id => parent_activity_id, :variant_label => @parent_variant_label, :first_year => @parent_first_year, :branch_year => @branch_year_in_parent)
       else
         nil
       end      
@@ -284,6 +284,15 @@ module CMORizer
       def self.variant_label # redefine to behave as getter
         @variant_label
       end
+    end    
+    
+    
+    def branch_year_in_parent(y=nil) # optional DSL setter (required if there is a parent)
+      @branch_year_in_parent = y
+      def self.branch_year_in_parent # redefine to behave as getter
+        @branch_year_in_parent
+      end
+      @branch_year_in_parent
     end
 
     
