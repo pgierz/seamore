@@ -185,6 +185,8 @@ module CMORizer
           when ["psu", "0.001"] # noop
           when ["W/m^2", "W m-2"] # noop
           when ["1.0", "1"] # noop
+          when ["1", "%"]
+            cmds << CDO_MULC_cmd.new(100)
           else
             raise "can not automatically convert unit from '#{@fesom_unit}' to '#{@out_unit}'"
           end

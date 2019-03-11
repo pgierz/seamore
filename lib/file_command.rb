@@ -139,6 +139,18 @@ class CDO_YEARMEAN_cmd < CDO_cmd
 end
 
 
+class CDO_MULC_cmd < CDO_cmd
+  def initialize(factor)
+    @factor = factor
+  end
+  
+  def cmd_txt_outofplace(infiles, outfile)
+    raise "can handle only 1 file in #{self.class} but got #{infiles.size} #{infiles.inspect}" if infiles.size != 1
+    %Q(cdo mulc,#{@factor} #{infiles.join(' ')} #{outfile})
+  end
+end
+
+
 class MEAN_TIMESTAMP_ADJUST_cmd < InplaceCommand
   def cmd_txt_inplace(file)
     bin = "ncn mean_timestamp_adjust" unless bin # assume binary is known via PATH
