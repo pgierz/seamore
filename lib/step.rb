@@ -3,7 +3,7 @@ require 'fileutils'
 module CMORizer
   module Step
     class BaseStep
-      attr_writer :forbid_inplace, :initial_prefix
+      attr_writer :forbid_inplace, :initial_prefix, :needs_to_run
       attr_reader :resultpath
     
       def initialize(next_step)
@@ -11,6 +11,7 @@ module CMORizer
         @available_inputs = {}
         @forbid_inplace = false
         @initial_prefix = nil
+        @needs_to_run = true
         @resultpath = nil
       end
       
@@ -61,7 +62,7 @@ module CMORizer
           raise "#{self.class.to_s.split('::').last} is an inplace command" if commands.all? {|c| c.inplace?}
         end
         
-        unless File.exist? opath # only run this step if its output does not already exist
+        if @needs_to_run
           command_inputs = inputs
           command_opath = nil
           commands.each_with_index do |cmd, i|

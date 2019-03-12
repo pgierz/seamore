@@ -60,21 +60,31 @@ module CMORizer
                                   description: data_request_variable.description,
                                   standard_name: data_request_variable.standard_name)}
     
-      # fill the first step with all the passed files without executing
+      # fill the first step with all the passed files without executing (i.e. dry run)
+      # this will set the resultpath for each step
       fesom_files.each do |f|
         steps.first.add_input(f.path, [f.year], fesom_files.size, false)
       end
-      # if the resultpath of the last step (i.e. the final path) does not exist, execute the steps
-      unless(File.exist? steps.last.resultpath)
-        fesom_files.each do |f|
-          steps.first.add_input(f.path, [f.year], fesom_files.size, true)
-        end
+      
+      # check from which resultpath we can resume this StepsChain (i.e. from the last resultpath for which a file exists)
+      last_existing_index = -1
+      steps.each_with_index do |step,i|
+        last_existing_index = i if File.exist?(step.resultpath)
+      end
+      # set all steps which result in the last file we have available to skip execution
+      steps.each_with_index do |step,i|
+        step.needs_to_run = (last_existing_index < i)
+      end     
+      
+      # fill the steps to execute from first to last step
+      fesom_files.each do |f|
+        steps.first.add_input(f.path, [f.year], fesom_files.size, true)
+      end
 
-        # remove all step results except the last one, we did set steps[0].forbid_inplace = true, so the first step has created a copy of the original input
-        if(File.exist? steps.last.resultpath)
-          steps[0..-2].each do |s|
-            FileUtils.rm(s.resultpath) if File.exist?(s.resultpath) # if the step processes all files inplace, the resultpath from the previous step has been renamed and does not exist anymore
-          end
+      # remove all step results except the last one, we did set steps[0].forbid_inplace = true, so the first step has created a copy of the original input
+      if(File.exist? steps.last.resultpath)
+        steps[0..-2].each do |s|
+          FileUtils.rm(s.resultpath) if File.exist?(s.resultpath) # if the step processes all files inplace, the resultpath from the previous step has been renamed and does not exist anymore
         end
       end
     end
