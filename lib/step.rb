@@ -187,6 +187,8 @@ module CMORizer
           when ["1.0", "1"] # noop
           when ["1", "%"]
             cmds << CDO_MULC_cmd.new(100)
+          when ["K", "degC"]
+            cmds << CDO_SUBC_cmd.new(-273.15)
           else
             raise "can not automatically convert unit from '#{@fesom_unit}' to '#{@out_unit}'"
           end
