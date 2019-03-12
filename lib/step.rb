@@ -194,7 +194,9 @@ module CMORizer
           end
           
          # apply unit
-         cmds << NCATTED_SET_VARIABLE_UNITS_cmd.new(@variable_id, @out_unit)
+         # assume the APPLY_LOCAL_ATTRIBUTES Step will be executed later
+         # and thus our variable has still the original name (@fesom_variable_name)
+         cmds << NCATTED_SET_VARIABLE_UNITS_cmd.new(@fesom_variable_name, @out_unit)
         end
         cmds
       end
@@ -224,7 +226,9 @@ module CMORizer
         cmds = []
         cmds << NCRENAME_DIMENSION_NODES_XD_TO_NCELLS_cmd.new
         cmds << NCKS_APPEND_GRID_cmd.new(@grid_description_file)
-        cmds << NCATTED_APPEND_COORDINATES_VALUE_cmd.new(@variable_id)
+        # assume the APPLY_LOCAL_ATTRIBUTES Step will be executed later
+        # and thus our variable has still the original name (@fesom_variable_name)
+        cmds << NCATTED_APPEND_COORDINATES_VALUE_cmd.new(@fesom_variable_name)
         cmds
       end
     end
