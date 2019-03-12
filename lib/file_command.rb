@@ -120,21 +120,21 @@ end
 
 class CDO_MONMEAN_cmd < CDO_cmd
   def cmd_txt_outofplace(infiles, outfile)
-    %Q(cdo monmean #{infiles.join(' ')} #{outfile})
+    %Q(cdo monmean #{infiles.join(' ')} #{outfile}) # this will rename our "number_of_time_bounds" dimension to "bnds"
   end
 end
 
 
 class CDO_TIMMEAN_cmd < CDO_cmd
   def cmd_txt_outofplace(infiles, outfile)
-    %Q(cdo timmean #{infiles.join(' ')} #{outfile})
+    %Q(cdo timmean #{infiles.join(' ')} #{outfile}) # this will rename our "number_of_time_bounds" dimension to "bnds"
   end
 end
 
 
 class CDO_YEARMEAN_cmd < CDO_cmd
   def cmd_txt_outofplace(infiles, outfile)
-    %Q(cdo yearmean #{infiles.join(' ')} #{outfile})
+    %Q(cdo yearmean #{infiles.join(' ')} #{outfile}) # this will rename our "number_of_time_bounds" dimension to "bnds"
   end
 end
 
