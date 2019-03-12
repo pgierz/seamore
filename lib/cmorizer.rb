@@ -20,7 +20,7 @@ module CMORizer
     end
     
   
-    def execute
+    def execute(threadcount)
       @experiments.each do |experiment|
         fesom_output_files = FesomOutputDir.new(experiment.indir, experiment.indir_first_year, experiment.indir_last_year).variable_files
         # sort the fesom files
@@ -50,9 +50,7 @@ module CMORizer
           end
         end
 
-        threadcount = 20
         threads = []
-
         threadcount.times do
           threads << Thread.new(threads.size) do |threadname|
             Thread.current.name = "T#{threadname}"

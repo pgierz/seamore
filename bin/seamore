@@ -77,9 +77,10 @@ end
 desc 'Process rules of given file to greate CMIP6 CMOR files'
 arg "rules_file"
 command :process do |c|
+  c.flag [:j], :desc => "number of jobs", :default_value=>20, :must_match => /\d+/
   c.action do |global_opts,opts,args|
     project = CMORizer::Project.new File.read(args[0])
-    project.execute
+    project.execute(opts[:j].to_i)
   end
 end
 
