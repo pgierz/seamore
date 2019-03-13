@@ -235,7 +235,7 @@ module CMORizer
     end
     
     
-    class APPLY_LOCAL_ATTRIBUTES < IndividualBaseStep
+    class SET_LOCAL_ATTRIBUTES < IndividualBaseStep
       def file_commands
         cmds = []
         # rename our variable
@@ -251,7 +251,7 @@ module CMORizer
     end
 
 
-    class APPLY_GLOBAL_ATTRIBUTES < IndividualBaseStep
+    class SET_GLOBAL_ATTRIBUTES < IndividualBaseStep
       def file_commands
         cmds = []
         cmds << NCATTED_DELETE_GLOBAL_ATTRIBUTES_cmd.new(%w(output_schedule history CDO CDI Conventions))
