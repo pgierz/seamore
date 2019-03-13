@@ -38,7 +38,7 @@ class FileCommand
     prefix = "#{Thread.current.name}: " if Thread.current.name
     puts "#{prefix}=> #{t0.strftime "%H:%M:%S"}  #{cmd}"
     out, err, status = Open3.capture3(cmd)
-    raise "#{cmd} : #{err}" unless command_success?(out, err, status)
+    raise "#{cmd} : #{err} #{out}" unless command_success?(out, err, status)
     puts "#{prefix}<= #{sprintf('%5.1f',Time.now-t0)} sec"
   end
 end
