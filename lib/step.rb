@@ -283,9 +283,14 @@ module CMORizer
     end
     
     
-    class INSERT_TIME_BOUNDS < IndividualBaseStep
+    class AUTO_INSERT_TIME_BOUNDS < IndividualBaseStep
       def file_commands
-        INSERT_TIME_BOUNDS_cmd.new
+        in_freq = Frequency.for_name(@fesom_variable_frequency)
+        cmds = []
+        if in_freq.time_method == TimeMethods::MEAN
+          cmds << INSERT_TIME_BOUNDS_cmd.new
+        end      
+        cmds
       end
     end
     
