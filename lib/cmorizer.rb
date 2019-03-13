@@ -83,7 +83,14 @@ module CMORizer
               true
             end
           end
-        end 
+        end
+        
+      # bail out if we do not have a continuous range of files
+      required_number_of_files = year_range.last-year_range.first+1
+      if filtered_fesom_files.size != required_number_of_files
+        file_years = filtered_fesom_files.map {|ff| ff.year}
+        raise "#{required_number_of_files-filtered_fesom_files.size} file(s) are missing for year range #{year_range}, we got: #{filtered_fesom_files.map{|ff| ff.path}}"
+      end
 
       unless filtered_fesom_files.empty?
         puts "#{Thread.current.name}: #{chain} #{year_range.first}-#{year_range.last}"
