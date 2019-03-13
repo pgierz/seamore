@@ -26,13 +26,13 @@ module CMORizer
         # sort the fesom files
         fesom_output_files = fesom_output_files.sort_by {|ff| "#{ff.variable_id}#{ff.year}"}
 
-        if(experiment.first_year)
-          first_year = experiment.first_year
+        if(experiment.indir_first_year)
+          first_year = experiment.indir_first_year
         else
-          # no year given in experiment, search for the lowest year in all files
+          # no explicit indir_first_year given in DSL, search for the lowest year in all files
           first_year = (fesom_output_files.min {|a,b| a.year <=> b.year}).year
         end
-
+        
         if(experiment.last_year)
           last_year = experiment.last_year
         else
