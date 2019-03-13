@@ -147,6 +147,7 @@ module CMORizer
         @default_steps << sym
       end
       def evaluater.default_steps
+        @default_steps ||= []
         @default_steps
       end
       evaluater.instance_eval(&block)

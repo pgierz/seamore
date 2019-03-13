@@ -23,6 +23,8 @@ module CMORizer
     
     
     def execute(fesom_files, experiment, data_request, grid_description_file, version_date)      
+      return if @step_classes.empty?
+      
       # create new step instances here for each call to execute to have this method thread safe
       steps = []
       next_step = nil
