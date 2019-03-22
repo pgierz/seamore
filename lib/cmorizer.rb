@@ -89,7 +89,7 @@ module CMORizer
       required_number_of_files = year_range.last-year_range.first+1
       if filtered_fesom_files.size != required_number_of_files
         file_years = filtered_fesom_files.map {|ff| ff.year}
-        raise "#{required_number_of_files-filtered_fesom_files.size} file(s) are missing for year range #{year_range}, we got: #{filtered_fesom_files.map{|ff| ff.path}}"
+        raise "#{required_number_of_files-filtered_fesom_files.size} file(s) are missing for year range #{year_range} for input variable: '#{chain.input_variable_name}' from indir: '#{experiment.indir}', we got: #{filtered_fesom_files.map{|ff| ff.path}}"
       end
 
       unless filtered_fesom_files.empty?
