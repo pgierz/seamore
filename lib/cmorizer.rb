@@ -27,19 +27,19 @@ module CMORizer
         fesom_output_files = fesom_output_files.sort_by {|ff| "#{ff.variable_id}#{ff.year}"}
 
         if(experiment.indir_first_year)
-          first_year = experiment.indir_first_year
+          execute_first_year = experiment.indir_first_year
         else
           # no explicit indir_first_year given in DSL, search for the lowest year in all files
-          first_year = (fesom_output_files.min {|a,b| a.year <=> b.year}).year
+          execute_first_year = (fesom_output_files.min {|a,b| a.year <=> b.year}).year
         end
         
-        if(experiment.last_year)
-          last_year = experiment.last_year
+        if(experiment.indir_last_year)
+          execute_last_year = experiment.indir_last_year
         else
-          # no year given in experiment, search for the highest year in all files
-          last_year = (fesom_output_files.max {|a,b| a.year <=> b.year}).year
+          # no explicit indir_last_year given in DSL, search for the highest year in all files
+          execute_last_year = (fesom_output_files.max {|a,b| a.year <=> b.year}).year
         end
-        experiment_year_ranges = Project.year_ranges_major_digits(first: first_year.to_i, last: last_year.to_i, step: @years_step, major_first_digit:1)
+        experiment_year_ranges = Project.year_ranges_major_digits(first: execute_first_year.to_i, last: execute_last_year.to_i, step: @years_step, major_first_digit:1)
         
         FileUtils.mkdir_p experiment.outdir
 
