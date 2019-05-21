@@ -124,14 +124,14 @@ end
 
 
 class DataRequestVariable
-  attr_reader :variable_id, :unit, :description, :time_method, :frequencies, :realms, :standard_name, :cell_methods
+  attr_reader :variable_id, :unit, :description, :time_method, :frequencies, :realms, :standard_name, :cell_methods, :cell_measures
 
   def self.new_from_table_var_entry(var_entry)
-    DataRequestVariable.new(var_entry.variable_id, var_entry.unit, var_entry.description, var_entry.time_method, var_entry.table, var_entry.frequency_name, var_entry.realms, var_entry.standard_name, var_entry.cell_methods)
+    DataRequestVariable.new(var_entry.variable_id, var_entry.unit, var_entry.description, var_entry.time_method, var_entry.table, var_entry.frequency_name, var_entry.realms, var_entry.standard_name, var_entry.cell_methods, var_entry.cell_measures)
   end
 
 
-  def initialize(variable_id, unit, description, time_method, table, frequency, realms, standard_name, cell_methods)
+  def initialize(variable_id, unit, description, time_method, table, frequency, realms, standard_name, cell_methods, cell_measures)
     @variable_id = variable_id
     @unit = unit
     @description = description
@@ -141,6 +141,7 @@ class DataRequestVariable
     @realms = realms
     @standard_name = standard_name
     @cell_methods = cell_methods
+    @cell_measures = cell_measures
   end
   
   
@@ -209,6 +210,11 @@ class TableVarEntry
 
   def cell_methods
     @data['cell_methods']
+  end
+
+
+  def cell_measures
+    @data['cell_measures']
   end
 end
 
