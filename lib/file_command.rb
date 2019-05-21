@@ -249,6 +249,19 @@ class NCATTED_SET_VARIABLE_DESCRIPTION_cmd < InplaceCommand
 end
 
 
+class NCATTED_SET_VARIABLE_CELL_METHODS_cmd < InplaceCommand
+  include NCO_warning_filter
+
+  def initialize(var_name, cell_methods)
+    @var_name, @cell_methods = var_name, cell_methods
+  end
+
+  def cmd_txt_inplace(file)
+    %Q(ncatted --create_ram -h -a cell_methods,#{@var_name},o,c,"#{@cell_methods}" #{file})
+  end
+end
+
+
 class NCATTED_SET_VARIABLE_UNITS_cmd < InplaceCommand
   include NCO_warning_filter
 
