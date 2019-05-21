@@ -16,7 +16,7 @@ module CMORizer
       end
       
       
-      def set_info(outdir:, grid_description_file:, global_attributes:, fesom_variable_name:, fesom_variable_frequency:, fesom_unit:, out_unit:, variable_id:, description:, standard_name:)
+      def set_info(outdir:, grid_description_file:, global_attributes:, fesom_variable_name:, fesom_variable_frequency:, fesom_unit:, out_unit:, variable_id:, description:, standard_name:, cell_methods:)
         @outdir = outdir
         @grid_description_file = grid_description_file
         @global_attributes = global_attributes
@@ -27,6 +27,7 @@ module CMORizer
         @variable_id = variable_id
         @description = description
         @standard_name = standard_name
+        @cell_methods = cell_methods
       end
 
 
@@ -246,6 +247,9 @@ module CMORizer
         
         # apply description
         cmds << NCATTED_SET_VARIABLE_DESCRIPTION_cmd.new(@variable_id, @description)
+        
+        # apply cell_methods
+        cmds << NCATTED_SET_VARIABLE_CELL_METHODS_cmd.new(@variable_id, @cell_methods)
         cmds
       end
     end

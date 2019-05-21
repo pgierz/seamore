@@ -60,7 +60,8 @@ module CMORizer
                                   out_unit: data_request_variable.unit,
                                   variable_id: data_request_variable.variable_id,
                                   description: data_request_variable.description,
-                                  standard_name: data_request_variable.standard_name)}
+                                  standard_name: data_request_variable.standard_name,
+                                  cell_methods: data_request_variable.cell_methods)}
     
       # fill the first step with all the passed files without executing (i.e. dry run)
       # this will set the resultpath for each step

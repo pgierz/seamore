@@ -124,14 +124,14 @@ end
 
 
 class DataRequestVariable
-  attr_reader :variable_id, :unit, :description, :time_method, :frequencies, :realms, :standard_name
+  attr_reader :variable_id, :unit, :description, :time_method, :frequencies, :realms, :standard_name, :cell_methods
 
   def self.new_from_table_var_entry(var_entry)
-    DataRequestVariable.new(var_entry.variable_id, var_entry.unit, var_entry.description, var_entry.time_method, var_entry.table, var_entry.frequency_name, var_entry.realms, var_entry.standard_name)
+    DataRequestVariable.new(var_entry.variable_id, var_entry.unit, var_entry.description, var_entry.time_method, var_entry.table, var_entry.frequency_name, var_entry.realms, var_entry.standard_name, var_entry.cell_methods)
   end
 
 
-  def initialize(variable_id, unit, description, time_method, table, frequency, realms, standard_name)
+  def initialize(variable_id, unit, description, time_method, table, frequency, realms, standard_name, cell_methods)
     @variable_id = variable_id
     @unit = unit
     @description = description
@@ -140,6 +140,7 @@ class DataRequestVariable
     @frequencies = [frequency]
     @realms = realms
     @standard_name = standard_name
+    @cell_methods = cell_methods
   end
   
   
@@ -203,6 +204,11 @@ class TableVarEntry
 
   def standard_name
     @data['standard_name']
+  end
+
+
+  def cell_methods
+    @data['cell_methods']
   end
 end
 
