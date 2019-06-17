@@ -37,7 +37,7 @@ module CMORizer
         steps[0].forbid_inplace = true # do not modify the original input files
         steps[0].initial_prefix = "_#{@input_variable_name}_#{@input_frequency_name}--#{@cmor_variable_id}_#{@cmor_table_id}_"
       end
-            
+
       # offer info about the current experiment and variable to all step objects
       data_request_variable = data_request.find_variable_id_in_table_id(@cmor_variable_id, @cmor_table_id) # the variable from the data request might have a different frequency than the input variable
       raise "data request does not contain variable #{@cmor_variable_id} #{@input_frequency_name}" unless data_request_variable
@@ -61,8 +61,8 @@ module CMORizer
                                   variable_id: data_request_variable.variable_id,
                                   description: data_request_variable.description,
                                   standard_name: data_request_variable.standard_name,
-                                  cell_methods: data_request_variable.cell_methods,
-                                  cell_measures: data_request_variable.cell_measures)}
+                                  out_cell_methods: data_request_variable.cell_methods_in_table(@cmor_table_id),
+                                  out_cell_measures: data_request_variable.cell_measures_in_table(@cmor_table_id))}
     
       # fill the first step with all the passed files without executing (i.e. dry run)
       # this will set the resultpath for each step
