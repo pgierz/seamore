@@ -130,6 +130,10 @@ module CMORizer
 end
 
 
+class OutputFrequencyExceedsInputRangeError < StandardError
+end
+
+
 require_relative "file_command.rb"
 module CMORizer
   module Step
@@ -146,7 +150,7 @@ module CMORizer
         out_freq = Frequency.for_name(@global_attributes.frequency)
         
         if out_freq.name == "dec" && in_freq < out_freq
-          raise "can not produce decadal output from #{number_of_eventual_input_years} input years (must have 10 years)" if number_of_eventual_input_years != 10
+          raise OutputFrequencyExceedsInputRangeError.new "#{self.class} can not produce decadal output from #{number_of_eventual_input_years} input years (must have 10 years)" if number_of_eventual_input_years != 10
           return number_of_eventual_input_years == 10
         else
           return true

@@ -94,10 +94,14 @@ module CMORizer
 
       unless filtered_fesom_files.empty?
         puts "#{Thread.current.name}: #{chain} #{year_range.first}-#{year_range.last}"
-        chain.execute(filtered_fesom_files, experiment, @data_request, @grid_description_file, @version_date)
+        begin
+          chain.execute(filtered_fesom_files, experiment, @data_request, @grid_description_file, @version_date)
+        rescue OutputFrequencyExceedsInputRangeError => e
+          puts "#{Thread.current.name}: \033[1mskipping <#{chain} #{year_range.first}-#{year_range.last}> (#{e})\033[0m" # print in bold if possible using \033[1m \033[0m
+        end
       end
-    end                 
-  
+    end
+
   
     def cmip6_cmor_tables(version, dir)
       @data_request = DataRequest.new_from_tables_dir(File.expand_path dir)
