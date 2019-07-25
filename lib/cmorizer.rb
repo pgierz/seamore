@@ -232,8 +232,9 @@ module CMORizer
       
       # parent_experiment_id might be set to "no parent", in which case our parent_experiment_cv would be nil
       parent_experiment_cv = controlled_vocabularies['experiment_id'][parent_experiment_id]
+      parent_first_year_dsl = parent_first_year # make a copy here to not inadvertently mess with the state of the DSL setter
       if parent_experiment_cv.nil?
-        if parent_variant_label || parent_first_year
+        if parent_variant_label || parent_first_year_dsl
           raise "we can not have parent_variant_label or parent_first_year set if parent_experiment_id is not present via controlled vocabularies experiment_id '#{@experiment_id}'"
         end
       else
@@ -245,14 +246,12 @@ module CMORizer
         cv_parent_first_year = parent_experiment_cv['start_year']
         cv_parent_first_year = nil if cv_parent_first_year.empty?
         if cv_parent_first_year != nil
-          @parent_first_year = cv_parent_first_year
-          if parent_first_year != nil
+          @parent_first_year = cv_parent_first_year.to_i
+          if parent_first_year_dsl != nil
             raise "we can not have a parent_first_year set if a start_year is known ('#{cv_parent_first_year}') via controlled vocabularies parent_experiment_id '#{parent_experiment_id}'"
           end
-        else
-          if parent_first_year.nil?
-            raise "we must have a parent_first_year set if a start_year is not known via controlled vocabularies parent_experiment_id '#{parent_experiment_id}'"
-          end
+        elsif parent_first_year_dsl.nil?
+          raise "we must have a parent_first_year set if a start_year is not known via controlled vocabularies parent_experiment_id '#{parent_experiment_id}'"
         end
       end
       
