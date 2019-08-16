@@ -74,7 +74,7 @@ command :print_experiment_ids do |c|
 end
 
 
-desc 'Process rules of given file to greate CMIP6 CMOR files'
+desc 'Process rules of given file to create CMIP6 CMOR files'
 arg "rules_file"
 command :process do |c|
   c.flag [:j], :desc => "number of jobs", :default_value=>20, :must_match => /\d+/
