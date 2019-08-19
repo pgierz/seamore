@@ -2,6 +2,18 @@ require 'fileutils'
 require 'open3'
 
 
+module SYSTEM_COMMANDS
+  ALL = [
+  CDO = "cdo",
+  NCN = "ncn",
+  SHELLNOOP = ":",
+  NCKS = "ncks",
+  NCCOPY = "nccopy",
+  NCATTED = "ncatted",
+  NCRENAME = "ncrename",
+  ]
+end
+
 class FileCommand
   def run(infiles, outfile)
     execute_atomically(infiles, outfile)
@@ -90,7 +102,7 @@ class NCCOPY_COMPRESS_cmd < OutofplaceCommand
 
   def cmd_txt_outofplace(infiles, outfile)
     raise "can handle only 1 file in #{self.class} but got #{infiles.size} #{infiles.inspect}" if infiles.size != 1
-    %Q(nccopy -k enhanced-nc3 -d 1 -s #{infiles[0]} #{outfile})
+    %Q(#{SYSTEM_COMMANDS::NCCOPY} -k enhanced-nc3 -d 1 -s #{infiles[0]} #{outfile})
   end
 end
 
@@ -106,35 +118,35 @@ end
 
 class CDO_MERGE_cmd < CDO_cmd
   def cmd_txt_outofplace(infiles, outfile)
-    %Q(cdo mergetime #{infiles.join(' ')} #{outfile})
+    %Q(#{SYSTEM_COMMANDS::CDO} mergetime #{infiles.join(' ')} #{outfile})
   end
 end
 
 
 class CDO_SET_T_UNITS_DAYS_cmd < CDO_cmd
   def cmd_txt_outofplace(infiles, outfile)
-    %Q(cdo settunits,days #{infiles.join(' ')} #{outfile})
+    %Q(#{SYSTEM_COMMANDS::CDO} settunits,days #{infiles.join(' ')} #{outfile})
   end
 end
 
 
 class CDO_MONMEAN_cmd < CDO_cmd
   def cmd_txt_outofplace(infiles, outfile)
-    %Q(cdo monmean #{infiles.join(' ')} #{outfile}) # this will rename our "number_of_time_bounds" dimension to "bnds"
+    %Q(#{SYSTEM_COMMANDS::CDO} monmean #{infiles.join(' ')} #{outfile}) # this will rename our "number_of_time_bounds" dimension to "bnds"
   end
 end
 
 
 class CDO_TIMMEAN_cmd < CDO_cmd
   def cmd_txt_outofplace(infiles, outfile)
-    %Q(cdo timmean #{infiles.join(' ')} #{outfile}) # this will rename our "number_of_time_bounds" dimension to "bnds"
+    %Q(#{SYSTEM_COMMANDS::CDO} timmean #{infiles.join(' ')} #{outfile}) # this will rename our "number_of_time_bounds" dimension to "bnds"
   end
 end
 
 
 class CDO_YEARMEAN_cmd < CDO_cmd
   def cmd_txt_outofplace(infiles, outfile)
-    %Q(cdo yearmean #{infiles.join(' ')} #{outfile}) # this will rename our "number_of_time_bounds" dimension to "bnds"
+    %Q(#{SYSTEM_COMMANDS::CDO} yearmean #{infiles.join(' ')} #{outfile}) # this will rename our "number_of_time_bounds" dimension to "bnds"
   end
 end
 
@@ -146,7 +158,7 @@ class CDO_MULC_cmd < CDO_cmd
   
   def cmd_txt_outofplace(infiles, outfile)
     raise "can handle only 1 file in #{self.class} but got #{infiles.size} #{infiles.inspect}" if infiles.size != 1
-    %Q(cdo mulc,#{@factor} #{infiles.join(' ')} #{outfile})
+    %Q(#{SYSTEM_COMMANDS::CDO} mulc,#{@factor} #{infiles.join(' ')} #{outfile})
   end
 end
 
@@ -158,14 +170,14 @@ class CDO_SUBC_cmd < CDO_cmd
   
   def cmd_txt_outofplace(infiles, outfile)
     raise "can handle only 1 file in #{self.class} but got #{infiles.size} #{infiles.inspect}" if infiles.size != 1
-    %Q(cdo subc,#{@subtrahend} #{infiles.join(' ')} #{outfile})
+    %Q(#{SYSTEM_COMMANDS::CDO} subc,#{@subtrahend} #{infiles.join(' ')} #{outfile})
   end
 end
 
 
 class MEAN_TIMESTAMP_ADJUST_cmd < InplaceCommand
   def cmd_txt_inplace(file)
-    bin = "ncn mean_timestamp_adjust" unless bin # assume binary is known via PATH
+    bin = "#{SYSTEM_COMMANDS::NCN} mean_timestamp_adjust" unless bin # assume binary is known via PATH
     %Q(#{bin} #{file})
   end
 end
@@ -173,7 +185,7 @@ end
 
 class INSERT_TIME_BOUNDS_cmd < InplaceCommand
   def cmd_txt_inplace(file)
-    bin = "ncn insert_time_bounds" unless bin # assume binary is known via PATH
+    bin = "#{SYSTEM_COMMANDS::NCN} insert_time_bounds" unless bin # assume binary is known via PATH
     %Q(#{bin} #{file})
   end
 end
@@ -197,7 +209,7 @@ class NCATTED_ADD_GLOBAL_ATTRIBUTES_cmd < InplaceCommand
         att_args += %Q( -a #{att_name},global,o,c,"#{att_txt}")
       end
     end
-    %Q(ncatted --create_ram -h#{att_args} #{file})
+    %Q(#{SYSTEM_COMMANDS::NCATTED} --create_ram -h#{att_args} #{file})
   end
 end
 
@@ -212,7 +224,7 @@ class NCATTED_DELETE_GLOBAL_ATTRIBUTES_cmd < InplaceCommand
   def cmd_txt_inplace(file)
     att_args = ""
     @attribute_names.each {|n| att_args += %Q( -a #{n},global,d,,)}
-    %Q(ncatted --create_ram -h#{att_args} #{file})
+    %Q(#{SYSTEM_COMMANDS::NCATTED} --create_ram -h#{att_args} #{file})
   end
 end
 
@@ -228,7 +240,7 @@ class NCATTED_DELETE_VARIABLE_ATTRIBUTES_cmd < InplaceCommand
   def cmd_txt_inplace(file)
     att_args = ""
     @attribute_names.each {|n| att_args += %Q( -a #{n},#{@var_name},d,,)}
-    %Q(ncatted --create_ram -h#{att_args} #{file})
+    %Q(#{SYSTEM_COMMANDS::NCATTED} --create_ram -h#{att_args} #{file})
   end
 end
 
@@ -244,7 +256,7 @@ class NCATTED_SET_VARIABLE_DESCRIPTION_cmd < InplaceCommand
     # there seems to be an error when setting chars with ncatted:
     # a single quote ' always results in a \' in the netcdf. the same effect as putting a \' in the first place
     # so we currently can not put all variable descriptions correctly, as some contain single quotes
-    %Q(ncatted --create_ram -h -a description,#{@var_name},o,c,"#{@description}" #{file})
+    %Q(#{SYSTEM_COMMANDS::NCATTED} --create_ram -h -a description,#{@var_name},o,c,"#{@description}" #{file})
   end
 end
 
@@ -257,7 +269,7 @@ class NCATTED_SET_VARIABLE_CELL_METHODS_CELL_MEASURES_cmd < InplaceCommand
   end
 
   def cmd_txt_inplace(file)
-    %Q(ncatted --create_ram -h -a cell_methods,#{@var_name},o,c,"#{@cell_methods}" -a cell_measures,#{@var_name},o,c,"#{@cell_measures}" #{file})
+    %Q(#{SYSTEM_COMMANDS::NCATTED} --create_ram -h -a cell_methods,#{@var_name},o,c,"#{@cell_methods}" -a cell_measures,#{@var_name},o,c,"#{@cell_measures}" #{file})
   end
 end
 
@@ -271,7 +283,7 @@ class NCATTED_SET_VARIABLE_UNITS_cmd < InplaceCommand
 
   def cmd_txt_inplace(file)
     # beware: the attribute is called 'units' (with 's')
-    %Q(ncatted --create_ram -h -a units,#{@var_name},o,c,"#{@unit}" #{file})
+    %Q(#{SYSTEM_COMMANDS::NCATTED} --create_ram -h -a units,#{@var_name},o,c,"#{@unit}" #{file})
   end
 end
 
@@ -284,7 +296,7 @@ class NCATTED_SET_VARIABLE_STANDARD_NAME_cmd < InplaceCommand
   end
 
   def cmd_txt_inplace(file)
-    %Q(ncatted --create_ram -h -a standard_name,#{@var_name},o,c,"#{@standard_name}" #{file})
+    %Q(#{SYSTEM_COMMANDS::NCATTED} --create_ram -h -a standard_name,#{@var_name},o,c,"#{@standard_name}" #{file})
   end
 end
 
@@ -294,7 +306,7 @@ class NCATTED_SET_LAT_LON_BNDS_STANDARD_NAME_cmd < InplaceCommand
 
   def cmd_txt_inplace(file)
     # set standard_name according to the CF conventions
-    %Q(ncatted --create_ram -h -a standard_name,lat_bnds,o,c,"lat_bnds" -a standard_name,lon_bnds,o,c,"lon_bnds" #{file})
+    %Q(#{SYSTEM_COMMANDS::NCATTED} --create_ram -h -a standard_name,lat_bnds,o,c,"lat_bnds" -a standard_name,lon_bnds,o,c,"lon_bnds" #{file})
   end
 end
 
@@ -308,9 +320,9 @@ class NCRENAME_RENAME_VARIABLE_cmd < InplaceCommand
 
   def cmd_txt_inplace(file)
     if @old_name == @new_name
-      %Q(:) # shell noop as ncrename fails with an error if the new name is the same as the old name
+      %Q(#{SYSTEM_COMMANDS::SHELLNOOP}) # shell noop as ncrename fails with an error if the new name is the same as the old name
     else
-      %Q(ncrename -h -v #{@old_name},#{@new_name} #{file})
+      %Q(#{SYSTEM_COMMANDS::NCRENAME} -h -v #{@old_name},#{@new_name} #{file})
     end
   end
 end
@@ -321,7 +333,7 @@ class NCRENAME_DIMENSION_NODES_XD_TO_NCELLS_cmd < InplaceCommand
 
   def cmd_txt_inplace(file)
     # from the docs: "ncrename will change the names of the input-file in place"
-    %Q(ncrename -h -d .nodes_2d,ncells -d .nodes_3d,ncells #{file}) # the dot '.' prefix tells ncrename that it is an optional rename
+    %Q(#{SYSTEM_COMMANDS::NCRENAME} -h -d .nodes_2d,ncells -d .nodes_3d,ncells #{file}) # the dot '.' prefix tells ncrename that it is an optional rename
   end
 end
 
@@ -336,7 +348,7 @@ class NCKS_APPEND_GRID_cmd < InplaceCommand
   def cmd_txt_inplace(file)
     # ncks will create a temporary copy of the file
     # see section "2.3 Temporary Output Files" in the docs
-    %Q(ncks -h --create_ram --no_tmp_fl -A -v lat,lon,lat_bnds,lon_bnds #{@grid_description_file} #{file}) # the nodes dimension must be identical in geid description and variable file, e.g. 'ncells'
+    %Q(#{SYSTEM_COMMANDS::NCKS} -h --create_ram --no_tmp_fl -A -v lat,lon,lat_bnds,lon_bnds #{@grid_description_file} #{file}) # the nodes dimension must be identical in geid description and variable file, e.g. 'ncells'
   end
 end
 
@@ -350,7 +362,7 @@ class NCATTED_APPEND_COORDINATES_VALUE_cmd < InplaceCommand
 
   def cmd_txt_inplace(file)
     # this does not seem to create a temporary file, but no mention of in-place operation in the ncatted docs
-    %Q(ncatted -h --create_ram -a coordinates,#{@variable_id},a,c,'lat lon' #{file})
+    %Q(#{SYSTEM_COMMANDS::NCATTED} -h --create_ram -a coordinates,#{@variable_id},a,c,'lat lon' #{file})
   end
 end
 
