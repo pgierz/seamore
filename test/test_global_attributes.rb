@@ -21,6 +21,6 @@ class GlobalAttributesTests < Minitest::Test
                         txt: "FESOM 1.4 (unstructured grid in the horizontal with 126859 wet nodes; 46 levels; top grid cell 0-5 m)")
     
     ga = builder.build_global_attributes(version_date: [2018,12,18], data_specs_version: "01.00.27")
-    assert "so", ga.as_hash['variable_id']
+    assert_equal "so", ga.as_hash['variable_id']
   end
 end
