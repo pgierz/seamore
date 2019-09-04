@@ -89,7 +89,7 @@ module NCO_warning_filter
   def command_success?(out, err, status)
     return false unless status.success?
     unless err.empty?
-      return false unless err =~ /and may not be portable to older operating systems/
+      return false unless err =~ /and may not be portable to older operating systems|may not play well with older operating systems/
     end
     
     true
