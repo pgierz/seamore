@@ -3,6 +3,13 @@ require_relative "../lib/file_command.rb"
 require "minitest/autorun"
 
 
+class GEMDependenciesTests < Minitest::Test
+  def test_can_load_gli_gem
+    require 'gli'
+  end
+end
+
+
 class SystemCLICommandsDependenciesTests < Minitest::Test  
 
   # create a test method for all known system commands  
