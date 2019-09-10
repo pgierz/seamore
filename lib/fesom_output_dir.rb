@@ -6,6 +6,13 @@ class FesomOutputDir
   def initialize(d, first_year=nil, last_year=nil)
     eligible_files = Dir[File.join(d,"*")].grep(/\/(?<variable_id>\w+)_fesom_\d{8}\.nc\Z/)
     
+    # remove any duplicate files (which are e.g. introduced via symlinks in the output directory)
+    realpath_groups = eligible_files.group_by {|f| File.realpath(f)}
+    eligible_files = []
+    realpath_groups.each do |realpath, given_paths|
+      eligible_files << realpath
+    end  
+    
     @variable_files = []
     eligible_files.each do |f|
       /(?<variable_id>\w+)_fesom_(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})\.nc\Z/ =~ File.basename(f)
