@@ -38,12 +38,12 @@ class FesomYearlyOutputFile # i.e. a netcdf file with one year of fesom output
   
 
   def <=>(other)
-    "#{@variable_id} #{@approx_interval} #{@frequency}" <=> "#{other.variable_id} #{other.approx_interval} #{other.frequency}"
+    "#{@variable_id} #{@approx_interval} #{@frequency} #{@time_method} #{@year}" <=> "#{other.variable_id} #{other.approx_interval} #{other.frequency} #{other.time_method} #{other.year}"
   end
   
   
   def to_s
-    "#{@variable_id} '#{unit}' #{@frequency}"
+    "#{@variable_id} '#{@unit}' #{@frequency} #{@time_method} #{@year}"
   end
   
 
