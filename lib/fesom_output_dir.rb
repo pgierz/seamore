@@ -1,10 +1,29 @@
 require_relative "fesom_file.rb"
 
 class FesomOutputDir
+  PATTERN_ENV_KEY = "SEAMORE_FESOM_FILE_PATTERN"
+  def self.pattern
+    pattern_txt = '(?<variable_id>\w+)_fesom_(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})\.nc\Z' # default pattern to match e.g. thetao_fesom_20420101.nc, to match e.g. hist_fesom_thetao_20420101.nc set SEAMORE_FESOM_FILE_PATTERN to '_fesom_(?<variable_id>\w+)_(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})\.nc\Z'
+    
+    if(ENV.has_key? PATTERN_ENV_KEY)
+      pattern_txt = ENV[PATTERN_ENV_KEY]
+    end
+    
+    r = Regexp.new pattern_txt
+    required_regexp_names = ["variable_id", "year", "month", "day"]
+    unless (required_regexp_names-r.names).empty?
+      raise "#{PATTERN_ENV_KEY} requires these named groups: #{required_regexp_names.inspect} but the pattern is: #{r.inspect}"
+    end
+      
+    r    
+  end
+
+
   attr_reader :variable_files
 
   def initialize(d, first_year=nil, last_year=nil)
-    eligible_files = Dir[File.join(d,"*")].grep(/\/(?<variable_id>\w+)_fesom_\d{8}\.nc\Z/)
+    filepattern = FesomOutputDir.pattern  
+    eligible_files = Dir[File.join(d,"*")].grep(filepattern)
     
     # remove any duplicate files (which are e.g. introduced via symlinks in the output directory)
     realpath_groups = eligible_files.group_by {|f| File.realpath(f)}
@@ -15,13 +34,13 @@ class FesomOutputDir
     
     @variable_files = []
     eligible_files.each do |f|
-      /(?<variable_id>\w+)_fesom_(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})\.nc\Z/ =~ File.basename(f)
+      match = filepattern.match(File.basename(f))
       if(first_year && last_year) # might be nil, i.e. read every year
-        if(first_year <= year.to_i && year.to_i <= last_year)
-          @variable_files << FesomYearlyOutputFile.new(variable_id: variable_id, year: year, month: month, day: day, path: f)
+        if(first_year <= match[:year].to_i && match[:year].to_i <= last_year)
+          @variable_files << FesomYearlyOutputFile.new(variable_id: match[:variable_id], year: match[:year], month: match[:month], day: match[:day], path: f)
         end
       else
-        @variable_files << FesomYearlyOutputFile.new(variable_id: variable_id, year: year, month: month, day: day, path: f)
+        @variable_files << FesomYearlyOutputFile.new(variable_id: match[:variable_id], year: match[:year], month: match[:month], day: match[:day], path: f)
       end
     end    
     
