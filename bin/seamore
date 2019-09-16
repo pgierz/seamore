@@ -8,6 +8,7 @@ require_relative "../lib/fesom_possible_var.rb"
 require_relative "../lib/matcher.rb"
 require_relative "../lib/controlled_vocabularies.rb"
 require_relative "../lib/cmorizer.rb"
+require_relative "../lib/directory_creator.rb"
 
 ENV['GLI_DEBUG']='true' # set environment GLI_DEBUG=true to show the full backtrace
 
@@ -81,6 +82,15 @@ command :process do |c|
   c.action do |global_opts,opts,args|
     project = CMORizer::Project.new File.read(args[0])
     project.execute(opts[:j].to_i)
+  end
+end
+
+
+desc 'Create CMIP6 directory structure and hard link given CMOR files'
+arg "cmor_file" , {:multiple=>true}
+command :create_directories do |c|
+  c.action do |global_opts,opts,args|
+    DirectoryCreator.create_directories args
   end
 end
 
