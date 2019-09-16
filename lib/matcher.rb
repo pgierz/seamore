@@ -30,9 +30,9 @@ class Matcher
       else
         cmipvar = request.variables.find {|v| v.variable_id == fevar.variable_id}
         if(cmipvar)
-          puts "# NO match: #{fevar} (!! #{cmipvar.variable_id} '#{cmipvar.unit}' exists in datarequest)"
+          puts "# NO match: #{fevar.variable_id} '#{fevar.unit}' #{fevar.frequency} #{fevar.time_method} (!! #{cmipvar.variable_id} '#{cmipvar.unit}' exists in datarequest)"
         else
-          puts "# NO match: #{fevar}"
+          puts "# NO match: #{fevar.variable_id} '#{fevar.unit}' #{fevar.frequency} #{fevar.time_method}"
         end
       end
     end
