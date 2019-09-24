@@ -190,9 +190,12 @@ module CMORizer
         if(@fesom_unit != @out_unit)
           case [@fesom_unit, @out_unit]
           when ["psu", "0.001"] # noop
+          when ["psu2", "1e-06"] # noop
           when ["W/m^2", "W m-2"] # noop
           when ["1.0", "1"] # noop
           when ["1", "%"]
+            cmds << CDO_MULC_cmd.new(100)
+          when ["1.0", "%"]
             cmds << CDO_MULC_cmd.new(100)
           when ["K", "degC"]
             cmds << CDO_SUBC_cmd.new(-273.15)
