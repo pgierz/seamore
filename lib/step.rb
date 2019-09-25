@@ -184,6 +184,17 @@ module CMORizer
     
     
     class AUTO_CONVERT_UNIT < IndividualBaseStep
+      def self.auto_convert_unit_possible?(from_unit, to_unit)
+        begin
+          AUTO_CONVERT_UNIT.convert_unit_commands(from_unit, to_unit)
+        rescue RuntimeError => e
+          return false
+        end
+        
+        return true
+      end
+      
+      
       def self.convert_unit_commands(from_unit, to_unit)
         cmds = []
 
