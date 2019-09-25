@@ -9,12 +9,13 @@ require_relative "../lib/matcher.rb"
 require_relative "../lib/controlled_vocabularies.rb"
 require_relative "../lib/cmorizer.rb"
 require_relative "../lib/directory_creator.rb"
+require_relative "../lib/step.rb"
 
 ENV['GLI_DEBUG']='true' # set environment GLI_DEBUG=true to show the full backtrace
 
 include GLI::App
 
-program_desc 'CMORize FESOM output to a given CMIP6 data request'
+program_desc 'CMORize FESOM output to a given CMIP6 data request and more. For questions and suggestions, please mail to: Jan Hegewald <jan.hegewald@awi.de>'
 
 subcommand_option_handling :normal
 arguments :strict
