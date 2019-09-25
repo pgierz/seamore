@@ -184,11 +184,11 @@ module CMORizer
     
     
     class AUTO_CONVERT_UNIT < IndividualBaseStep
-      def file_commands
+      def self.convert_unit_commands(from_unit, to_unit)
         cmds = []
 
-        if(@fesom_unit != @out_unit)
-          case [@fesom_unit, @out_unit]
+        if(from_unit != to_unit)
+          case [from_unit, to_unit]
           when ["psu", "0.001"] # noop
           when ["psu2", "1e-06"] # noop
           when ["W/m^2", "W m-2"] # noop
@@ -200,14 +200,23 @@ module CMORizer
           when ["K", "degC"]
             cmds << CDO_SUBC_cmd.new(-273.15)
           else
-            raise "can not automatically convert unit from '#{@fesom_unit}' to '#{@out_unit}'"
-          end
-          
-         # apply unit
-         # assume the APPLY_LOCAL_ATTRIBUTES Step will be executed later
-         # and thus our variable has still the original name (@fesom_variable_name)
-         cmds << NCATTED_SET_VARIABLE_UNITS_cmd.new(@fesom_variable_name, @out_unit)
+            raise "can not automatically convert unit from '#{from_unit}' to '#{to_unit}'"
+          end          
         end
+        
+        cmds
+      end
+      
+      
+      def file_commands
+        cmds = AUTO_CONVERT_UNIT.convert_unit_commands(@fesom_unit, @out_unit)
+        unless cmds.empty?
+          # apply unit
+          # assume the APPLY_LOCAL_ATTRIBUTES Step will be executed later
+          # and thus our variable has still the original name (@fesom_variable_name)
+          cmds << NCATTED_SET_VARIABLE_UNITS_cmd.new(@fesom_variable_name, @out_unit)
+        end
+        
         cmds
       end
     end
