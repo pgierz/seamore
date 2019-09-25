@@ -38,7 +38,7 @@ class Matcher
           if CMORizer::Step::AUTO_CONVERT_UNIT.auto_convert_unit_possible?(fevar.unit, cmipvar.unit)
             puts "cmorize #{fevar.variable_id}_#{fevar.frequency} => [#{table_txts.join(', ')}] # automatically converting unit from '#{fevar.unit}' to '#{cmipvar.unit}'"
           else
-            puts "# NO match: #{fevar.variable_id} '#{fevar.unit}' #{fevar.frequency} #{fevar.time_method} (!! #{cmipvar.variable_id} '#{cmipvar.unit}' exists in datarequest)"
+            puts "# NO match: #{fevar.variable_id} '#{fevar.unit}' #{fevar.frequency} #{fevar.time_method} (!! #{cmipvar.variable_id} '#{cmipvar.unit}' exists in table(s) #{cmipvar.table_ids.join(', ')})"
           end
         end
       else
