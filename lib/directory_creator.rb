@@ -54,7 +54,7 @@ class DirectoryCreator
   
     files.each do |file|
       subdirs = DirectoryCreator.subdirs_for_cmor_file file
-      system "mkdir -p #{File.join subdirs}"
+      system "mkdir -p '#{File.join subdirs}'"
       cmd = "ln #{file} #{File.join(subdirs, File.basename(file))}"
       puts cmd
       system cmd
