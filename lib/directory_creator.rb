@@ -7,7 +7,7 @@ class DirectoryCreator
 
 
 # <mip_era>/
-#  <activity_id>/
+#  <activity_id>/ # an exception for this exists in section "Directory structure template": "If multiple activities are listed in the global attribute, the first one is used in the directory structure."
 #   <institution_id>/
 # 	 <source_id>/
 #     <experiment_id>/
@@ -41,6 +41,8 @@ class DirectoryCreator
         end
       elsif t == "version"
         (Date.parse values['creation_date']).to_time.strftime "v%Y%m%d"
+      elsif t == "activity_id" # an exception for this exists: "If multiple activities are listed in the global attribute, the first one is used in the directory structure."
+        values[t].split.first
       else
         values[t]
       end
