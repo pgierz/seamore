@@ -15,7 +15,7 @@ class FesomOutputDir
       raise "#{PATTERN_ENV_KEY} requires these named groups: #{required_regexp_names.inspect} but the pattern is: #{r.inspect}"
     end
       
-    r    
+    r
   end
 
 
@@ -24,6 +24,7 @@ class FesomOutputDir
   def initialize(d, first_year=nil, last_year=nil)
     filepattern = FesomOutputDir.pattern  
     eligible_files = Dir[File.join(d,"*")].grep(filepattern)
+    puts "# #{PATTERN_ENV_KEY}='#{filepattern.source}' is matching #{eligible_files.size} files"
     
     # remove any duplicate files (which are e.g. introduced via symlinks in the output directory)
     realpath_groups = eligible_files.group_by {|f| File.realpath(f)}
