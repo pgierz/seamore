@@ -23,6 +23,8 @@ module CMORizer
     def execute(threadcount)
       @experiments.each do |experiment|
         fesom_output_files = FesomOutputDir.new(experiment.indir, experiment.indir_first_year, experiment.indir_last_year).variable_files
+        next if fesom_output_files.empty?
+        
         # sort the fesom files
         fesom_output_files = fesom_output_files.sort_by {|ff| "#{ff.variable_id}#{ff.year}"}
 
