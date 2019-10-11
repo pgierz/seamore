@@ -24,7 +24,7 @@ class FesomOutputDir
   def initialize(d, first_year=nil, last_year=nil, verbose=true)
     filepattern = FesomOutputDir.pattern  
     eligible_files = Dir[File.join(d,"*")].grep(filepattern)
-    puts "# #{PATTERN_ENV_KEY}='#{filepattern.source}' is matching #{eligible_files.size} files" if verbose
+    puts "# #{PATTERN_ENV_KEY}='#{filepattern.source}' is matching #{eligible_files.size} files in directory #{d}" if verbose
     
     # remove any duplicate files (which are e.g. introduced via symlinks in the output directory)
     realpath_groups = eligible_files.group_by {|f| File.realpath(f)}
