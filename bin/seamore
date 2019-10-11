@@ -10,6 +10,7 @@ require_relative "../lib/controlled_vocabularies.rb"
 require_relative "../lib/cmorizer.rb"
 require_relative "../lib/directory_creator.rb"
 require_relative "../lib/step.rb"
+require_relative "../lib/version.rb"
 
 ENV['GLI_DEBUG']='true' # set environment GLI_DEBUG=true to show the full backtrace
 
@@ -19,6 +20,9 @@ program_desc 'CMORize FESOM output to a given CMIP6 data request and more. For q
 
 subcommand_option_handling :normal
 arguments :strict
+
+
+version Seamore::VERSION # this will be shown in the help message and also add a global --version option
 
 
 desc 'Print data request variables for json tables at PATH'
