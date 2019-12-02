@@ -230,6 +230,7 @@ module CMORizer
       @experiment_cv = controlled_vocabularies['experiment_id'][@experiment_id]
       raise "experiment_id #{@experiment_id} does not exist in controlled vocabularies" unless @experiment_cv
       instance_eval(&block) if block_given?
+      raise "source_id <#{source_id}> not found in controlled vocabularies" if controlled_vocabularies['source_id'][source_id].nil?
       @nominal_resolution = controlled_vocabularies['source_id'][source_id]['model_component']['ocean']['native_nominal_resolution']
       @grid_txt = controlled_vocabularies['source_id'][source_id]['model_component']['ocean']['description']
       
