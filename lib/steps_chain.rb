@@ -35,7 +35,8 @@ module CMORizer
       steps.reverse!
       unless steps.empty?
         steps[0].forbid_inplace = true # do not modify the original input files
-        steps[0].initial_prefix = "_#{@input_variable_name}_#{@input_frequency_name}--#{@cmor_variable_id}_#{@cmor_table_id}_"
+        # filename prefix, has to be sufficient to avoid naming collisions of our files
+        steps[0].initial_prefix = "_#{@input_variable_name}_#{@input_frequency_name}--#{@cmor_variable_id}_#{@cmor_table_id}_#{fesom_files.first.year}-#{fesom_files.last.year}"
       end
 
       # offer info about the current experiment and variable to all step objects

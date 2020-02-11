@@ -103,11 +103,15 @@ module CMORizer
       def create_outpath(*inpaths)
         step_suffix = self.class.to_s.split('::').last
         step_suffix = truncate_string(step_suffix)        
-        prefix = (@initial_prefix) ? "#{@initial_prefix}" : ""
-        from = "#{File.basename(inpaths[0])}"
-        to = (inpaths.size > 1) ? "-#{File.basename(inpaths.last)}" : ""
         
-        outname = "#{prefix}#{from}#{to}.#{step_suffix}"
+        if @initial_prefix
+          prefix = "#{@initial_prefix}"
+        else
+          prefix = File.basename(inpaths[0])
+        end
+
+        # keep filename less than 255 chars, as most systems can not deal with more
+        outname = "#{prefix}.#{step_suffix}"
         
         File.join @outdir, outname
       end
