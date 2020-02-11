@@ -86,6 +86,7 @@ command :process do |c|
   c.flag [:j], :desc => "number of jobs", :default_value=>20, :must_match => /\d+/
   c.action do |global_opts,opts,args|
     project = CMORizer::Project.new File.read(args[0])
+    puts "#{Time.now.strftime "%Y-%m-%d %H:%M:%S"}, seamore version #{Seamore::VERSION}"
     project.execute(opts[:j].to_i)
   end
 end
