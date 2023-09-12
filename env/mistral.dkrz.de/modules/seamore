@@ -1,0 +1,14 @@
+#%Module
+
+proc ModulesHelp { } {
+  puts stderr "seamore"
+}
+module-whatis "seamore"
+conflict seamore
+
+prepend-path PATH /work/bk0988/a270076/shared/bin/ruby/bin
+prepend-path PATH /work/bk0988/a270076/shared/bin/seamore/bin
+module load ncn
+module load cdo/1.9.7-magicsxx-gcc64
+module load nco/4.7.5-gcc64 
+module load netcdf_c/4.3.2-gcc48 # for ncdump
