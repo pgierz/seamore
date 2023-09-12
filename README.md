@@ -182,3 +182,40 @@ ncrename
 
 If a `seamore process` job has been killed or `ctrl-c`ed, it can be resumed! Manually delete all `*.inprogress` from the output directoy and re-run the original `seamore process` command to resume cmorization.
 
+## Tab Auto Completion
+
+There is an autocompletion file for bash and zsh which can besourced to get autocomplete: [env/complete.sh](https://github.com/FESOM/seamore/blob/6d43a6fb894bd0502dc4ff153b39acb94ce0b6f8/env/complete.sh)
+
+
+# Install Notes
+
+## In case there is no ruby available
+
+```
+cd /path
+wget https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.4.tar.gz
+tar -xf ruby-2.6.4.tar.gz
+mkdir ruby-2.6.4_bin
+cd ruby-2.6.4
+./configure --disable-install-doc --prefix=/path/ruby-2.6.4_bin
+make -j `nproc --all`
+make install
+```
+
+## seamore
+
+```
+cd /path/seamore && bundle install
+# if bundle install fails, we only need gli
+gem install --install-dir /path/rubygems/ gli
+export GEM_PATH=$GEM_PATH:/path/rubygems/
+```
+
+One can add the seamore module file to .zshrc, .bashrc like `export MODULEPATH=/path/modules:$MODULEPATH`
+
+Then to use seamore:
+
+```
+module load seamore
+
+```
