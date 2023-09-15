@@ -48,6 +48,9 @@ source_id "AWI-CM-1-1-MR"
 grid_description_file "/pool/glob/griddes.nc"
 ```
 
+Note, the `merge_years_step` joins multiple years to a single file. Each new file will start at year xxx1, i.e. if files for the years 1950,1951,1952 are merged with `merge_years_step 2`, the resulting files will range from 1950--1950 and 1951--1952.
+
+
 ### Part 2, one or multiple blocks for each experiment id, i.e. *historical*, *piControl*, *abrupt-4xCO2*
 
 ```
@@ -218,4 +221,13 @@ Then to use seamore:
 ```
 module load seamore
 
+```
+
+## Unit Tests
+
+*seamore* contains a set of carefully written unit tests. To run:
+
+```
+cd src
+ruby test/test.rb
 ```
