@@ -189,6 +189,22 @@ There is an autocompletion file for bash and zsh which can besourced to get auto
 
 # Install Notes
 
+## Automatic installation
+
+If the environment scripts are already available for the machine you are using you'll
+be able to run the following to automatically install seamore and build its
+dependencies:
+
+```
+./configure.sh
+```
+
+Before starting using `bin/seamore` make sure you execute:
+
+```
+source env.sh
+```
+
 ## In case there is no ruby available
 
 ```
@@ -202,7 +218,7 @@ make -j `nproc --all`
 make install
 ```
 
-## seamore
+## Manual installation of seamore
 
 ```
 cd /path/seamore && bundle install

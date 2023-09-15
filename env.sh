@@ -104,4 +104,4 @@ else
    source $SHELLFILE
 fi
 
-source ./.gem_path
+source ./.paths
