@@ -205,6 +205,9 @@ Before starting using `bin/seamore` make sure you execute:
 source env.sh
 ```
 
+Machines that support this type of installation
+- Albedo
+
 ## In case there is no ruby available
 
 ```
