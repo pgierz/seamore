@@ -1,0 +1,4 @@
+lib/ruby
+lib/ruby/gems
+.bundle
+.gem_path
