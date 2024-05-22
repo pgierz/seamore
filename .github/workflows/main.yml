@@ -24,8 +24,10 @@ jobs:
       - name: Install external dependencies
         run: |
           sudo apt-get update
+          sudo apt-get install -y libnetcdf
           sudo apt-get install -y libnetcdf-dev
           sudo apt-get install -y nco
+          sudo apt-get install -y cdo
       - name: Set up Ruby ${{ matrix.ruby-version }}
         uses: ruby/setup-ruby@v1.177.1
         with:
