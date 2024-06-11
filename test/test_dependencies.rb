@@ -17,9 +17,8 @@ class SystemCLICommandsDependenciesTests < Minitest::Test
     define_method("test_command_#{cmd_name}_exists".to_sym) do
       
       capture_subprocess_io do
-        puts "Checking if command exists: #{cmd_name}"
-        cmd_txt = system("command -v #{cmd_name}")
-        puts "Output: #{cmd_txt}"
+        cmd_txt = "command -v #{cmd_name}"
+        puts system(cmd_txt)
         raise  "failed: #{cmd_txt}" unless system(cmd_txt)
       end
     
