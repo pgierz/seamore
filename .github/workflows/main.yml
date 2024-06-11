@@ -37,8 +37,7 @@ jobs:
         run: |
           cdo --version
           ruby -e 'puts ENV["PATH"]'
-        ruby -e "system('which cdo')"
-
+          ruby -e "system('which cdo')"
       - name: Install dependencies
         run: bundle install
       - name: Run tests
