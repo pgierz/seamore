@@ -36,4 +36,7 @@ jobs:
       - name: Install dependencies
         run: bundle install
       - name: Run tests
-        run: ruby test/test.rb
+        run: |
+          which cdo
+          which ncks
+          ruby test/test.rb
