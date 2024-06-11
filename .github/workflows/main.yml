@@ -36,6 +36,7 @@ jobs:
       - name: Sanity Check for cdo
         run: |
           cdo --version
+          command -v cdo
           ruby -e 'puts ENV["PATH"]'
           ruby -e "system('which cdo')"
           ruby -e "system('command -v cdo')"
