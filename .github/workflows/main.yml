@@ -33,10 +33,17 @@ jobs:
           sudo apt-get install -y libnetcdf-dev
           sudo apt-get install -y nco
           sudo apt-get install -y cdo
+      - name: Sanity Check for cdo
+        run: |
+          cdo --version
+          ruby -e 'puts ENV["PATH"]'
+        ruby -e "system('which cdo')"
+
       - name: Install dependencies
         run: bundle install
       - name: Run tests
         run: |
           which cdo
           which ncks
+          echo $PATH
           ruby test/test.rb
